@@ -49,8 +49,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DestinationsNavHost(navGraph = NavGraphs.root)
-
+            MetroYarTheme {
+                DestinationsNavHost(navGraph = NavGraphs.root)
+            }
         }
     }
 }
