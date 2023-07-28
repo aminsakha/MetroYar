@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
 @Destination
 @Composable
 fun Greeting() {
-    var selectedIndex by remember { mutableStateOf(0) }
-    //val navBarItems = remember { NavBarItems.values() }
+    var selectedIndex by remember { mutableStateOf(1) }
+    val navBarItems = remember { NavBarItems.values() }
 
     Scaffold(
         modifier = Modifier.padding(all = 12.dp),
@@ -75,30 +75,38 @@ fun Greeting() {
                 barColor = MaterialTheme.colorScheme.primary,
                 ballColor = MaterialTheme.colorScheme.primary
             ) {
-//                navBarItems.forEach {
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .nonRipple { selectedIndex = it.ordinal },
-//                        contentAlignment = Alignment.Center
-//                    ) {
-//                        Icon(
-//                            modifier = Modifier.size(26.dp),
-//                            imageVector = it.icon,
-//                            contentDescription = "",
-//                            tint = if (selectedIndex == it.ordinal) MaterialTheme.colorScheme.error
-//                            else MaterialTheme.colorScheme.inversePrimary
-//                        )
-//                    }
-//                }
+                navBarItems.forEach {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .nonRipple { selectedIndex = it.ordinal },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(26.dp),
+                            imageVector = it.icon,
+                            contentDescription = "",
+                            tint = if (selectedIndex == it.ordinal) MaterialTheme.colorScheme.secondary
+                            else MaterialTheme.colorScheme.inversePrimary
+                        )
+                    }
+                }
             }
         }, content = { padding ->
             Column(
                 modifier = Modifier
                     .padding(padding)
-            ) {}
+            ) {
+                decider(input = selectedIndex)
+            }
         }
     )
+}
+
+enum class NavBarItems(val icon: ImageVector) {
+    Person(icon = Icons.Default.Person),
+    Call(icon = Icons.Default.Call),
+    Settings(icon = Icons.Default.Settings),
 }
 
 fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
@@ -108,5 +116,35 @@ fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
             MutableInteractionSource()
         }) {
         onclick()
+    }
+}
+
+@Composable
+fun PersonNavItem() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Person")
+    }
+}
+
+@Composable
+fun CallNavItem() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Call")
+    }
+}
+
+@Composable
+fun SettingsNavItem() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Settings")
+    }
+}
+
+@Composable
+fun decider(input: Int) {
+    when (input) {
+        0 -> PersonNavItem()
+        1 -> CallNavItem()
+        2 -> SettingsNavItem()
     }
 }
