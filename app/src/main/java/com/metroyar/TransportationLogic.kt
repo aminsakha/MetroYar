@@ -12,7 +12,7 @@ class Graph(numberOfStationsInGraph: Int) {
         adjacencyList[w].add(v)
     }
 
-     fun setAdjNodesLineNum(edgePair: Pair<Int, Int>, edgeLineNum: Int) {
+    fun setAdjNodesLineNum(edgePair: Pair<Int, Int>, edgeLineNum: Int) {
         adjNodesLineNum[edgePair] = edgeLineNum
     }
 
@@ -61,7 +61,6 @@ class Graph(numberOfStationsInGraph: Int) {
                 }
             }
         }
-
         // Build the path
         val path = mutableListOf<Int>()
         var current = dst

@@ -43,13 +43,13 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
     }
     connectInterchangeStations(context)
 
-    for (stationId in graph.findPath(
-        findStationObjectFromItsName("تجریش")[0].id,
-        findStationObjectFromItsName("رودکی")[0].id
+    for (stationIdd in graph.findPath(
+        findStationObjectFromItsName("ارم سبز")[1].id,
+        findStationObjectFromItsName("طرشت")[0].id
     )) {
         Log.d(
             GlobalObjects.TAG,
-            findStationObjectFromItsId(stationId)[0].name
+            findStationObjectFromItsId(stationIdd)[0].name
         )
     }
 }

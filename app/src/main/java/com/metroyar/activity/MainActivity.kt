@@ -96,8 +96,8 @@ fun Greeting() {
                             modifier = Modifier.size(26.dp),
                             imageVector = it.icon,
                             contentDescription = "",
-                            tint = if (selectedIndex == it.ordinal) MaterialTheme.colorScheme.secondary
-                            else MaterialTheme.colorScheme.inversePrimary
+                            tint = if (selectedIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
+                            else MaterialTheme.colorScheme.onSecondary
                         )
                     }
                 }
