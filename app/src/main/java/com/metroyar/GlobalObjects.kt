@@ -3,7 +3,8 @@ package com.metroyar
 import com.metroyar.model.Station
 
 object GlobalObjects {
-    val lines = HashMap<Pair<Int, Int>, Int>()
+    const val TAG = "testMetroYar"
+    val adjNodesLineNum = mutableMapOf <Pair<Int,Int>,Int>()
     val stationList = mutableListOf<Station>()
-    val graph = Graph(146)
+    val graph = Graph(151)
 }

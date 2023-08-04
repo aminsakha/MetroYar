@@ -1,6 +1,7 @@
 package com.metroyar.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.tween
@@ -29,22 +30,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
-import com.metroyar.NavGraphs
+import com.metroyar.GlobalObjects
+import com.metroyar.GlobalObjects.TAG
+import com.metroyar.GlobalObjects.graph
 import com.metroyar.ui.theme.MetroYarTheme
+import com.metroyar.utils.findStationObjectFromItsId
+import com.metroyar.utils.findStationObjectFromItsName
+import com.metroyar.utils.initiateStationsAndAdjNodesLineNum
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
+import kotlin.system.measureTimeMillis
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MetroYarTheme {
+                val time  = measureTimeMillis {
+                    initiateStationsAndAdjNodesLineNum(LocalContext.current)
+                }
+                Log.d(
+                    GlobalObjects.TAG,
+                   "time is :$time"
+                )
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
@@ -92,7 +107,7 @@ fun Greeting() {
                 modifier = Modifier
                     .padding(padding)
             ) {
-                decider(input = selectedIndex)
+                Decider(input = selectedIndex)
             }
         }
     )
@@ -136,7 +151,8 @@ fun SettingsNavItem() {
 }
 
 @Composable
-fun decider(input: Int) {
+fun Decider(input: Int) {
+
     when (input) {
         0 -> PersonNavItem()
         1 -> CallNavItem()

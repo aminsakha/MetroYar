@@ -1,14 +1,19 @@
 package com.metroyar
 
-import com.metroyar.GlobalObjects.lines
+import com.metroyar.GlobalObjects.adjNodesLineNum
 import java.util.PriorityQueue
 
 class Graph(numberOfStationsInGraph: Int) {
-    private val adjacencyList: Array<MutableList<Int>> = Array(numberOfStationsInGraph) { mutableListOf() }
+    private val adjacencyList: Array<MutableList<Int>> =
+        Array(numberOfStationsInGraph) { mutableListOf() }
 
     fun addEdge(v: Int, w: Int) {
         adjacencyList[v].add(w)
         adjacencyList[w].add(v)
+    }
+
+     fun setAdjNodesLineNum(edgePair: Pair<Int, Int>, edgeLineNum: Int) {
+        adjNodesLineNum[edgePair] = edgeLineNum
     }
 
     private data class Node(val id: Int, val distance: Int, val interchanges: Int)
@@ -39,7 +44,10 @@ class Graph(numberOfStationsInGraph: Int) {
             for (adjNode in adjacencyList[current]) {
                 val newDistance = distance + 1
                 val lineChange =
-                    lines[Pair(current, adjNode)] != lines[Pair(previous[current] ?: src, current)]
+                    adjNodesLineNum[Pair(
+                        current,
+                        adjNode
+                    )] != adjNodesLineNum[Pair(previous[current] ?: src, current)]
 
 
                 val newInterchange = if (lineChange) interchange + 1 else interchange

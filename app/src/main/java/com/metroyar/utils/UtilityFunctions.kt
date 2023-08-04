@@ -1,41 +1,80 @@
 package com.metroyar.utils
 
 import android.content.Context
+import android.util.Log
+import com.metroyar.GlobalObjects
 import com.metroyar.GlobalObjects.graph
 import com.metroyar.GlobalObjects.stationList
 import com.metroyar.R
 import com.metroyar.model.Station
 
-fun initiateStations(context: Context) {
+fun initiateStationsAndAdjNodesLineNum(context: Context) {
     var stationId = -1
     val resources = context.resources
-    val packageName = context.packageName
-    resources.getStringArray(R.array.stationsOnLine1)
     for (i in 1..7) {
-        val curLineStations = resources.getStringArray(
-            resources.getIdentifier(
+        val curLine = resources.getStringArray(
+            context.resources.getIdentifier(
                 "stationsOnLine$i",
                 "array",
-                packageName
+                context.packageName
             )
         )
-        curLineStations.forEach { stationName ->
-            stationList.add(Station(++stationId, stationName, i))
-            if (stationList.last().lineNum == stationList[stationList.lastIndex - 1].lineNum) {
-                graph.addEdge(
-                    stationList.last().id,
-                    stationList[stationList.lastIndex - 1].id,
-                )
-                graph.addEdge(
-                    stationList[stationList.lastIndex - 1].id,
-                    stationList.last().id,
-                )
+
+        curLine.forEach { stationName ->
+            try {
+                stationList.add(Station(++stationId, stationName, i))
+                if (stationList.last().lineNum == stationList[stationList.lastIndex - 1].lineNum) {
+                    graph.addEdge(
+                        stationList[stationList.lastIndex - 1].id,
+                        stationList.last().id,
+                    )
+                    graph.setAdjNodesLineNum(
+                        Pair(
+                            stationList[stationList.lastIndex - 1].id,
+                            stationList.last().id
+                        ), i
+                    )
+
+                    graph.setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
+                }
+            } catch (_: Exception) {
             }
         }
     }
-    connectDupIntersections(context)
+    connectInterchangeStations(context)
+
+    for (stationId in graph.findPath(
+        findStationObjectFromItsName("تجریش")[0].id,
+        findStationObjectFromItsName("رودکی")[0].id
+    )) {
+        Log.d(
+            GlobalObjects.TAG,
+            findStationObjectFromItsId(stationId)[0].name
+        )
+    }
 }
 
-private fun connectDupIntersections(context: Context) {
-    TODO("Not yet implemented")
+private fun connectInterchangeStations(context: Context) {
+    context.resources.getStringArray(R.array.interchangeStations).forEach {
+        val foundedTwoSameNameStations = findStationObjectFromItsName(it)
+        graph.addEdge(foundedTwoSameNameStations[0].id, foundedTwoSameNameStations[1].id)
+
+        graph.setAdjNodesLineNum(
+            Pair(
+                foundedTwoSameNameStations[0].id,
+                foundedTwoSameNameStations[1].id
+            ), foundedTwoSameNameStations[1].lineNum
+        )
+        graph.setAdjNodesLineNum(
+            Pair(
+                foundedTwoSameNameStations[1].id,
+                foundedTwoSameNameStations[0].id
+            ), foundedTwoSameNameStations[0].lineNum
+        )
+    }
 }
+
+fun findStationObjectFromItsName(stationName: String) =
+    stationList.filter { it.name == stationName }
+
+fun findStationObjectFromItsId(stationId: Int) = stationList.filter { it.id == stationId }
