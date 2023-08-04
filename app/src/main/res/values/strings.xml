@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">مترویار</string>
 
-    <string-array name="StationsOnLine1">
+    <string-array name="stationsOnLine1">
         <item>تجریش</item>
         <item>قیطریه</item>
         <item>شهید صدر</item>
@@ -32,7 +32,7 @@
         <item>حرم مطهر امام خمینی</item>
         <item>کهریزک</item>
     </string-array>
-    <string-array name="StationsOnLine2">
+    <string-array name="stationsOnLine2">
         <item>فرهنگسرا</item>
         <item>تهران پارس</item>
         <item>شهید باقری</item>
@@ -56,7 +56,7 @@
         <item>طرشت</item>
         <item>تهران (صادقیه)</item>
     </string-array>
-    <string-array name="StationsOnLine3">
+    <string-array name="stationsOnLine3">
         <item>قایم</item>
         <item>شهید محلاتی</item>
         <item>اقدسیه</item>
@@ -83,7 +83,7 @@
         <item>نعمت آباد</item>
         <item>آزادگان</item>
     </string-array>
-    <string-array name="StationsOnLine4">
+    <string-array name="stationsOnLine4">
         <item>شهید کلاهدوز</item>
         <item>نیروهوایی</item>
         <item>نبرد</item>
@@ -104,7 +104,7 @@
         <item>شهرک اکباتان</item>
         <item>ارم سبز</item>
     </string-array>
-    <string-array name="StationsOnLine5">
+    <string-array name="stationsOnLine5">
         <item>تهران (صادقیه)</item>
         <item>ارم سبز</item>
         <item>ورزشگاه آزادی</item>
@@ -118,7 +118,7 @@
         <item>گلشهر</item>
         <item>شهید سپهبد قاسم سلیمانی</item>
     </string-array>
-    <string-array name="StationsOnLine6">
+    <string-array name="stationsOnLine6">
         <item>کوهسار</item>
         <item>شهدای کن</item>
         <item>شهران</item>
@@ -143,7 +143,7 @@
         <item>کیان شهر</item>
         <item>دولت آباد</item>
     </string-array>
-    <string-array name="StationsOnLine7">
+    <string-array name="stationsOnLine7">
         <item>میدان کتاب</item>
         <item>شهید دادمان</item>
         <item>میدان صنعت</item>

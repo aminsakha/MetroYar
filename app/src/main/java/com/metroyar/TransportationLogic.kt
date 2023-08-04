@@ -3,12 +3,12 @@ package com.metroyar
 import com.metroyar.GlobalObjects.lines
 import java.util.PriorityQueue
 
-class Graph(V: Int) {
-    private val adj: Array<MutableList<Int>> = Array(V) { mutableListOf() }
+class Graph(numberOfStationsInGraph: Int) {
+    private val adjacencyList: Array<MutableList<Int>> = Array(numberOfStationsInGraph) { mutableListOf() }
 
     fun addEdge(v: Int, w: Int) {
-        adj[v].add(w)
-        adj[w].add(v)
+        adjacencyList[v].add(w)
+        adjacencyList[w].add(v)
     }
 
     private data class Node(val id: Int, val distance: Int, val interchanges: Int)
@@ -36,7 +36,7 @@ class Graph(V: Int) {
 
             if (current == dst) break
 
-            for (adjNode in adj[current]) {
+            for (adjNode in adjacencyList[current]) {
                 val newDistance = distance + 1
                 val lineChange =
                     lines[Pair(current, adjNode)] != lines[Pair(previous[current] ?: src, current)]
