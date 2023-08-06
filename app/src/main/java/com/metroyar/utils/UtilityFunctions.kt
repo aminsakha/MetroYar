@@ -2,10 +2,13 @@ package com.metroyar.utils
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import com.metroyar.GlobalObjects
+import com.metroyar.GlobalObjects.adjNodesLineNum
 import com.metroyar.GlobalObjects.graph
 import com.metroyar.GlobalObjects.stationList
 import com.metroyar.R
+import com.metroyar.Result
 import com.metroyar.model.Station
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
@@ -34,7 +37,6 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
                             stationList.last().id
                         ), i
                     )
-
                     graph.setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
                 }
             } catch (_: Exception) {
@@ -42,16 +44,6 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
         }
     }
     connectInterchangeStations(context)
-
-    for (stationIdd in graph.findPath(
-        findStationObjectFromItsName("ارم سبز")[1].id,
-        findStationObjectFromItsName("طرشت")[0].id
-    )) {
-        Log.d(
-            GlobalObjects.TAG,
-            findStationObjectFromItsId(stationIdd)[0].name
-        )
-    }
 }
 
 private fun connectInterchangeStations(context: Context) {

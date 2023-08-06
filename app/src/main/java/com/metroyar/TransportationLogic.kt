@@ -1,6 +1,7 @@
 package com.metroyar
 
 import com.metroyar.GlobalObjects.adjNodesLineNum
+import java.nio.file.Paths
 import java.util.PriorityQueue
 
 class Graph(numberOfStationsInGraph: Int) {
@@ -19,9 +20,9 @@ class Graph(numberOfStationsInGraph: Int) {
     private data class Node(val id: Int, val distance: Int, val interchanges: Int)
 
     fun findPath(src: Int, dst: Int): List<Int> {
-        val queue = PriorityQueue<Node> { a, b ->
-            if (a.interchanges != b.interchanges) a.interchanges - b.interchanges
-            else a.distance - b.distance
+        val queue = PriorityQueue<Node> { nodeA, nodeB ->
+            if (nodeA.interchanges != nodeB.interchanges) nodeA.interchanges - nodeB.interchanges
+            else nodeA.distance - nodeB.distance
         }
         val previous = HashMap<Int, Int>()
         val visited = HashSet<Int>()

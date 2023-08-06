@@ -37,11 +37,8 @@ import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.GlobalObjects
-import com.metroyar.GlobalObjects.TAG
-import com.metroyar.GlobalObjects.graph
+import com.metroyar.Result
 import com.metroyar.ui.theme.MetroYarTheme
-import com.metroyar.utils.findStationObjectFromItsId
-import com.metroyar.utils.findStationObjectFromItsName
 import com.metroyar.utils.initiateStationsAndAdjNodesLineNum
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
@@ -53,13 +50,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MetroYarTheme {
-                val time  = measureTimeMillis {
                     initiateStationsAndAdjNodesLineNum(LocalContext.current)
-                }
-                Log.d(
-                    GlobalObjects.TAG,
-                   "time is :$time"
-                )
+                    val a =
+                        Result(LocalContext.current, "میدان صنعت", "ارم سبز").generatePossiblePaths()
+
+                    Log.i(
+                        GlobalObjects.TAG,
+                        a.poll().stationsOnPath.toString()
+                    )
+                    Log.i(
+                        GlobalObjects.TAG,
+                        a.poll().stationsOnPath.toString()
+                    )
+
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
