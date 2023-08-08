@@ -6,6 +6,6 @@ data class Station(
     var lineNum: Int,
 ) {
     override fun toString(): String {
-        return "$name : $lineNum"
+        return "$name"
     }
 }

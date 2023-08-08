@@ -1,6 +1,8 @@
-package com.metroyar.model
+package com.metroyar
 
-class Path( val stationsOnPath: MutableList<Station>) {
+import com.metroyar.model.Station
+
+class Path(val stationsOnPath: MutableList<Station>) {
     var interchangesScore = 0
     var stationsBetweenScore = 0
 
