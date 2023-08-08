@@ -58,8 +58,8 @@ class MainActivity : ComponentActivity() {
                     GlobalObjects.TAG,
                     Result(
                         LocalContext.current,
-                        "میدان حضرت ولی\u200Cعصر",
-                        "خواجه عبدالله انصاری"
+                        "شهید کلاهدوز",
+                        "طرشت"
                     ).convertPathToUserUnderstandableForm().toString()
                 )
 

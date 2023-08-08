@@ -45,7 +45,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
                 "میدان شهدا" -> return "به سمت دولت آباد"
                 "دروازه شمیران" -> return "به سمت تهران (صادقیه)"
                 "شهید مدنی" -> return "به سمت فرهنگسرا"
-                "َشهدای هفتم تیر" -> return "به سمت شهید ستاری"
+                "شهدای هفتم تیر" -> return "به سمت شهید ستاری"
             }
         }
 

@@ -1,9 +1,8 @@
 package com.metroyar
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import com.metroyar.GlobalObjects.metroGraph
+import com.metroyar.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.model.Station
 import com.metroyar.utils.findStationObjectFromItsId
 import com.metroyar.utils.findStationObjectFromItsName
@@ -16,16 +15,8 @@ class Result(
     private var startStationName: String,
     private var destStationName: String
 ) {
-    private val tripleOfLinesAndTheirStartAndEndStations =
-        mutableListOf<Triple<Int, String, String>>().apply {
-            add(Triple(1, "تجریش", "کهریزک"))
-            add(Triple(2, "فرهنگسرا", "تهران(صادقیه)"))
-            add(Triple(3, "قایم", "آزدادگان"))
-            add(Triple(4, "شهید کلاهدوز", "ارم سبز"))
-            add(Triple(5, "تهران(صادقیه)", "شهید سلیمانی"))
-            add(Triple(6, "شهید ستاری", "دولت آباد"))
-            add(Triple(7, "میدان صنعت", "بسیج"))
-        }
+
+
     private val intersectionNames =
         context.resources.getStringArray(R.array.interchangeStations).toMutableList()
 
@@ -99,24 +90,26 @@ class Result(
         val pathStationNamesResult = mutableListOf<String>()
         pathStationNamesResult.add("حرکت از ایستگاه ")
         pathStationNamesResult.add(stations[0].name)
-        pathStationNamesResult.add(" به سمت ")
         pathStationNamesResult.add(
-            detectWhereToGoFromStartStation(
-                stations[0],
-                stations[1]
-            )
+            "به سمت ${
+                detectWhereToGoFromStartStation(
+                    stations[0],
+                    stations[1]
+                )
+            }"
         )
         stations.removeFirst()
         for (stationIndex in stations.indices) {
             try {
                 if (intersectionNames.contains(stations[stationIndex].name)) {
                     pathStationNamesResult.add(stations[stationIndex].name)
-                    pathStationNamesResult.add(
-                        getDirectionFromInterchangeStations(
-                            stations[stationIndex].id,
-                            stations[stationIndex + 1].id
-                        )
+                    val directionOfCurrStation = getDirectionFromInterchangeStations(
+                        stations[stationIndex].id,
+                        stations[stationIndex + 1].id
                     )
+                    if (!pathStationNamesResult.contains(directionOfCurrStation))
+                        pathStationNamesResult.add(directionOfCurrStation)
+
                 } else
                     pathStationNamesResult.add(stations[stationIndex].name)
             } catch (_: Exception) {
