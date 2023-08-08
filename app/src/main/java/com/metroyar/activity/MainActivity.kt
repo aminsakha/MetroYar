@@ -3,8 +3,10 @@ package com.metroyar.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
 import com.metroyar.screen.NavGraphs
 import com.metroyar.ui.theme.MetroYarTheme
+import com.metroyar.utils.initiateStationsAndAdjNodesLineNum
 import com.ramcosta.composedestinations.DestinationsNavHost
 
 class MainActivity : ComponentActivity() {
@@ -12,6 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MetroYarTheme {
+                initiateStationsAndAdjNodesLineNum(LocalContext.current)
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
