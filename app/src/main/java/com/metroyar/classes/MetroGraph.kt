@@ -1,6 +1,6 @@
-package com.metroyar
+package com.metroyar.classes
 
-import com.metroyar.GlobalObjects.adjNodesLineNum
+import com.metroyar.utils.GlobalObjects.adjNodesLineNum
 import java.util.PriorityQueue
 
 class MetroGraph(numberOfStationsInGraph: Int) {

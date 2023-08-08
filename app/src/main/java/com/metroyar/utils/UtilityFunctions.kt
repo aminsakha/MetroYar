@@ -2,10 +2,9 @@ package com.metroyar.utils
 
 import android.content.Context
 import android.util.Log
-import com.metroyar.GlobalObjects
-import com.metroyar.GlobalObjects.TAG
-import com.metroyar.GlobalObjects.metroGraph
-import com.metroyar.GlobalObjects.stationList
+import com.metroyar.utils.GlobalObjects.TAG
+import com.metroyar.utils.GlobalObjects.metroGraph
+import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.R
 import com.metroyar.model.Station
 

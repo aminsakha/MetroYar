@@ -1,5 +1,6 @@
-package com.metroyar
+package com.metroyar.utils
 
+import com.metroyar.classes.MetroGraph
 import com.metroyar.model.Station
 
 object GlobalObjects {
