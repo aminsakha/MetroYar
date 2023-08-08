@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,12 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.GlobalObjects
+import com.metroyar.R
 import com.metroyar.Result
 import com.metroyar.ui.theme.MetroYarTheme
 import com.metroyar.utils.initiateStationsAndAdjNodesLineNum
@@ -50,18 +53,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MetroYarTheme {
-                    initiateStationsAndAdjNodesLineNum(LocalContext.current)
-                    val a =
-                        Result(LocalContext.current, "میدان صنعت", "ارم سبز").generatePossiblePaths()
-
-                    Log.i(
-                        GlobalObjects.TAG,
-                        a.poll().stationsOnPath.toString()
-                    )
-                    Log.i(
-                        GlobalObjects.TAG,
-                        a.poll().stationsOnPath.toString()
-                    )
+                initiateStationsAndAdjNodesLineNum(LocalContext.current)
+                Log.i(
+                    GlobalObjects.TAG,
+                    Result(
+                        LocalContext.current,
+                        "شهید کلاهدوز",
+                        "طرشت"
+                    ).convertPathToUserUnderstandableForm().toString()
+                )
 
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
@@ -118,7 +118,7 @@ fun Greeting() {
 
 enum class NavBarItems(val icon: ImageVector) {
     Person(icon = Icons.Default.Person),
-    Call(icon = Icons.Default.Call),
+    Call(icon = Icons.Outlined.Share),
     Settings(icon = Icons.Default.Settings),
 }
 
@@ -142,7 +142,7 @@ fun PersonNavItem() {
 @Composable
 fun CallNavItem() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Call")
+        Text("Direction")
     }
 }
 

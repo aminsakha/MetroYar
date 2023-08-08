@@ -1,20 +1,15 @@
 package com.metroyar
 
 import com.metroyar.GlobalObjects.adjNodesLineNum
-import java.nio.file.Paths
 import java.util.PriorityQueue
 
-class Graph(numberOfStationsInGraph: Int) {
+class MetroGraph(numberOfStationsInGraph: Int) {
     private val adjacencyList: Array<MutableList<Int>> =
         Array(numberOfStationsInGraph) { mutableListOf() }
 
     fun addEdge(v: Int, w: Int) {
         adjacencyList[v].add(w)
         adjacencyList[w].add(v)
-    }
-
-    fun setAdjNodesLineNum(edgePair: Pair<Int, Int>, edgeLineNum: Int) {
-        adjNodesLineNum[edgePair] = edgeLineNum
     }
 
     private data class Node(val id: Int, val distance: Int, val interchanges: Int)

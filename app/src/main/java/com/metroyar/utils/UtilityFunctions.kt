@@ -2,13 +2,11 @@ package com.metroyar.utils
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import com.metroyar.GlobalObjects
-import com.metroyar.GlobalObjects.adjNodesLineNum
-import com.metroyar.GlobalObjects.graph
+import com.metroyar.GlobalObjects.TAG
+import com.metroyar.GlobalObjects.metroGraph
 import com.metroyar.GlobalObjects.stationList
 import com.metroyar.R
-import com.metroyar.Result
 import com.metroyar.model.Station
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
@@ -27,17 +25,17 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
             try {
                 stationList.add(Station(++stationId, stationName, i))
                 if (stationList.last().lineNum == stationList[stationList.lastIndex - 1].lineNum) {
-                    graph.addEdge(
+                    metroGraph.addEdge(
                         stationList[stationList.lastIndex - 1].id,
                         stationList.last().id,
                     )
-                    graph.setAdjNodesLineNum(
+                    setAdjNodesLineNum(
                         Pair(
                             stationList[stationList.lastIndex - 1].id,
                             stationList.last().id
                         ), i
                     )
-                    graph.setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
+                    setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
                 }
             } catch (_: Exception) {
             }
@@ -49,15 +47,15 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
 private fun connectInterchangeStations(context: Context) {
     context.resources.getStringArray(R.array.interchangeStations).forEach {
         val foundedTwoSameNameStations = findStationObjectFromItsName(it)
-        graph.addEdge(foundedTwoSameNameStations[0].id, foundedTwoSameNameStations[1].id)
+        metroGraph.addEdge(foundedTwoSameNameStations[0].id, foundedTwoSameNameStations[1].id)
 
-        graph.setAdjNodesLineNum(
+        setAdjNodesLineNum(
             Pair(
                 foundedTwoSameNameStations[0].id,
                 foundedTwoSameNameStations[1].id
             ), foundedTwoSameNameStations[1].lineNum
         )
-        graph.setAdjNodesLineNum(
+        setAdjNodesLineNum(
             Pair(
                 foundedTwoSameNameStations[1].id,
                 foundedTwoSameNameStations[0].id
@@ -69,4 +67,11 @@ private fun connectInterchangeStations(context: Context) {
 fun findStationObjectFromItsName(stationName: String) =
     stationList.filter { it.name == stationName }
 
-fun findStationObjectFromItsId(stationId: Int) = stationList.filter { it.id == stationId }
+fun findStationObjectFromItsId(stationId: Int) = stationList.find { it.id == stationId }!!
+
+fun setAdjNodesLineNum(edgePair: Pair<Int, Int>, edgeLineNum: Int) {
+    GlobalObjects.adjNodesLineNum[edgePair] = edgeLineNum
+}
+
+fun log(stringMessage: String = "", wantToLogThis: Any?) =
+    Log.d(TAG, "$stringMessage : $wantToLogThis")
