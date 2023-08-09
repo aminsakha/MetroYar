@@ -11,12 +11,11 @@ object GlobalObjects {
      val tripleOfLinesAndTheirStartAndEndStations =
         mutableListOf<Triple<Int, String, String>>().apply {
             add(Triple(1, "تجریش", "کهریزک"))
-            add(Triple(2, "فرهنگسرا", "تهران(صادقیه)"))
-            add(Triple(3, "قائم", "آزدادگان"))
+            add(Triple(2, "فرهنگسرا", "تهران (صادقیه)"))
+            add(Triple(3, "قائم", "آزادگان"))
             add(Triple(4, "شهید کلاهدوز", "ارم سبز"))
-            add(Triple(5, "تهران(صادقیه)", "شهید سلیمانی"))
+            add(Triple(5, "تهران (صادقیه)", "شهید سپهبد قاسم سلیمانی"))
             add(Triple(6, "شهید ستاری", "دولت آباد"))
             add(Triple(7, "میدان صنعت", "بسیج"))
         }
-
 }

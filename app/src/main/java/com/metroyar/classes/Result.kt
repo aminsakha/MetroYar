@@ -17,71 +17,35 @@ class Result(
     private var startStationName: String,
     private var destStationName: String
 ) {
-
-
     private val intersectionNames =
         context.resources.getStringArray(R.array.interchangeStations).toMutableList()
 
     private fun generatePossiblePaths(): PriorityQueue<Path> {
         val possiblePathsQueue = PriorityQueue<Path> { pathA, pathB ->
-            if (pathA.interchangesScore != pathB.interchangesScore) pathA.interchangesScore - pathB.interchangesScore
-            else pathA.stationsBetweenScore - pathB.stationsBetweenScore
+            when {
+                pathA.interchangesScore != pathB.interchangesScore -> pathA.interchangesScore - pathB.interchangesScore
+                else -> pathA.stationsBetweenScore - pathB.stationsBetweenScore
+            }
         }
 
-        if ((intersectionNames.contains(startStationName) && !intersectionNames.contains(
-                destStationName
-            ))
-        ) {
-            for (i in 0..1) {
-                possiblePathsQueue.add(
-                    Path(
-                        metroGraph.findPath(
-                            findStationObjectFromItsName(startStationName)[i].id,
-                            findStationObjectFromItsName(destStationName)[0].id
-                        ).map { findStationObjectFromItsId(it) }.toMutableList()
-                    )
-                )
-            }
-        } else if (!intersectionNames.contains(startStationName) && intersectionNames.contains(
-                destStationName
-            )
-        ) {
-            for (i in 0..1) {
-                possiblePathsQueue.add(
-                    Path(
-                        metroGraph.findPath(
-                            findStationObjectFromItsName(startStationName)[0].id,
-                            findStationObjectFromItsName(destStationName)[i].id
-                        ).map { findStationObjectFromItsId(it) }.toMutableList()
-                    )
-                )
-            }
-        } else if (intersectionNames.contains(startStationName) && intersectionNames.contains(
-                destStationName
-            )
-        ) {
-            for (i in 0..1) {
-                for (j in 0..1) {
-                    possiblePathsQueue.add(
-                        Path(
-                            metroGraph.findPath(
-                                findStationObjectFromItsName(startStationName)[i].id,
-                                findStationObjectFromItsName(destStationName)[j].id
-                            ).map { findStationObjectFromItsId(it) }.toMutableList()
-                        )
-                    )
-                }
-            }
-        } else
-            possiblePathsQueue.add(
-                Path(
-                    metroGraph.findPath(
-                        findStationObjectFromItsName(startStationName)[0].id,
-                        findStationObjectFromItsName(destStationName)[0].id
-                    ).map { findStationObjectFromItsId(it) }.toMutableList()
-                )
-            )
+        val startIsIntersection = intersectionNames.contains(startStationName)
+        val destIsIntersection = intersectionNames.contains(destStationName)
 
+        val startIndices = if (startIsIntersection) 0..1 else 0..0
+        val destIndices = if (destIsIntersection) 0..1 else 0..0
+
+        for (startIndex in startIndices) {
+            for (destIndex in destIndices) {
+                possiblePathsQueue.add(
+                    Path(
+                        metroGraph.findPath(
+                            findStationObjectFromItsName(startStationName)[startIndex].id,
+                            findStationObjectFromItsName(destStationName)[destIndex].id
+                        ).map { findStationObjectFromItsId(it) }.toMutableList()
+                    )
+                )
+            }
+        }
         return possiblePathsQueue
     }
 
@@ -89,35 +53,34 @@ class Result(
         val path = generatePossiblePaths().peek()!!
         val stations = path.stationsOnPath.distinctBy { it.name }.toMutableList()
         log("path is :", path.stationsOnPath.map { it.name }.toSet().toMutableList())
-        val pathStationNamesResult = mutableListOf<String>()
+        val pathStationNamesResult = mutableSetOf<String>()
         pathStationNamesResult.add("حرکت از ایستگاه ")
         pathStationNamesResult.add(stations[0].name)
         pathStationNamesResult.add(
             "به سمت ${
                 detectWhereToGoFromStartStation(
-                    stations[0],
-                    stations[1]
+                    stations[0], stations[1]
                 )
             }"
         )
+        pathStationNamesResult.last().forEach { log("last", it) }
+
         stations.removeFirst()
         for (stationIndex in stations.indices) {
             try {
+                pathStationNamesResult.add(stations[stationIndex].name)
                 if (intersectionNames.contains(stations[stationIndex].name)) {
-                    pathStationNamesResult.add(stations[stationIndex].name)
-                    val directionOfCurrStation = getDirectionFromInterchangeStations(
-                        stations[stationIndex].id,
-                        stations[stationIndex + 1].id
+                    pathStationNamesResult.add(
+                        getDirectionFromInterchangeStations(
+                            stations[stationIndex].id,
+                            stations[stationIndex + 1].id
+                        )
                     )
-                    if (!pathStationNamesResult.contains(directionOfCurrStation))
-                        pathStationNamesResult.add(directionOfCurrStation)
-
-                } else
-                    pathStationNamesResult.add(stations[stationIndex].name)
+                }
             } catch (_: Exception) {
             }
         }
-        return pathStationNamesResult
+        return pathStationNamesResult.toMutableList()
     }
 
     private fun detectWhereToGoFromStartStation(

@@ -58,13 +58,6 @@ class MetroGraph(numberOfStationsInGraph: Int) {
             }
         }
         // Build the path
-        val path = mutableListOf<Int>()
-        var current = dst
-        while (current != src) {
-            path.add(current)
-            current = previous[current] ?: throw RuntimeException("No path found")
-        }
-        path.add(src)
-        return path.reversed()
+        return generateSequence(dst) { previous[it] }.toList().reversed()
     }
 }
