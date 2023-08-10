@@ -1,4 +1,4 @@
-package com.metroyar
+package com.metroyar.classes
 
 import com.metroyar.model.Station
 

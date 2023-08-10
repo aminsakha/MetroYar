@@ -1,6 +1,4 @@
-package com.metroyar
-
-import com.metroyar.utils.findStationObjectFromItsId
+package com.metroyar.utils
 
 fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
     when (findStationObjectFromItsId(currId).name) {
@@ -149,19 +147,10 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
             when (findStationObjectFromItsId(nextId).name) {
                 "طالقانی" -> return "به سمت کهریزک"
                 "امام حسین" -> return "به سمت دولت آباد"
-                "شهید مفتح" -> return "به سمت‌ تجریش"
+                "شهید مفتح" -> return "به سمت تجریش"
                 "شهید نجات اللهی (افتتاح نشده)" -> return "به سمت شهید ستاری"
             }
         }
-
-//        "شهدای هفده شهریور" -> {
-//            when (findStationObjectFromItsId(nextId).name) {
-//                "شهید رضایی" -> return "به سمت دولت آباد"
-//                "چهل تن دولاب" -> return "به سمت بسیج"
-//                "میدان قیام" -> return "به سمت میدان صنعت"
-//                "امیرکبیر" -> return "به سمت شهید ستاری "
-//            }
-//        }
     }
     return "خطا"
 }
