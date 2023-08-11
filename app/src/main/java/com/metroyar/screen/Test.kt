@@ -3,7 +3,6 @@ package com.metroyar.screen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement.Top
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +33,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -45,27 +43,13 @@ import com.metroyar.utils.GlobalObjects
 
 @Composable
 fun AutoComplete() {
+    val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }
 
-    val categories = GlobalObjects.stationList.map { it.name }
-
-    var category by remember {
-        mutableStateOf("")
-    }
-
-    val heightTextFields by remember {
-        mutableStateOf(55.dp)
-    }
-
-    var textFieldSize by remember {
-        mutableStateOf(Size.Zero)
-    }
-
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-    val interactionSource = remember {
-        MutableInteractionSource()
-    }
+    var category by remember { mutableStateOf("") }
+    val heightTextFields by remember { mutableStateOf(55.dp) }
+    var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var expanded by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     // Category Field
     Column(
@@ -80,44 +64,48 @@ fun AutoComplete() {
                 }
             )
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-
-            Row(modifier = Modifier.fillMaxWidth()) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(heightTextFields)
-                        .onGloballyPositioned { coordinates ->
-                            textFieldSize = coordinates.size.toSize()
-                        },
-                    label = { Text("ایستگاه مبدا را انتخاب کنید", textAlign = TextAlign.End) },
-                    value = category,
-                    onValueChange = {
-                        category = it
-                        expanded = true
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(heightTextFields)
+                    .onGloballyPositioned { coordinates ->
+                        textFieldSize = coordinates.size.toSize()
                     },
-                    textStyle =
-                    TextStyle(
-                        textAlign = TextAlign.End, color = Color.Black,
-                        fontSize = 16.sp
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done
-                    ),
-                    singleLine = true,
-                    trailingIcon = {
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                modifier = Modifier.size(24.dp),
-                                imageVector = Icons.Rounded.KeyboardArrowDown,
-                                contentDescription = "arrow",
-                                tint = Color.Black
-                            )
-                        }
+                label = {
+                    Text(
+                        "تست", modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.End
+                    )
+                },
+                value = category,
+                onValueChange = {
+                    category = it
+                    expanded = true
+                },
+                textStyle =
+                TextStyle(
+                    textAlign = TextAlign.End,
+                    fontSize = 16.sp
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            imageVector = Icons.Rounded.KeyboardArrowDown,
+                            contentDescription = "arrow",
+                            tint = Color.Black
+                        )
                     }
-                )
-            }
+                }
+            )
 
             AnimatedVisibility(visible = expanded) {
                 Card(
@@ -131,7 +119,7 @@ fun AutoComplete() {
                     ) {
                         if (category.isNotEmpty()) {
                             items(
-                                categories.filter {
+                                dropDownStationNamesList.filter {
                                     it.contains(category)
                                 }
                             ) {
@@ -142,7 +130,7 @@ fun AutoComplete() {
                             }
                         } else {
                             items(
-                                categories.sorted()
+                                dropDownStationNamesList.sorted()
                             ) {
                                 CategoryItems(title = it) { title ->
                                     category = title
@@ -171,6 +159,9 @@ fun CategoryItems(
             }
             .padding(10.dp)
     ) {
-        Text(text = title, fontSize = 16.sp)
+        Text(
+            text = title, fontSize = 16.sp, modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.End
+        )
     }
 }
