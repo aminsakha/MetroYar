@@ -63,7 +63,6 @@ class Result(
                 )
             }"
         )
-        pathStationNamesResult.last().forEach { log("last", it) }
 
         stations.removeFirst()
         for (stationIndex in stations.indices) {
