@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -33,7 +35,7 @@ import com.metroyar.utils.GlobalObjects
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AutoComplete() {
+fun AutoComplete() :String{
     val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }
 
     var inputText by remember { mutableStateOf("") }
@@ -41,6 +43,7 @@ fun AutoComplete() {
     val heightTextFields by remember { mutableStateOf(55.dp) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
 
     Column(
         modifier = Modifier
@@ -52,7 +55,7 @@ fun AutoComplete() {
         Column(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth().focusRequester(focusRequester)
                     .height(heightTextFields)
                     .onGloballyPositioned { textFieldSize = it.size.toSize() },
                 label = {
@@ -68,15 +71,12 @@ fun AutoComplete() {
                     expanded = true
                 },
                 textStyle = TextStyle(textAlign = TextAlign.End, fontSize = 16.sp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                ),
                 singleLine = true,
                 trailingIcon = {
                     IconButton(onClick = {
                         expanded = !expanded
                         inputText = ""
+                        focusRequester.requestFocus()
                         keyboardController?.show()
                     }) {
                         Icon(
@@ -113,6 +113,7 @@ fun AutoComplete() {
             }
         }
     }
+    return selectedItem
 }
 
 @Composable
