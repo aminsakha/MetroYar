@@ -23,50 +23,51 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.metroyar.classes.Result
-import com.metroyar.utils.log
+import com.metroyar.composable.autoCompleteOutLinedTextField
 
 
 @Composable
 fun NavigationScreen() {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        log("into nav",true)
-        MyComposable(LocalContext.current)
-    }
+    MyComposable(LocalContext.current)
 }
 
 @Composable
 fun MyComposable(context: Context) {
-    var text1 by remember { mutableStateOf("") }
-    var text2 by remember { mutableStateOf("") }
-    var list by remember { mutableStateOf(listOf<String>()) }
+    var startStation by remember { mutableStateOf("") }
+    var destStation by remember { mutableStateOf("") }
+    var resultList by remember { mutableStateOf(listOf<String>()) }
 
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-        text1 = AutoComplete()
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        startStation = autoCompleteOutLinedTextField(label = "ایستگاه مبدا")
 
         Spacer(Modifier.height(16.dp))
 
-        text2 = AutoComplete()
+        destStation = autoCompleteOutLinedTextField(label = "ایستگاه مقصد")
 
         Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
-            list = Result(
+            resultList = Result(
                 context,
-                text1,
-                text2
+                startStation,
+                destStation
             ).convertPathToUserUnderstandableForm()
         }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text("پیدا کردن بهترین مسیر")
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(12.dp))
 
         LazyColumn {
-            items(list) { item ->
+            items(resultList) { item ->
                 Text(
                     item,
                     Modifier
-                        .padding(16.dp)
+                        .padding(12.dp)
                         .fillMaxWidth(),
                     textAlign = TextAlign.End
                 )

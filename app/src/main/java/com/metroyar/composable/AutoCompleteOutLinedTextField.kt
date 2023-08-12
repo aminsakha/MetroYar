@@ -1,4 +1,5 @@
-package com.metroyar.screen
+package com.metroyar.composable
+
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -7,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.*
@@ -25,8 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,12 +33,11 @@ import com.metroyar.utils.GlobalObjects
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AutoComplete() :String{
+fun autoCompleteOutLinedTextField(label: String): String {
     val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }
 
     var inputText by remember { mutableStateOf("") }
     var selectedItem by remember { mutableStateOf("") }
-    val heightTextFields by remember { mutableStateOf(55.dp) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
@@ -55,12 +52,12 @@ fun AutoComplete() :String{
         Column(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 modifier = Modifier
-                    .fillMaxWidth().focusRequester(focusRequester)
-                    .height(heightTextFields)
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
                     .onGloballyPositioned { textFieldSize = it.size.toSize() },
                 label = {
                     Text(
-                        "تست",
+                        label,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End
                     )
