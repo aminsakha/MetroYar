@@ -53,28 +53,34 @@ class Result(
         val path = generatePossiblePaths().peek()!!
         val stations = path.stationsOnPath.distinctBy { it.name }.toMutableList()
         log("path is :", path.stationsOnPath.map { it.name }.toSet().toMutableList())
-        val pathStationNamesResult = mutableSetOf<String>()
+        val pathStationNamesResult = mutableSetOf<String>().toMutableList()
         pathStationNamesResult.add("حرکت از ایستگاه ")
-        pathStationNamesResult.add(stations[0].name)
-        pathStationNamesResult.add(
-            "به سمت ${
+        pathStationNamesResult[pathStationNamesResult.lastIndex] =
+            pathStationNamesResult.last() + stations[0].name
+        pathStationNamesResult[pathStationNamesResult.lastIndex] =
+            pathStationNamesResult.last() + " به سمت ${
                 detectWhereToGoFromStartStation(
                     stations[0], stations[1]
                 )
             }"
-        )
 
         stations.removeFirst()
         for (stationIndex in stations.indices) {
             try {
                 pathStationNamesResult.add(stations[stationIndex].name)
                 if (intersectionNames.contains(stations[stationIndex].name)) {
-                    pathStationNamesResult.add(
-                        getDirectionFromInterchangeStations(
-                            stations[stationIndex].id,
-                            stations[stationIndex + 1].id
-                        )
+                    val plus = getDirectionFromInterchangeStations(
+                        stations[stationIndex].id,
+                        stations[stationIndex + 1].id
                     )
+                    if (!pathStationNamesResult.any { it.contains(plus) }) {
+                        pathStationNamesResult[pathStationNamesResult.lastIndex] =
+                            pathStationNamesResult.last() + " " +
+                                    getDirectionFromInterchangeStations(
+                                        stations[stationIndex].id,
+                                        stations[stationIndex + 1].id
+                                    )
+                    }
                 }
             } catch (_: Exception) {
             }
