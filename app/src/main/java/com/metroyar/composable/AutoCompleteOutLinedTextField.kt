@@ -23,6 +23,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -41,6 +42,7 @@ fun autoCompleteOutLinedTextField(label: String): String {
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
@@ -100,7 +102,7 @@ fun autoCompleteOutLinedTextField(label: String): String {
                                 CategoryItems(title = title) {
                                     inputText = it
                                     expanded = false
-                                    keyboardController?.hide()
+                                    focusManager.clearFocus()
                                     selectedItem = it
                                 }
                             }
