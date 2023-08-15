@@ -22,8 +22,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.metroyar.R
 import com.metroyar.classes.Result
 import com.metroyar.composable.autoCompleteOutLinedTextField
 import com.metroyar.ui.theme.line
@@ -39,20 +41,16 @@ fun MyComposable(context: Context) {
     var startStation by remember { mutableStateOf("") }
     var destStation by remember { mutableStateOf("") }
     var resultList by remember { mutableStateOf(listOf<String>()) }
-  LaunchedEffect(key1 = startStation){
-   //   if (startStation!="")
-
-  }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        startStation = autoCompleteOutLinedTextField(label = "ایستگاه مبدا")
+        startStation = autoCompleteOutLinedTextField(label = "ایستگاه مبدا رو انتخاب کن")
 
         Spacer(Modifier.height(16.dp))
 
-        destStation = autoCompleteOutLinedTextField(label = "ایستگاه مقصد")
+        destStation = autoCompleteOutLinedTextField(label = "ایستگاه مقصد رو انتخاب کن")
 
         Spacer(Modifier.height(16.dp))
 
@@ -63,7 +61,7 @@ fun MyComposable(context: Context) {
                 destStation
             ).convertPathToUserUnderstandableForm()
         }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text("پیدا کردن بهترین مسیر")
+            Text("برام بهترین مسیرو پیدا کن")
         }
 
         Spacer(Modifier.height(12.dp))

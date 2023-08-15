@@ -30,6 +30,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import com.metroyar.ui.theme.hint
+import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -46,7 +48,7 @@ fun autoCompleteOutLinedTextField(label: String): String {
 
     Column(
         modifier = Modifier
-            .padding(30.dp)
+            .padding(15.dp)
             .fillMaxWidth()
             .clickable { expanded = false }
     ) {
@@ -60,6 +62,7 @@ fun autoCompleteOutLinedTextField(label: String): String {
                 label = {
                     Text(
                         label,
+                        color = hint,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End
                     )

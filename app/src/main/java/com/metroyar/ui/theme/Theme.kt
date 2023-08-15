@@ -3,6 +3,7 @@ package com.metroyar.ui.theme
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -93,11 +94,12 @@ fun MetroYarTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = Color(0xFFC0E8FF).toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                useDarkTheme
         }
     }
     MaterialTheme(
         colorScheme = colors,
-        content = content
+        content = content, typography = Typography
     )
 }
