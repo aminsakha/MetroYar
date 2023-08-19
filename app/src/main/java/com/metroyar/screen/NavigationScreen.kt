@@ -21,53 +21,78 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.fontResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.Result
+import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.composable.autoCompleteOutLinedTextField
 import com.metroyar.ui.theme.line
-
+import com.metroyar.utils.GlobalObjects.destStation
+import com.metroyar.utils.GlobalObjects.resultList
+import com.metroyar.utils.GlobalObjects.startStation
 
 @Composable
 fun NavigationScreen() {
-    MyComposable(LocalContext.current)
+    NavigatingScreen(LocalContext.current)
 }
 
 @Composable
-fun MyComposable(context: Context) {
-    var startStation by remember { mutableStateOf("") }
-    var destStation by remember { mutableStateOf("") }
-    var resultList by remember { mutableStateOf(listOf<String>()) }
+fun NavigatingScreen(context: Context) {
+    var showDialog by remember { mutableStateOf(false) }
+    val focusRequesterDst by remember { mutableStateOf(FocusRequester()) }
+    val focusRequesterSrc by remember { mutableStateOf(FocusRequester()) }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        startStation = autoCompleteOutLinedTextField(label = "ایستگاه مبدا رو انتخاب کن")
+        LaunchedEffect(key1 = startStation.value) {
+            if (startStation.value.isNotEmpty() && destStation.value.isEmpty())
+                focusRequesterDst.requestFocus()
+        }
+        startStation.value =
+            autoCompleteOutLinedTextField(
+                label = "ایستگاه مبدا رو انتخاب کن",
+                focusRequesterSrc, true
+            )
 
         Spacer(Modifier.height(16.dp))
 
-        destStation = autoCompleteOutLinedTextField(label = "ایستگاه مقصد رو انتخاب کن")
+        destStation.value = autoCompleteOutLinedTextField(
+            label = "ایستگاه مقصد رو انتخاب کن",
+            focusRequesterDst, false
+        )
 
         Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
-            resultList = Result(
-                context,
-                startStation,
-                destStation
-            ).convertPathToUserUnderstandableForm()
+            if (startStation.value == destStation.value)
+                showDialog = true
+            else
+                resultList.value = Result(
+                    context,
+                    startStation.value,
+                    destStation.value
+                ).convertPathToUserUnderstandableForm()
         }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text("برام بهترین مسیرو پیدا کن")
         }
-
+        OneBtnAlertDialog(
+            visible = showDialog,
+            onDismissRequest = { showDialog = false },
+            title = stringResource(R.string.notice_text),
+            message = stringResource(R.string.same_input_output_message),
+            okMessage = stringResource(R.string.ok_message)
+        )
         Spacer(Modifier.height(12.dp))
 
         LazyColumn {
-            itemsIndexed(resultList) { index, item ->
+            itemsIndexed(resultList.value) { index, item ->
                 Text(
                     item,
                     Modifier
@@ -75,7 +100,7 @@ fun MyComposable(context: Context) {
                         .fillMaxWidth(),
                     textAlign = TextAlign.End
                 )
-                if (index < resultList.lastIndex)
+                if (index < resultList.value.lastIndex)
                     Divider(color = line, thickness = 1.dp)
             }
         }

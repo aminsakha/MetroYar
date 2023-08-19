@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -31,19 +32,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.metroyar.ui.theme.hint
-import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun autoCompleteOutLinedTextField(label: String): String {
-    val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }
+fun autoCompleteOutLinedTextField(
+    label: String,
+    focusRequester: FocusRequester,
+    isSrc: Boolean
+): String {
+    val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }.toSet()
 
-    var inputText by remember { mutableStateOf("") }
-    var selectedItem by remember { mutableStateOf("") }
+    var inputText by rememberSaveable { mutableStateOf(if (isSrc) GlobalObjects.startStation.value else GlobalObjects.destStation.value) }
+    var selectedItem by rememberSaveable { mutableStateOf(if (isSrc) GlobalObjects.startStation.value else GlobalObjects.destStation.value) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -54,6 +57,7 @@ fun autoCompleteOutLinedTextField(label: String): String {
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
         Column(modifier = Modifier.fillMaxWidth()) {
+
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,6 +73,7 @@ fun autoCompleteOutLinedTextField(label: String): String {
                 },
                 value = inputText,
                 onValueChange = {
+
                     inputText = it
                     expanded = true
                 },
