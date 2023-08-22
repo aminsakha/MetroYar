@@ -1,6 +1,7 @@
 package com.metroyar.screen
 
 import android.content.Context
+import android.os.Vibrator
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
