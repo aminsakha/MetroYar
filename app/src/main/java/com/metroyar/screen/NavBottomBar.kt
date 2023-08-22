@@ -39,6 +39,7 @@ import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
+import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 
@@ -71,10 +72,17 @@ fun NavigationBottom() {
                             }
                             .fillMaxSize()
                             .nonRipple {
+                                playSound(context)
                                 selectedIndex = it.ordinal
-                                val vibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
+                                val vibrator =
+                                    context.getSystemService(VIBRATOR_SERVICE) as Vibrator
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    vibrator.vibrate(VibrationEffect.createOneShot(10, VibrationEffect.DEFAULT_AMPLITUDE))
+                                    vibrator.vibrate(
+                                        VibrationEffect.createOneShot(
+                                            10,
+                                            VibrationEffect.DEFAULT_AMPLITUDE
+                                        )
+                                    )
                                 } else {
                                     vibrator.vibrate(10)
                                 }
