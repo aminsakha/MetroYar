@@ -34,6 +34,13 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
                             stationList.last().id
                         ), i
                     )
+                    setAdjNodesLineNum(
+                        Pair(
+                            stationList.last().id,
+                            stationList[stationList.lastIndex - 1].id,
+                        ), i
+                    )
+
                     setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
                 }
             } catch (_: Exception) {
@@ -41,10 +48,11 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
         }
     }
     connectInterchangeStations(context)
+    connectSideStations(context)
 }
 
 private fun connectInterchangeStations(context: Context) {
-    context.resources.getStringArray(R.array.interchangeStations).forEach {
+    context.resources.getStringArray(R.array.interchangeStations).drop(2).forEach {
         val foundedTwoSameNameStations = findStationObjectFromItsName(it)
         metroGraph.addEdge(foundedTwoSameNameStations[0].id, foundedTwoSameNameStations[1].id)
 
@@ -74,3 +82,102 @@ fun setAdjNodesLineNum(edgePair: Pair<Int, Int>, edgeLineNum: Int) {
 
 fun log(stringMessage: String = "", wantToLogThis: Any?) =
     Log.d(TAG, "$stringMessage : $wantToLogThis")
+
+fun connectSideStations(context: Context) {
+    var stationId = stationList.lastIndex
+    val resources = context.resources
+    for (i in 1..4 step 3) {
+        val curLine = resources.getStringArray(
+            context.resources.getIdentifier(
+                "sideStationsOfLine$i",
+                "array",
+                context.packageName
+            )
+        )
+
+        curLine.forEachIndexed { index, stationName ->
+            try {
+                stationList.add(Station(++stationId, stationName, i))
+                when (i) {
+                    1 -> {
+                        if (index == 0) {
+                            metroGraph.addEdge(
+                                findStationObjectFromItsName("شاهد - باقرشهر")[0].id,
+                                stationList.last().id,
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    findStationObjectFromItsName("شاهد - باقرشهر")[0].id,
+                                    stationList.last().id
+                                ), i
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    stationList.last().id,
+                                    findStationObjectFromItsName("شاهد - باقرشهر")[0].id,
+                                ), i
+                            )
+                        } else {
+                            metroGraph.addEdge(
+                                stationList[stationList.lastIndex - 1].id,
+                                stationList.last().id,
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    stationList[stationList.lastIndex - 1].id,
+                                    stationList.last().id
+                                ), i
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    stationList.last().id,
+                                    stationList[stationList.lastIndex - 1].id,
+                                ), i
+                            )
+                        }
+                    }
+
+                    4 -> {
+                        if (index == 0) {
+                            metroGraph.addEdge(
+                                findStationObjectFromItsName("بیمه")[0].id,
+                                stationList.last().id,
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    findStationObjectFromItsName("بیمه")[0].id,
+                                    stationList.last().id
+                                ), i
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    stationList.last().id,
+                                    findStationObjectFromItsName("بیمه")[0].id,
+                                ), i
+                            )
+                        } else {
+                            metroGraph.addEdge(
+                                stationList[stationList.lastIndex - 1].id,
+                                stationList.last().id,
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    stationList[stationList.lastIndex - 1].id,
+                                    stationList.last().id
+                                ), i
+                            )
+                            setAdjNodesLineNum(
+                                Pair(
+                                    stationList.last().id,
+                                    stationList[stationList.lastIndex - 1].id,
+                                ), i
+                            )
+                        }
+                    }
+                }
+                //setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
+            } catch (_: Exception) {
+            }
+        }
+    }
+}

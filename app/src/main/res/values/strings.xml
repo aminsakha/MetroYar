@@ -169,8 +169,17 @@
         <item>آهنگ</item>
         <item>بسیج</item>
     </string-array>
-
+    <string-array name="sideStationsOfLine4">
+        <item>پایانه ۱ و ۲ فرودگاه مهرآباد</item>
+        <item>پایانه ۴ و ۶ فرودگاه مهرآباد</item>
+    </string-array>
+    <string-array name="sideStationsOfLine1">
+        <item>نمایشگاه شهر آفتاب</item>
+        <item>فرودگاه امام خمینی</item>
+    </string-array>
     <string-array name="interchangeStations">
+        <item>شاهد - باقرشهر</item>
+        <item>بیمه</item>
         <item>شهید بهشتی</item>
         <item>دروازه دولت</item>
         <item>امام خمینی</item>

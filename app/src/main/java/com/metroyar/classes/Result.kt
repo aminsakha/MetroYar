@@ -5,6 +5,8 @@ import com.metroyar.R
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.model.Station
+import com.metroyar.utils.GlobalObjects.adjNodesLineNum
+import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.findStationObjectFromItsId
 import com.metroyar.utils.findStationObjectFromItsName
 import com.metroyar.utils.getDirectionFromInterchangeStations
@@ -31,8 +33,8 @@ class Result(
         val startIsIntersection = intersectionNames.contains(startStationName)
         val destIsIntersection = intersectionNames.contains(destStationName)
 
-        val startIndices = if (startIsIntersection) 0..1 else 0..0
-        val destIndices = if (destIsIntersection) 0..1 else 0..0
+        val startIndices = if (startIsIntersection && startStationName != "بیمه") 0..1 else 0..0
+        val destIndices = if (destIsIntersection && destStationName != "بیمه") 0..1 else 0..0
 
         for (startIndex in startIndices) {
             for (destIndex in destIndices) {
@@ -108,6 +110,27 @@ class Result(
                     tripleOfLinesAndTheirStartAndEndStations.find { it.first == i }!!.second
             }
         }
-        return "wrong"
+
+        val triple =
+            mutableListOf<Triple<Int, String, String>>().apply {
+                add(Triple(1, "شاهد - باقرشهر", "فرودگاه امام خمینی"))
+                add(Triple(4, "بیمه", "پایانه ۴ و ۶ فرودگاه مهرآباد"))
+            }
+        return if (startStation.id < nextStation.id)
+            triple.find {
+                it.first == adjNodesLineNum[Pair(
+                    startStation.id,
+                    nextStation.id
+                )] && (it.second == "شاهد - باقرشهر" || it.second == "بیمه")
+            }!!.third
+        else
+            triple.find {
+                it.first == adjNodesLineNum[Pair(
+                    startStation.id,
+                    nextStation.id
+                )] && (it.second == "شاهد - باقرشهر" || it.second == "بیمه")
+            }!!.second
+
+        //return "wrong"
     }
 }

@@ -151,6 +151,22 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
                 "شهید نجات اللهی (افتتاح نشده)" -> return "به سمت شهید ستاری"
             }
         }
+
+        "شاهد - باقرشهر" -> {
+            when (findStationObjectFromItsId(nextId).name) {
+                "نمایشگاه شهر آفتاب" -> return "به سمت فرودگاه امام خمینی"
+                "حرم مطهر امام خمینی" -> return "به سمت کهریزک"
+                "پالایشگاه" -> return "به سمت تجریش"
+            }
+        }
+
+        "بیمه" -> {
+            when (findStationObjectFromItsId(nextId).name) {
+                "شهرک اکباتان" -> return "به سمت علامه جعفری"
+                "پایانه ۱ و ۲ فرودگاه مهرآباد" -> return "به سمت پایانه ۴ و ۶ فرودگاه مهرآباد"
+                "میدان آزادی" -> return "به سمت شهید کلاهدوز"
+            }
+        }
     }
     return "خطا"
 }

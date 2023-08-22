@@ -8,7 +8,7 @@ object GlobalObjects {
     const val TAG = "testMetroYar"
     val adjNodesLineNum = mutableMapOf<Pair<Int, Int>, Int>()
     val stationList = mutableListOf<Station>()
-    val metroGraph = MetroGraph(151)
+    val metroGraph = MetroGraph(155)
     var startStation = mutableStateOf("")
     var destStation = mutableStateOf("")
     var resultList = mutableStateOf(listOf<String>())
