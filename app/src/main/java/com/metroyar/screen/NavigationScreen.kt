@@ -1,7 +1,6 @@
 package com.metroyar.screen
 
 import android.content.Context
-import android.os.Vibrator
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,8 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,8 +81,8 @@ fun NavigatingScreen(context: Context) {
                     startStation.value,
                     destStation.value
                 ).convertPathToUserUnderstandableForm()
-        }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text("برام بهترین مسیرو پیدا کن")
+        }, modifier = Modifier.align(Alignment.CenterHorizontally), shape = RoundedCornerShape(16.dp)) {
+            Text("برام بهترین مسیرو پیدا کن", color = MaterialTheme.colorScheme.onPrimary)
         }
         OneBtnAlertDialog(
             visible = showDialog,

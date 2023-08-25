@@ -93,7 +93,7 @@ fun MetroYarTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = Color(0xFFC0E8FF).toArgb()
+            window.statusBarColor = Color(0xFF004D66).toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
                 useDarkTheme
         }

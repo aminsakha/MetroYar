@@ -23,14 +23,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import com.metroyar.R
 import com.metroyar.ui.theme.hint
 import com.metroyar.utils.GlobalObjects
 
@@ -71,6 +74,7 @@ fun autoCompleteOutLinedTextField(
                         textAlign = TextAlign.End
                     )
                 },
+                shape = RoundedCornerShape(8.dp),
                 value = inputText,
                 onValueChange = {
 
@@ -87,8 +91,8 @@ fun autoCompleteOutLinedTextField(
                         keyboardController?.show()
                     }) {
                         Icon(
-                            modifier = Modifier.size(24.dp), imageVector = Icons.Rounded.Clear,
-                            contentDescription = "clear", tint = Color.Black
+                            painter = painterResource(id = R.drawable.icons8_trash_128),
+                            contentDescription = "clear",
                         )
                     }
                 }
