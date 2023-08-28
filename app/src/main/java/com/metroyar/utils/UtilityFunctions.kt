@@ -2,18 +2,11 @@ package com.metroyar.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.location.Location
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnCompleteListener
 import com.metroyar.R
 import com.metroyar.model.Station
 import com.metroyar.utils.GlobalObjects.TAG
@@ -130,8 +123,6 @@ fun getCurrentLocation(context: Context) {
             log("res ", location.latitude)
         }
     }
-
     // Request location updates and listen for the callback.
     locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
-
 }

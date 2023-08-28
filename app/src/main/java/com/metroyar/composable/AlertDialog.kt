@@ -13,8 +13,9 @@ fun OneBtnAlertDialog(
     title:String,
     message:String,
     okMessage:String,
-    visible: Boolean,
-    onDismissRequest: () -> Unit
+    visible: Boolean=true,
+    onDismissRequest: () -> Unit={},
+    onConfirm: () -> Unit={}
 ) {
     if (visible) {
         AlertDialog(
@@ -32,7 +33,7 @@ fun OneBtnAlertDialog(
                 )
             },
             confirmButton = {
-                TextButton(onClick = onDismissRequest) {
+                TextButton(onClick = onConfirm) {
                     Text(
                         text = okMessage, modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End
