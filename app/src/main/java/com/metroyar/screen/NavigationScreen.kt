@@ -36,6 +36,7 @@ import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
+import com.metroyar.utils.log
 
 @Composable
 fun NavigationScreen() {
@@ -45,6 +46,7 @@ fun NavigationScreen() {
 @Composable
 fun NavigatingScreen(context: Context) {
     var showDialog by remember { mutableStateOf(false) }
+    var isFindNearestButtonClicked by remember { mutableStateOf(false) }
     val focusRequesterDst by remember { mutableStateOf(FocusRequester()) }
     val focusRequesterSrc by remember { mutableStateOf(FocusRequester()) }
 
@@ -57,6 +59,7 @@ fun NavigatingScreen(context: Context) {
             if (startStation.value.isNotEmpty() && destStation.value.isEmpty())
                 focusRequesterDst.requestFocus()
         }
+
         startStation.value =
             autoCompleteOutLinedTextField(
                 label = "ایستگاه مبدا رو انتخاب کن",
@@ -71,17 +74,30 @@ fun NavigatingScreen(context: Context) {
         )
 
         Spacer(Modifier.height(16.dp))
-
+        if (isFindNearestButtonClicked)
+            PermissionScreen(onPermissionGranted = { log("sate", "granted") })
         Button(onClick = {
-            if (startStation.value == destStation.value)
-                showDialog = true
-            else
-                resultList.value = Result(
-                    context,
-                    startStation.value,
-                    destStation.value
-                ).convertPathToUserUnderstandableForm()
-        }, modifier = Modifier.align(Alignment.CenterHorizontally), shape = RoundedCornerShape(16.dp)) {
+            isFindNearestButtonClicked = true
+        }) {
+            Text(text = "نزدیکترین ایستگاه به من")
+        }
+        Spacer(Modifier.height(8.dp))
+        Button(
+            onClick = {
+                if (startStation.value == destStation.value ||
+                    startStation.value.isEmpty() != destStation.value.isEmpty()
+                )
+                    showDialog = true
+                else
+                    resultList.value = Result(
+                        context,
+                        startStation.value,
+                        destStation.value
+                    ).convertPathToUserUnderstandableForm()
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            shape = RoundedCornerShape(16.dp)
+        ) {
             Text("برام بهترین مسیرو پیدا کن", color = MaterialTheme.colorScheme.onPrimary)
         }
         OneBtnAlertDialog(
