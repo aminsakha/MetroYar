@@ -36,7 +36,7 @@ import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
-import com.metroyar.utils.log
+import com.metroyar.utils.getCurrentLocation
 
 @Composable
 fun NavigationScreen() {
@@ -75,7 +75,9 @@ fun NavigatingScreen(context: Context) {
 
         Spacer(Modifier.height(16.dp))
         if (isFindNearestButtonClicked)
-            PermissionScreen(onPermissionGranted = { log("sate", "granted") })
+            PermissionScreen(onPermissionGranted = {
+                getCurrentLocation(context)
+            })
         Button(onClick = {
             isFindNearestButtonClicked = true
         }) {

@@ -1,36 +1,25 @@
 package com.metroyar.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.location.Location
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
+import android.widget.Toast
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.location.LocationManagerCompat.isLocationEnabled
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnCompleteListener
+import com.metroyar.R
+import com.metroyar.model.Station
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.R
-import com.metroyar.model.Station
-import java.time.format.TextStyle
+
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
     var stationId = -1
@@ -126,4 +115,23 @@ fun connectSideStations(context: Context) {
             }
         }
     }
+}
+
+@SuppressLint("MissingPermission")
+fun getCurrentLocation(context: Context) {
+    val locationProvider = LocationServices.getFusedLocationProviderClient(context)
+    val locationRequest = LocationRequest()
+    locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+    val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val location = locationResult.locations.lastOrNull() ?: return
+            log("res ", location.longitude)
+            log("res ", location.latitude)
+        }
+    }
+
+    // Request location updates and listen for the callback.
+    locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
+
 }
