@@ -8,6 +8,6 @@ import androidx.compose.ui.Alignment
 @Composable
 fun AccountScreen() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Layout()
+
     }
 }

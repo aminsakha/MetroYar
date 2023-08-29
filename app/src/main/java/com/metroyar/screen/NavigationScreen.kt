@@ -37,6 +37,7 @@ import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.getCurrentLocation
+import com.metroyar.utils.isGpsEnabled
 
 @Composable
 fun NavigationScreen() {
@@ -74,10 +75,13 @@ fun NavigatingScreen(context: Context) {
         )
 
         Spacer(Modifier.height(16.dp))
-        if (isFindNearestButtonClicked)
+        if (isFindNearestButtonClicked) {
             PermissionScreen(onPermissionGranted = {
-                getCurrentLocation(context)
-            })
+                if (isGpsEnabled(context))
+                    getCurrentLocation(context)
+            }, onPermissionGrantedNextScreen = { if (!isGpsEnabled(context)) Layout() })
+        }
+
         Button(onClick = {
             isFindNearestButtonClicked = true
         }) {
@@ -104,6 +108,7 @@ fun NavigatingScreen(context: Context) {
         }
         OneBtnAlertDialog(
             visible = showDialog,
+            onConfirm = { showDialog = false },
             onDismissRequest = { showDialog = false },
             title = stringResource(R.string.notice_text),
             message = stringResource(R.string.same_input_output_message),

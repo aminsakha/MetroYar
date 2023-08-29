@@ -2,11 +2,15 @@ package com.metroyar.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.LocationManager
 import android.util.Log
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationRequest.Builder.IMPLICIT_MAX_UPDATE_AGE
+import com.google.android.gms.location.LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.metroyar.R
 import com.metroyar.model.Station
 import com.metroyar.utils.GlobalObjects.TAG
@@ -112,10 +116,16 @@ fun connectSideStations(context: Context) {
 
 @SuppressLint("MissingPermission")
 fun getCurrentLocation(context: Context) {
-    val locationProvider = LocationServices.getFusedLocationProviderClient(context)
-    val locationRequest = LocationRequest()
-    locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    log("got into currloc",true)
+    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,
+       300000
+    )
+        .setWaitForAccurateLocation(true)
+        .setMinUpdateIntervalMillis(1000)
+        .setMaxUpdateDelayMillis(100)
+        .build()
 
+    val locationProvider = LocationServices.getFusedLocationProviderClient(context)
     val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val location = locationResult.locations.lastOrNull() ?: return
@@ -125,4 +135,10 @@ fun getCurrentLocation(context: Context) {
     }
     // Request location updates and listen for the callback.
     locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
+}
+
+@SuppressLint("ServiceCast")
+fun isGpsEnabled(context: Context): Boolean {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
