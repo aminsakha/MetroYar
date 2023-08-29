@@ -1,8 +1,11 @@
 package com.metroyar.utils
 
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.metroyar.classes.MetroGraph
+import com.metroyar.model.Location
 import com.metroyar.model.Station
+import kotlinx.coroutines.flow.MutableStateFlow
 
 object GlobalObjects {
     const val TAG = "testMetroYar"
@@ -10,8 +13,12 @@ object GlobalObjects {
     val stationList = mutableListOf<Station>()
     val metroGraph = MetroGraph(155)
     var startStation = mutableStateOf("")
+    var shouldGetData = mutableStateOf(false)
     var destStation = mutableStateOf("")
+    var UserLongitude = mutableDoubleStateOf(0.0)
+    var UserLatitude = mutableDoubleStateOf(0.0)
     var resultList = mutableStateOf(listOf<String>())
+    val locationFlow = MutableStateFlow<Location?>(null)
     val tripleOfLinesAndTheirStartAndEndStations =
         mutableListOf<Triple<Int, String, String>>().apply {
             add(Triple(1, "تجریش", "کهریزک"))

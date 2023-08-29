@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -16,19 +17,39 @@ import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
+import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.getCurrentLocation
 import com.metroyar.utils.log
+import com.metroyar.utils.setTextFieldsWithApiResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun Layout() {
     val context: Context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
-        if (activityResult.resultCode == RESULT_OK)
-            getCurrentLocation(context)
-        else
-          log("appDebug", "Denied")
+        if (activityResult.resultCode == RESULT_OK) {
+            log("res 2 ", GlobalObjects.UserLatitude.value)
+            coroutineScope.launch {
+                withContext(Dispatchers.Main) {
+                    getCurrentLocation(context)
+                }
+                withContext(Dispatchers.IO) {
+                    locationFlow.collect { location ->
+                        if (location != null) {
+                            log("res 22 ", location.x)
+                            setTextFieldsWithApiResponse(context)
+                        }
+                    }
+                }
+            }
+        } else
+            log("appDebug", "Denied")
     }
     checkLocationSetting(
         context = context,
@@ -44,7 +65,8 @@ fun checkLocationSetting(
     onDisabled: (IntentSenderRequest) -> Unit,
     onEnabled: () -> Unit
 ) {
-    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,
+    val locationRequest = LocationRequest.Builder(
+        Priority.PRIORITY_HIGH_ACCURACY,
         Integer.MAX_VALUE.toLong()
     )
         .setWaitForAccurateLocation(false)

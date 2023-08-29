@@ -12,10 +12,17 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.metroyar.R
+import com.metroyar.model.Location
 import com.metroyar.model.Station
+import com.metroyar.network.MetroYarNeshanApiService
 import com.metroyar.utils.GlobalObjects.TAG
+import com.metroyar.utils.GlobalObjects.UserLatitude
+import com.metroyar.utils.GlobalObjects.UserLongitude
+import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
@@ -116,9 +123,10 @@ fun connectSideStations(context: Context) {
 
 @SuppressLint("MissingPermission")
 fun getCurrentLocation(context: Context) {
-    log("got into currloc",true)
-    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,
-       300000
+    log("got into currloc", true)
+    val locationRequest = LocationRequest.Builder(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        300000
     )
         .setWaitForAccurateLocation(true)
         .setMinUpdateIntervalMillis(1000)
@@ -129,8 +137,10 @@ fun getCurrentLocation(context: Context) {
     val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val location = locationResult.locations.lastOrNull() ?: return
-            log("res ", location.longitude)
-            log("res ", location.latitude)
+            UserLongitude.value = location.longitude
+            UserLatitude.value = location.latitude
+            locationFlow.value = Location(location.longitude, location.latitude)
+            log("res", UserLatitude.value)
         }
     }
     // Request location updates and listen for the callback.
@@ -141,4 +151,15 @@ fun getCurrentLocation(context: Context) {
 fun isGpsEnabled(context: Context): Boolean {
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+}
+
+suspend fun setTextFieldsWithApiResponse(context: Context) {
+    val response =
+        MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
+            latitude = locationFlow.value!!.y,
+            longitude = locationFlow.value!!.x,
+            term = "ایستگاه مترو"
+        )
+
+    log("my last", response.items.first().title)
 }

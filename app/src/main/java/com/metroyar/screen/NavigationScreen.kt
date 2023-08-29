@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +34,18 @@ import com.metroyar.classes.Result
 import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.composable.autoCompleteOutLinedTextField
 import com.metroyar.ui.theme.line
+import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.GlobalObjects.destStation
+import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.getCurrentLocation
 import com.metroyar.utils.isGpsEnabled
+import com.metroyar.utils.log
+import com.metroyar.utils.setTextFieldsWithApiResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun NavigationScreen() {
@@ -50,7 +58,7 @@ fun NavigatingScreen(context: Context) {
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
     val focusRequesterDst by remember { mutableStateOf(FocusRequester()) }
     val focusRequesterSrc by remember { mutableStateOf(FocusRequester()) }
-
+    val coroutineScope = rememberCoroutineScope()
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -77,8 +85,22 @@ fun NavigatingScreen(context: Context) {
         Spacer(Modifier.height(16.dp))
         if (isFindNearestButtonClicked) {
             PermissionScreen(onPermissionGranted = {
-                if (isGpsEnabled(context))
-                    getCurrentLocation(context)
+                if (isGpsEnabled(context)) {
+
+                    coroutineScope.launch {
+                        withContext(Dispatchers.Main) {
+                            getCurrentLocation(context)
+                        }
+                        withContext(Dispatchers.IO) {
+                            locationFlow.collect { location ->
+                                if (location != null) {
+                                    log("res 22 ", location.y)
+                                    setTextFieldsWithApiResponse(context)
+                                }
+                            }
+                        }
+                    }
+                }
             }, onPermissionGrantedNextScreen = { if (!isGpsEnabled(context)) Layout() })
         }
 
