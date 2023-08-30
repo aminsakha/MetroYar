@@ -43,7 +43,7 @@ fun Layout() {
                     locationFlow.collect { location ->
                         if (location != null) {
                             log("res 22 ", location.x)
-                            setTextFieldsWithApiResponse(context)
+                            setTextFieldsWithApiResponse()
                         }
                     }
                 }

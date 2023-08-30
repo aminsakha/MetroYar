@@ -34,7 +34,6 @@ import com.metroyar.classes.Result
 import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.composable.autoCompleteOutLinedTextField
 import com.metroyar.ui.theme.line
-import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.GlobalObjects.resultList
@@ -95,7 +94,7 @@ fun NavigatingScreen(context: Context) {
                             locationFlow.collect { location ->
                                 if (location != null) {
                                     log("res 22 ", location.y)
-                                    setTextFieldsWithApiResponse(context)
+                                    setTextFieldsWithApiResponse()
                                 }
                             }
                         }

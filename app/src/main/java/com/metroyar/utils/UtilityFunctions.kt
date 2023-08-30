@@ -6,8 +6,6 @@ import android.location.LocationManager
 import android.util.Log
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationRequest.Builder.IMPLICIT_MAX_UPDATE_AGE
-import com.google.android.gms.location.LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -21,8 +19,6 @@ import com.metroyar.utils.GlobalObjects.UserLongitude
 import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
@@ -153,7 +149,7 @@ fun isGpsEnabled(context: Context): Boolean {
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
 
-suspend fun setTextFieldsWithApiResponse(context: Context) {
+suspend fun setTextFieldsWithApiResponse() {
     val response =
         MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
             latitude = locationFlow.value!!.y,
