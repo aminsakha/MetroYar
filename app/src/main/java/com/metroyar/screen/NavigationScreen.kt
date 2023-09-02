@@ -20,7 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,18 +34,10 @@ import com.metroyar.classes.Result
 import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.composable.autoCompleteOutLinedTextField
 import com.metroyar.ui.theme.line
-import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.GlobalObjects.destStation
-import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
-import com.metroyar.utils.getCurrentLocation
-import com.metroyar.utils.isGpsEnabled
-import com.metroyar.utils.log
-import com.metroyar.utils.setTextFieldsWithApiResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.metroyar.utils.Test
 
 @Composable
 fun NavigationScreen() {
@@ -54,54 +46,60 @@ fun NavigationScreen() {
 
 @Composable
 fun NavigatingScreen(context: Context) {
+    var srcInputText by remember { mutableStateOf(startStation) }
+
+    var dstInputText by remember { mutableStateOf(destStation) }
+
+
     var showDialog by remember { mutableStateOf(false) }
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
     val focusRequesterDst by remember { mutableStateOf(FocusRequester()) }
     val focusRequesterSrc by remember { mutableStateOf(FocusRequester()) }
-    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LaunchedEffect(key1 = startStation.value) {
-            if (startStation.value.isNotEmpty() && destStation.value.isEmpty())
-                focusRequesterDst.requestFocus()
-        }
+//        LaunchedEffect(key1 = srcInputText) {
+//            if (srcInputText.isNotEmpty() && dstInputText.isEmpty())
+//                focusRequesterDst.requestFocus()
+//        }
 
-        startStation.value =
-            autoCompleteOutLinedTextField(
-                label = "ایستگاه مبدا رو انتخاب کن",
-                focusRequesterSrc, true
-            )
+
+        autoCompleteOutLinedTextField(
+            label = "ایستگاه مبدا رو انتخاب کن",
+            focusRequester = focusRequesterSrc,
+            value = srcInputText,
+            onValueChange = {
+                srcInputText = it
+            },
+            onItemSelectedChange = {
+                srcInputText = it
+                startStation = srcInputText
+            },
+            onTrashIconClick = { srcInputText = "" }
+        )
 
         Spacer(Modifier.height(16.dp))
 
-        destStation.value = autoCompleteOutLinedTextField(
+        autoCompleteOutLinedTextField(
             label = "ایستگاه مقصد رو انتخاب کن",
-            focusRequesterDst, false
+            focusRequester = focusRequesterDst,
+            value = dstInputText,
+            onValueChange = {
+                dstInputText = it
+            },
+            onItemSelectedChange = {
+                dstInputText = it
+                destStation = dstInputText
+            },
+            onTrashIconClick = { dstInputText = "" }
         )
 
         Spacer(Modifier.height(16.dp))
         if (isFindNearestButtonClicked) {
-            PermissionScreen(onPermissionGranted = {
-                if (isGpsEnabled(context)) {
-
-                    coroutineScope.launch {
-                        withContext(Dispatchers.Main) {
-                            getCurrentLocation(context)
-                        }
-                        withContext(Dispatchers.IO) {
-                            locationFlow.collect { location ->
-                                if (location != null) {
-                                    log("res 22 ", location.y)
-                                    setTextFieldsWithApiResponse(context)
-                                }
-                            }
-                        }
-                    }
-                }
-            }, onPermissionGrantedNextScreen = { if (!isGpsEnabled(context)) Layout() })
+            Test(context)
         }
 
         Button(onClick = {
@@ -112,15 +110,15 @@ fun NavigatingScreen(context: Context) {
         Spacer(Modifier.height(8.dp))
         Button(
             onClick = {
-                if (startStation.value == destStation.value ||
-                    startStation.value.isEmpty() != destStation.value.isEmpty()
+                if (srcInputText == dstInputText ||
+                    srcInputText.isEmpty() != dstInputText.isEmpty()
                 )
                     showDialog = true
                 else
                     resultList.value = Result(
                         context,
-                        startStation.value,
-                        destStation.value
+                        srcInputText,
+                        dstInputText
                     ).convertPathToUserUnderstandableForm()
             },
             modifier = Modifier.align(Alignment.CenterHorizontally),

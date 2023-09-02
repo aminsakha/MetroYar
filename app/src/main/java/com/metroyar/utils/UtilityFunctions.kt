@@ -4,24 +4,34 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationRequest.Builder.IMPLICIT_MAX_UPDATE_AGE
-import com.google.android.gms.location.LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.metroyar.R
+import com.metroyar.composable.SuggestionStationsDialog
 import com.metroyar.model.Location
 import com.metroyar.model.Station
 import com.metroyar.network.MetroYarNeshanApiService
+import com.metroyar.screen.Layout
+import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.UserLatitude
 import com.metroyar.utils.GlobalObjects.UserLongitude
 import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.GlobalObjects.metroGraph
+import com.metroyar.utils.GlobalObjects.pairOfClosestStationsFlow
 import com.metroyar.utils.GlobalObjects.stationList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
@@ -137,10 +147,9 @@ fun getCurrentLocation(context: Context) {
     val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val location = locationResult.locations.lastOrNull() ?: return
-            UserLongitude.value = location.longitude
-            UserLatitude.value = location.latitude
+            UserLongitude = location.longitude
+            UserLatitude = location.latitude
             locationFlow.value = Location(location.longitude, location.latitude)
-            log("res", UserLatitude.value)
         }
     }
     // Request location updates and listen for the callback.
@@ -153,13 +162,46 @@ fun isGpsEnabled(context: Context): Boolean {
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
 
-suspend fun setTextFieldsWithApiResponse(context: Context) {
+suspend fun setPairOfClosestStationsFlow() {
     val response =
         MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
             latitude = locationFlow.value!!.y,
             longitude = locationFlow.value!!.x,
             term = "ایستگاه مترو"
         )
+    pairOfClosestStationsFlow.value = Pair(response.items.first().title, response.items[1].title)
+}
 
-    log("my last", response.items.first().title)
+@Composable
+fun Test(context: Context) {
+    val coroutineScope = rememberCoroutineScope()
+    var pair by remember { mutableStateOf(Pair("", "")) }
+    var showDialog by remember { mutableStateOf(false) }
+    PermissionScreen(onPermissionGranted = {
+        if (isGpsEnabled(context)) {
+            coroutineScope.launch {
+                withContext(Dispatchers.Main) {
+                    getCurrentLocation(context)
+                }
+                withContext(Dispatchers.IO) {
+                    log("got into IO", true)
+                    locationFlow.collect { location ->
+                        if (location != null) {
+                            log("loc is not null", location)
+                            setPairOfClosestStationsFlow()
+                        }
+                        pairOfClosestStationsFlow.collect { res ->
+                            if (res != null) {
+                                pair = res
+                                showDialog = true
+                                log("res is not null", res)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }, onPermissionGrantedNextScreen = { if (!isGpsEnabled(context)) Layout() })
+    if (showDialog)
+        SuggestionStationsDialog(pair = pair)
 }

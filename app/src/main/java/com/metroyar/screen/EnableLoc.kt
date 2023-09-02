@@ -21,7 +21,6 @@ import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.getCurrentLocation
 import com.metroyar.utils.log
-import com.metroyar.utils.setTextFieldsWithApiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,7 +33,6 @@ fun Layout() {
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
         if (activityResult.resultCode == RESULT_OK) {
-            log("res 2 ", GlobalObjects.UserLatitude.value)
             coroutineScope.launch {
                 withContext(Dispatchers.Main) {
                     getCurrentLocation(context)
@@ -42,8 +40,7 @@ fun Layout() {
                 withContext(Dispatchers.IO) {
                     locationFlow.collect { location ->
                         if (location != null) {
-                            log("res 22 ", location.x)
-                            setTextFieldsWithApiResponse(context)
+                            //setTextFieldsWithApiResponse()
                         }
                     }
                 }
