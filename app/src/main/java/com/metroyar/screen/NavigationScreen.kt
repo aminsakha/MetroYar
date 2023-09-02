@@ -37,6 +37,7 @@ import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
+import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.Test
 
 @Composable
@@ -61,10 +62,8 @@ fun NavigatingScreen(context: Context) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        LaunchedEffect(key1 = srcInputText) {
-//            if (srcInputText.isNotEmpty() && dstInputText.isEmpty())
-//                focusRequesterDst.requestFocus()
-//        }
+        if (stationList.map { it.name }.contains(srcInputText) && dstInputText.isEmpty())
+            focusRequesterDst.requestFocus()
 
 
         autoCompleteOutLinedTextField(
