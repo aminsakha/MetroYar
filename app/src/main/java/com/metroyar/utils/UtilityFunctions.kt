@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -17,22 +16,17 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.metroyar.R
-import com.metroyar.composable.SuggestionStationsDialog
 import com.metroyar.model.Location
 import com.metroyar.model.Station
 import com.metroyar.network.MetroYarNeshanApiService
-import com.metroyar.screen.Layout
+import com.metroyar.screen.EnableLocationDialog
 import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.UserLatitude
 import com.metroyar.utils.GlobalObjects.UserLongitude
-import com.metroyar.utils.GlobalObjects.locationFlow
 import com.metroyar.utils.GlobalObjects.metroGraph
-import com.metroyar.utils.GlobalObjects.pairOfClosestStationsFlow
 import com.metroyar.utils.GlobalObjects.stationList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlin.system.measureTimeMillis
 
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
@@ -132,7 +126,7 @@ fun connectSideStations(context: Context) {
 }
 
 @SuppressLint("MissingPermission")
-fun getCurrentLocation(context: Context) {
+fun getCurrentLocation(context: Context, onLocationChange: (Location) -> Unit) {
     log("got into currloc", true)
     val locationRequest = LocationRequest.Builder(
         Priority.PRIORITY_HIGH_ACCURACY,
@@ -144,16 +138,18 @@ fun getCurrentLocation(context: Context) {
         .build()
 
     val locationProvider = LocationServices.getFusedLocationProviderClient(context)
-    val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            val location = locationResult.locations.lastOrNull() ?: return
-            UserLongitude = location.longitude
-            UserLatitude = location.latitude
-            locationFlow.value = Location(location.longitude, location.latitude)
+    val timeInMillis = measureTimeMillis {
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                val location = locationResult.locations.lastOrNull() ?: return
+                log("lat", UserLatitude)
+                onLocationChange.invoke(Location(location.longitude, location.latitude))
+            }
         }
+        // Request location updates and listen for the callback.
+        locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
     }
-    // Request location updates and listen for the callback.
-    locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
+    log("time", timeInMillis)
 }
 
 @SuppressLint("ServiceCast")
@@ -162,46 +158,81 @@ fun isGpsEnabled(context: Context): Boolean {
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
 
-suspend fun setPairOfClosestStationsFlow() {
+suspend fun setPairOfClosestStationsFlow(
+    location: Location,
+    onPairChange: (Pair<String, String>) -> Unit
+) {
     val response =
         MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
-            latitude = locationFlow.value!!.y,
-            longitude = locationFlow.value!!.x,
+            latitude = location.y,
+            longitude = location.x,
             term = "ایستگاه مترو"
         )
-    pairOfClosestStationsFlow.value = Pair(response.items.first().title, response.items[1].title)
+    onPairChange.invoke(Pair(response.items.first().title, response.items[1].title))
+    log("into set", response.count)
 }
 
+//@Composable
+//fun Test(context: Context) {
+//    val coroutineScope = rememberCoroutineScope()
+//    var pair by remember { mutableStateOf(Pair("", "")) }
+//    var showDialog by remember { mutableStateOf(false) }
+//    PermissionScreen(onPermissionGranted = {
+//        if (isGpsEnabled(context)) {
+//            coroutineScope.launch {
+//                withContext(Dispatchers.Main) {
+//                    getCurrentLocation(context)
+//                }
+//                withContext(Dispatchers.IO) {
+//                    log("got into IO", true)
+//                    locationFlow.collect { location ->
+//                        if (location != null) {
+//                            log("loc is not null", location)
+//                            setPairOfClosestStationsFlow()
+//                        }
+//                        pairOfClosestStationsFlow.collect { res ->
+//                            if (res != null) {
+//                                pair = res
+//                                showDialog = true
+//                                log("res is not null", res)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }, onPermissionGrantedNextScreen = { if (!isGpsEnabled(context))  })
+//    if (showDialog)
+//        SuggestionStationsDialog(pair = pair)
+//}
+
 @Composable
-fun Test(context: Context) {
-    val coroutineScope = rememberCoroutineScope()
+fun Test2(context: Context) {
+    var isLocEnabled by remember { mutableStateOf(false) }
+    var location by remember { mutableStateOf(Location(0.0, 0.0)) }
     var pair by remember { mutableStateOf(Pair("", "")) }
-    var showDialog by remember { mutableStateOf(false) }
-    PermissionScreen(onPermissionGranted = {
-        if (isGpsEnabled(context)) {
-            coroutineScope.launch {
-                withContext(Dispatchers.Main) {
-                    getCurrentLocation(context)
+    PermissionScreen(
+        onPermissionGranted = {
+            if (!isGpsEnabled(context))
+                EnableLocationDialog {
+                    isLocEnabled = true
+                    log("enabled got 2", true)
                 }
-                withContext(Dispatchers.IO) {
-                    log("got into IO", true)
-                    locationFlow.collect { location ->
-                        if (location != null) {
-                            log("loc is not null", location)
-                            setPairOfClosestStationsFlow()
-                        }
-                        pairOfClosestStationsFlow.collect { res ->
-                            if (res != null) {
-                                pair = res
-                                showDialog = true
-                                log("res is not null", res)
-                            }
-                        }
-                    }
-                }
-            }
+            else
+                isLocEnabled = true
         }
-    }, onPermissionGrantedNextScreen = { if (!isGpsEnabled(context)) Layout() })
-    if (showDialog)
-        SuggestionStationsDialog(pair = pair)
+    )
+    // LaunchedEffect(key1 = isLocEnabled) {
+    if (isLocEnabled) {
+        getCurrentLocation(context, onLocationChange = { location = it })
+        log("isLocEnabled", location)
+    }
+    // }
+
+    LaunchedEffect(key1 = location) {
+        if (location?.x != 0.0) {
+            setPairOfClosestStationsFlow(location = location, onPairChange = { pair = it })
+            log("x is not 0", location)
+        }
+    }
 }

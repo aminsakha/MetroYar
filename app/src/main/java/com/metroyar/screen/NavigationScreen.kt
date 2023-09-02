@@ -16,11 +16,9 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +36,7 @@ import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.utils.Test
+import com.metroyar.utils.Test2
 
 @Composable
 fun NavigationScreen() {
@@ -48,9 +46,7 @@ fun NavigationScreen() {
 @Composable
 fun NavigatingScreen(context: Context) {
     var srcInputText by remember { mutableStateOf(startStation) }
-
     var dstInputText by remember { mutableStateOf(destStation) }
-
 
     var showDialog by remember { mutableStateOf(false) }
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
@@ -64,7 +60,6 @@ fun NavigatingScreen(context: Context) {
     ) {
         if (stationList.map { it.name }.contains(srcInputText) && dstInputText.isEmpty())
             focusRequesterDst.requestFocus()
-
 
         autoCompleteOutLinedTextField(
             label = "ایستگاه مبدا رو انتخاب کن",
@@ -98,7 +93,7 @@ fun NavigatingScreen(context: Context) {
 
         Spacer(Modifier.height(16.dp))
         if (isFindNearestButtonClicked) {
-            Test(context)
+            Test2(context)
         }
 
         Button(onClick = {

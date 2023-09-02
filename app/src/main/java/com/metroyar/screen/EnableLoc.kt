@@ -17,34 +17,17 @@ import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
-import com.metroyar.utils.GlobalObjects
-import com.metroyar.utils.GlobalObjects.locationFlow
-import com.metroyar.utils.getCurrentLocation
 import com.metroyar.utils.log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
-fun Layout() {
+fun EnableLocationDialog(onValueChange: (String) -> Unit) {
     val context: Context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
         if (activityResult.resultCode == RESULT_OK) {
-            coroutineScope.launch {
-                withContext(Dispatchers.Main) {
-                    getCurrentLocation(context)
-                }
-                withContext(Dispatchers.IO) {
-                    locationFlow.collect { location ->
-                        if (location != null) {
-                            //setTextFieldsWithApiResponse()
-                        }
-                    }
-                }
-            }
+            onValueChange.invoke("")
         } else
             log("appDebug", "Denied")
     }

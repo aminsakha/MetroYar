@@ -8,20 +8,18 @@ import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.utils.log
 import com.ramcosta.composedestinations.annotation.Destination
 
-
-@Destination
 @Composable
 fun PermissionScreen(
-    onPermissionGranted: () -> Unit = {},
-    onPermissionGrantedNextScreen: @Composable () -> Unit = {}
+    onPermissionGranted: @Composable () -> Unit = {},
+    onLocationDataReceived:  () -> Unit = {}
 ) =
-    RequestSmsPermission(onPermissionGranted, onPermissionGrantedNextScreen)
+    RequestSmsPermission(onPermissionGranted, onLocationDataReceived)
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun RequestSmsPermission(
-    onPermissionGranted: () -> Unit = {},
-    onPermissionGrantedNextScreen: @Composable () -> Unit = {}
+    onPermissionGranted: @Composable () -> Unit = {},
+    onLocationDataReceived: () -> Unit = {}
 ) {
     val locationPermissionsState = rememberMultiplePermissionsState(
         listOf(
@@ -31,13 +29,13 @@ private fun RequestSmsPermission(
     )
 
     if (locationPermissionsState.allPermissionsGranted) {
-        log("got into persmission",true)
+        log("got into persmission", true)
         onPermissionGranted()
-        onPermissionGrantedNextScreen()
+        onLocationDataReceived()
     } else {
         OneBtnAlertDialog(
             onConfirm = { locationPermissionsState.launchMultiplePermissionRequest() },
-            title = "مکان",
+            title = "اجازه مکان",
             message = "مکانتو بده دیگه",
             okMessage = "اوکیه"
         )

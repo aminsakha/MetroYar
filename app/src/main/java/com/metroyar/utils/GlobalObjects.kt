@@ -17,7 +17,8 @@ object GlobalObjects {
     var UserLongitude =0.0
     var UserLatitude =0.0
     var resultList = mutableStateOf(listOf<String>())
-    val locationFlow = MutableStateFlow<Location?>(null)
+   // val locationFlow = MutableStateFlow<Location?>(null)
+    //var locationOfUser : Location?=null
     val pairOfClosestStationsFlow = MutableStateFlow<Pair<String,String>?>(null)
     val tripleOfLinesAndTheirStartAndEndStations =
         mutableListOf<Triple<Int, String, String>>().apply {
