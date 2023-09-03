@@ -159,9 +159,9 @@ fun isGpsEnabled(context: Context): Boolean {
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
 
-suspend fun setPairOfClosestStationsFlow(
+suspend fun setPairOfClosestStations(
     location: Location,
-    onPairChange: (Pair<String, String>) -> Unit
+    onPairChange: (Triple<String, String, String>) -> Unit
 ) {
     val response =
         MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
@@ -169,50 +169,22 @@ suspend fun setPairOfClosestStationsFlow(
             longitude = location.x,
             term = "ایستگاه مترو"
         )
-    onPairChange.invoke(Pair(response.items.first().title, response.items[1].title))
+    onPairChange.invoke(
+        Triple(
+            response.items.first().title,
+            response.items[1].title,
+            response.items[2].title
+        )
+    )
     log("into set", response.count)
 }
-
-//@Composable
-//fun Test(context: Context) {
-//    val coroutineScope = rememberCoroutineScope()
-//    var pair by remember { mutableStateOf(Pair("", "")) }
-//    var showDialog by remember { mutableStateOf(false) }
-//    PermissionScreen(onPermissionGranted = {
-//        if (isGpsEnabled(context)) {
-//            coroutineScope.launch {
-//                withContext(Dispatchers.Main) {
-//                    getCurrentLocation(context)
-//                }
-//                withContext(Dispatchers.IO) {
-//                    log("got into IO", true)
-//                    locationFlow.collect { location ->
-//                        if (location != null) {
-//                            log("loc is not null", location)
-//                            setPairOfClosestStationsFlow()
-//                        }
-//                        pairOfClosestStationsFlow.collect { res ->
-//                            if (res != null) {
-//                                pair = res
-//                                showDialog = true
-//                                log("res is not null", res)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }, onPermissionGrantedNextScreen = { if (!isGpsEnabled(context))  })
-//    if (showDialog)
-//        SuggestionStationsDialog(pair = pair)
-//}
 
 @Composable
 fun Test2(context: Context) {
     var isLoading by remember { mutableStateOf(true) }
     var isLocEnabled by remember { mutableStateOf(false) }
     var location by remember { mutableStateOf(Location(0.0, 0.0)) }
-    var pair by remember { mutableStateOf(Pair("", "")) }
+    var triple by remember { mutableStateOf(Triple("", "", "")) }
     PermissionScreen(
         onPermissionGranted = {
             if (!isGpsEnabled(context))
@@ -234,14 +206,41 @@ fun Test2(context: Context) {
 
     LaunchedEffect(key1 = location) {
         if (location?.x != 0.0) {
-            setPairOfClosestStationsFlow(location = location, onPairChange = { pair = it })
+            setPairOfClosestStations(location = location, onPairChange = { triple = it })
             log("x is not 0", location)
         }
     }
 
-    if (pair.first != ""){
-        isLoading=false
-        SuggestionStationsDialog(pair = pair)
+    if (triple.first != "") {
+        isLoading = false
+        SuggestionStationsDialog(pair = findMatchingNames(triple))
     }
 
+}
+
+fun findMatchingNames(triple: Triple<String, String, String>): Pair<String, String> {
+    val matchingNames = mutableSetOf<String>()
+
+    // Check for a match with triple.first
+    val firstName =
+        stationList.map { it.name }.find { it.contains(triple.first, ignoreCase = true) }
+    if (firstName != null) {
+        matchingNames.add(firstName)
+    }
+
+    // Check for a match with triple.second
+    val secondName =
+        stationList.map { it.name }.find { it.contains(triple.second, ignoreCase = true) }
+    if (secondName != null) {
+        matchingNames.add(secondName)
+    }
+
+    // Check for a match with triple.third
+    val thirdName =
+        stationList.map { it.name }.find { it.contains(triple.third, ignoreCase = true) }
+    if (thirdName != null) {
+        matchingNames.add(thirdName)
+    }
+
+    return Pair(matchingNames.toList()[0], matchingNames.toList()[1])
 }
