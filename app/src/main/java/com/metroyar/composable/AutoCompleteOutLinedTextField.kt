@@ -8,43 +8,41 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import com.metroyar.R
 import com.metroyar.ui.theme.hint
 import com.metroyar.utils.GlobalObjects
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun autoCompleteOutLinedTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    onItemSelectedChange: (String) -> Unit,
+    onTrashIconClick: (String) -> Unit,
     label: String,
     focusRequester: FocusRequester,
-    isSrc: Boolean
-): String {
+) {
     val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }.toSet()
-
-    var inputText by rememberSaveable { mutableStateOf(if (isSrc) GlobalObjects.startStation.value else GlobalObjects.destStation.value) }
-    var selectedItem by rememberSaveable { mutableStateOf(if (isSrc) GlobalObjects.startStation.value else GlobalObjects.destStation.value) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -52,7 +50,7 @@ fun autoCompleteOutLinedTextField(
     Column(
         modifier = Modifier
             .padding(15.dp)
-            .fillMaxWidth()
+            .fillMaxWidth().focusRequester(focusRequester)
             .clickable { expanded = false }
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -71,10 +69,10 @@ fun autoCompleteOutLinedTextField(
                         textAlign = TextAlign.End
                     )
                 },
-                value = inputText,
+                shape = RoundedCornerShape(8.dp),
+                value = value,
                 onValueChange = {
-
-                    inputText = it
+                    onValueChange.invoke(it)
                     expanded = true
                 },
                 textStyle = TextStyle(textAlign = TextAlign.End, fontSize = 16.sp),
@@ -82,13 +80,13 @@ fun autoCompleteOutLinedTextField(
                 trailingIcon = {
                     IconButton(onClick = {
                         expanded = !expanded
-                        inputText = ""
+                        onTrashIconClick.invoke("")
                         focusRequester.requestFocus()
                         keyboardController?.show()
                     }) {
                         Icon(
-                            modifier = Modifier.size(24.dp), imageVector = Icons.Rounded.Clear,
-                            contentDescription = "clear", tint = Color.Black
+                            painter = painterResource(id = R.drawable.icons8_trash_128),
+                            contentDescription = "clear",
                         )
                     }
                 }
@@ -105,13 +103,12 @@ fun autoCompleteOutLinedTextField(
                             .heightIn(max = 150.dp)
                             .background(MaterialTheme.colorScheme.secondaryContainer)
                     ) {
-                        if (inputText.isNotEmpty()) {
-                            items(dropDownStationNamesList.filter { it.contains(inputText) }) { title ->
+                        if (value.isNotEmpty()) {
+                            items(dropDownStationNamesList.filter { it.contains(value) }) { title ->
                                 CategoryItems(title = title) {
-                                    inputText = it
+                                    onItemSelectedChange.invoke(title)
                                     expanded = false
                                     focusManager.clearFocus()
-                                    selectedItem = it
                                 }
                             }
                         }
@@ -120,7 +117,6 @@ fun autoCompleteOutLinedTextField(
             }
         }
     }
-    return selectedItem
 }
 
 @Composable

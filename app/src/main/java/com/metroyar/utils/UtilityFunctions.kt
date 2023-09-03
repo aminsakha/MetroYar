@@ -1,12 +1,32 @@
 package com.metroyar.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.location.LocationManager
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.metroyar.R
+import com.metroyar.composable.CircularProgressBar
+import com.metroyar.composable.SuggestionStationsDialog
+import com.metroyar.model.Location
+import com.metroyar.model.Station
+import com.metroyar.network.MetroYarNeshanApiService
+import com.metroyar.screen.EnableLocationDialog
+import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.R
-import com.metroyar.model.Station
+
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
     var stationId = -1
@@ -84,100 +104,142 @@ fun log(stringMessage: String = "", wantToLogThis: Any?) =
     Log.d(TAG, "$stringMessage : $wantToLogThis")
 
 fun connectSideStations(context: Context) {
-    var stationId = stationList.lastIndex
     val resources = context.resources
-    for (i in 1..4 step 3) {
+    arrayOf(1, 4).forEach { lineNum ->
         val curLine = resources.getStringArray(
-            context.resources.getIdentifier(
-                "sideStationsOfLine$i",
-                "array",
-                context.packageName
-            )
+            resources.getIdentifier("sideStationsOfLine$lineNum", "array", context.packageName)
         )
-
         curLine.forEachIndexed { index, stationName ->
+            stationList.add(Station(stationList.size, stationName, lineNum))
+            val firstStationName = if (lineNum == 1) "شاهد - باقرشهر" else "بیمه"
+            val firstStationId =
+                if (index == 0) findStationObjectFromItsName(firstStationName)[0].id else stationList[stationList.lastIndex - 1].id
             try {
-                stationList.add(Station(++stationId, stationName, i))
-                when (i) {
-                    1 -> {
-                        if (index == 0) {
-                            metroGraph.addEdge(
-                                findStationObjectFromItsName("شاهد - باقرشهر")[0].id,
-                                stationList.last().id,
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    findStationObjectFromItsName("شاهد - باقرشهر")[0].id,
-                                    stationList.last().id
-                                ), i
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    stationList.last().id,
-                                    findStationObjectFromItsName("شاهد - باقرشهر")[0].id,
-                                ), i
-                            )
-                        } else {
-                            metroGraph.addEdge(
-                                stationList[stationList.lastIndex - 1].id,
-                                stationList.last().id,
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    stationList[stationList.lastIndex - 1].id,
-                                    stationList.last().id
-                                ), i
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    stationList.last().id,
-                                    stationList[stationList.lastIndex - 1].id,
-                                ), i
-                            )
-                        }
-                    }
-
-                    4 -> {
-                        if (index == 0) {
-                            metroGraph.addEdge(
-                                findStationObjectFromItsName("بیمه")[0].id,
-                                stationList.last().id,
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    findStationObjectFromItsName("بیمه")[0].id,
-                                    stationList.last().id
-                                ), i
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    stationList.last().id,
-                                    findStationObjectFromItsName("بیمه")[0].id,
-                                ), i
-                            )
-                        } else {
-                            metroGraph.addEdge(
-                                stationList[stationList.lastIndex - 1].id,
-                                stationList.last().id,
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    stationList[stationList.lastIndex - 1].id,
-                                    stationList.last().id
-                                ), i
-                            )
-                            setAdjNodesLineNum(
-                                Pair(
-                                    stationList.last().id,
-                                    stationList[stationList.lastIndex - 1].id,
-                                ), i
-                            )
-                        }
-                    }
-                }
-                //setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
+                metroGraph.addEdge(firstStationId, stationList.last().id)
+                setAdjNodesLineNum(Pair(firstStationId, stationList.last().id), lineNum)
+                setAdjNodesLineNum(Pair(stationList.last().id, firstStationId), lineNum)
             } catch (_: Exception) {
             }
         }
     }
+}
+
+@SuppressLint("MissingPermission")
+fun getCurrentLocation(context: Context, onLocationChange: (Location) -> Unit) {
+    log("got into getCurrentLocation", true)
+    val locationRequest = LocationRequest.Builder(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        300000
+    )
+        .setWaitForAccurateLocation(true)
+        .setMinUpdateIntervalMillis(1000)
+        .setMaxUpdateDelayMillis(100)
+        .build()
+
+    val locationProvider = LocationServices.getFusedLocationProviderClient(context)
+    val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val location = locationResult.locations.lastOrNull() ?: return
+            onLocationChange.invoke(Location(location.longitude, location.latitude))
+        }
+    }
+    // Request location updates and listen for the callback.
+    locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
+}
+
+@SuppressLint("ServiceCast")
+fun isGpsEnabled(context: Context): Boolean {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+}
+
+suspend fun setPairOfClosestStations(
+    location: Location,
+    onPairChange: (Pair<String, String>) -> Unit
+) {
+    val response =
+        MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
+            latitude = location.y,
+            longitude = location.x,
+            term = "ایستگاه مترو"
+        )
+    val filteredList = response.items.filter { it.type == "subway_station" }
+    val pair = Pair(
+        filteredList.getOrNull(0)?.title ?: "",
+        filteredList.getOrNull(1)?.title ?: ""
+    )
+    log("filter list", pair)
+    onPairChange.invoke(pair)
+}
+
+@Composable
+fun Test2(context: Context, onDstClicked: (String) -> Unit, onSrcClicked: (String) -> Unit) {
+    var showDialog by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(true) }
+    var isLocEnabled by remember { mutableStateOf(false) }
+    var location by remember { mutableStateOf(Location(0.0, 0.0)) }
+    var pair by remember { mutableStateOf(Pair("", "")) }
+    PermissionScreen(
+        onPermissionGranted = {
+            if (!isGpsEnabled(context))
+                EnableLocationDialog {
+                    isLocEnabled = true
+                    log("enabled got 2", true)
+                }
+            else
+                isLocEnabled = true
+        }
+    )
+
+    if (isLocEnabled && location?.x == 0.0) {
+        CircularProgressBar(visible = isLoading)
+        getCurrentLocation(context, onLocationChange = { location = it })
+        log("isLocEnabled", location)
+    }
+
+    LaunchedEffect(key1 = location) {
+        if (location?.x != 0.0) {
+            setPairOfClosestStations(location = location, onPairChange = { pair = it })
+            log("x is not 0", location)
+        }
+    }
+
+    if (pair.first != "") {
+        isLoading = false
+        log("my pair", pair)
+        SuggestionStationsDialog(
+            onDismissRequest = { showDialog = false },
+            pair = findMatchingNames(pair),
+            visible = showDialog,
+            srcOnclick = {
+                showDialog = false
+                onSrcClicked.invoke(it)
+            },
+            dstOnClicked = {
+                showDialog = false
+                onDstClicked.invoke(it)
+            })
+    }
+}
+
+fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
+    val matchingNames = mutableSetOf<String>()
+
+    // Check for a match with triple.first
+    val firstName =
+        stationList.map { it.name }.find { pair.first.contains(it, ignoreCase = true) }
+    if (firstName != null) {
+        matchingNames.add(firstName)
+    }
+
+    val secondName =
+        stationList.map { it.name }.find { pair.second.contains(it, ignoreCase = true) }
+    if (secondName != null) {
+        matchingNames.add(secondName)
+    }
+
+    return Pair(
+        matchingNames.toList().getOrNull(0) ?: "",
+        matchingNames.toList().getOrNull(1) ?: ""
+    )
 }

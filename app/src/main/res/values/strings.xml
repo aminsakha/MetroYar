@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">مترویار</string>
-    <string name="notice_text">عه</string>
-    <string name="same_input_output_message">"🙄 اشتباهی مبدا و مقصد رو یکی زدی "</string>
+    <string name="notice_text">🙄</string>
+    <string name="same_input_output_message">" اشتباهی مبدا و مقصد رو یکی زدی "</string>
     <string name="ok_message">حله</string>
 
     <string-array name="stationsOnLine1">

@@ -79,12 +79,12 @@ fun NavigationBottom() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     vibrator.vibrate(
                                         VibrationEffect.createOneShot(
-                                            10,
+                                            20,
                                             VibrationEffect.DEFAULT_AMPLITUDE
                                         )
                                     )
                                 } else {
-                                    vibrator.vibrate(10)
+                                    vibrator.vibrate(20)
                                 }
                             },
                         contentAlignment = Alignment.Center
@@ -95,7 +95,7 @@ fun NavigationBottom() {
                             painter = painterResource(id = it.icon),
                             contentDescription = "",
                             tint = if (selectedIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
-                            else MaterialTheme.colorScheme.onSecondary
+                            else MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }

@@ -33,8 +33,10 @@ class Result(
         val startIsIntersection = intersectionNames.contains(startStationName)
         val destIsIntersection = intersectionNames.contains(destStationName)
 
-        val startIndices = if (startIsIntersection && startStationName != "بیمه") 0..1 else 0..0
-        val destIndices = if (destIsIntersection && destStationName != "بیمه") 0..1 else 0..0
+        val startIndices =
+            if (startIsIntersection && (startStationName != "بیمه" && startStationName != "شاهد - باقرشهر")) 0..1 else 0..0
+        val destIndices =
+            if (destIsIntersection && (destStationName != "بیمه" && destStationName != "شاهد - باقرشهر")) 0..1 else 0..0
 
         for (startIndex in startIndices) {
             for (destIndex in destIndices) {

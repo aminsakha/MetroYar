@@ -9,8 +9,8 @@ object GlobalObjects {
     val adjNodesLineNum = mutableMapOf<Pair<Int, Int>, Int>()
     val stationList = mutableListOf<Station>()
     val metroGraph = MetroGraph(155)
-    var startStation = mutableStateOf("")
-    var destStation = mutableStateOf("")
+    var startStation = ""
+    var destStation = ""
     var resultList = mutableStateOf(listOf<String>())
     val tripleOfLinesAndTheirStartAndEndStations =
         mutableListOf<Triple<Int, String, String>>().apply {
