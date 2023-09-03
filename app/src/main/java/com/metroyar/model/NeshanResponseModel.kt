@@ -10,12 +10,12 @@ data class NeshanSearchResponseModel(
 
 @Serializable
 data class SearchItem(
-    val title: String,
-    val address: String="",
-    val neighbourhood: String,
-    val region: String,
-    val type: String,
-    val category: String,
+    val title: String = "",
+    val address: String = "",
+    val neighbourhood: String = "",
+    val region: String = "",
+    val type: String = "",
+    val category: String = "",
     val location: Location
 )
 
@@ -23,5 +23,5 @@ data class SearchItem(
 data class Location(
     val x: Double,
     val y: Double,
-    val z: String=""
+    val z: String = ""
 )

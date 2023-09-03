@@ -23,7 +23,6 @@ import com.metroyar.screen.EnableLocationDialog
 import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.UserLatitude
-import com.metroyar.utils.GlobalObjects.UserLongitude
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
 import kotlin.system.measureTimeMillis
@@ -235,4 +234,7 @@ fun Test2(context: Context) {
             log("x is not 0", location)
         }
     }
+
+    if (pair.first != "")
+        log("my pair:", pair)
 }

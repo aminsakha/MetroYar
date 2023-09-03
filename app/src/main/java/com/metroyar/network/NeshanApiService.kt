@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.metroyar.model.NeshanSearchResponseModel
 import com.metroyar.utils.log
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.ConnectionPool
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -32,7 +33,6 @@ val client: OkHttpClient.Builder =
         .writeTimeout(15, TimeUnit.SECONDS) // write timeout
         .readTimeout(15, TimeUnit.SECONDS)
         .addInterceptor(loggingInterceptor)
-
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
