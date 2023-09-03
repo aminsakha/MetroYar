@@ -21,22 +21,10 @@ fun CircularProgressBar(visible: Boolean) {
     var isVisible by remember { mutableStateOf(visible) }
 
     if (isVisible) {
-        Box(
+        CircularProgressIndicator(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Surface(
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .padding(12.dp)
-                )
-            }
-        }
+                .size(48.dp)
+                .padding(12.dp)
+        )
     }
 }

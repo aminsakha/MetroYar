@@ -24,10 +24,8 @@ import com.metroyar.network.MetroYarNeshanApiService
 import com.metroyar.screen.EnableLocationDialog
 import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
-import com.metroyar.utils.GlobalObjects.UserLatitude
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
-import kotlin.system.measureTimeMillis
 
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
@@ -128,7 +126,7 @@ fun connectSideStations(context: Context) {
 
 @SuppressLint("MissingPermission")
 fun getCurrentLocation(context: Context, onLocationChange: (Location) -> Unit) {
-    log("got into currloc", true)
+    log("got into getCurrentLocation", true)
     val locationRequest = LocationRequest.Builder(
         Priority.PRIORITY_HIGH_ACCURACY,
         300000
@@ -139,18 +137,14 @@ fun getCurrentLocation(context: Context, onLocationChange: (Location) -> Unit) {
         .build()
 
     val locationProvider = LocationServices.getFusedLocationProviderClient(context)
-    val timeInMillis = measureTimeMillis {
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                val location = locationResult.locations.lastOrNull() ?: return
-                log("lat", UserLatitude)
-                onLocationChange.invoke(Location(location.longitude, location.latitude))
-            }
+    val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val location = locationResult.locations.lastOrNull() ?: return
+            onLocationChange.invoke(Location(location.longitude, location.latitude))
         }
-        // Request location updates and listen for the callback.
-        locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
     }
-    log("time", timeInMillis)
+    // Request location updates and listen for the callback.
+    locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
 }
 
 @SuppressLint("ServiceCast")
@@ -161,7 +155,7 @@ fun isGpsEnabled(context: Context): Boolean {
 
 suspend fun setPairOfClosestStations(
     location: Location,
-    onPairChange: (Triple<String, String, String>) -> Unit
+    onPairChange: (Pair<String, String>) -> Unit
 ) {
     val response =
         MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
@@ -169,22 +163,22 @@ suspend fun setPairOfClosestStations(
             longitude = location.x,
             term = "ایستگاه مترو"
         )
-    onPairChange.invoke(
-        Triple(
-            response.items.first().title,
-            response.items[1].title,
-            response.items[2].title
-        )
+    val filteredList = response.items.filter { it.type == "subway_station" }
+    val pair = Pair(
+        filteredList.getOrNull(0)?.title ?: "",
+        filteredList.getOrNull(1)?.title ?: ""
     )
-    log("into set", response.count)
+    log("filter list", pair)
+    onPairChange.invoke(pair)
 }
 
 @Composable
 fun Test2(context: Context) {
+    var showDialog by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(true) }
     var isLocEnabled by remember { mutableStateOf(false) }
     var location by remember { mutableStateOf(Location(0.0, 0.0)) }
-    var triple by remember { mutableStateOf(Triple("", "", "")) }
+    var pair by remember { mutableStateOf(Pair("", "")) }
     PermissionScreen(
         onPermissionGranted = {
             if (!isGpsEnabled(context))
@@ -196,50 +190,46 @@ fun Test2(context: Context) {
                 isLocEnabled = true
         }
     )
-    // LaunchedEffect(key1 = isLocEnabled) {
-    if (isLocEnabled) {
+
+    if (isLocEnabled && location?.x == 0.0) {
         CircularProgressBar(visible = isLoading)
         getCurrentLocation(context, onLocationChange = { location = it })
         log("isLocEnabled", location)
     }
-    // }
 
     LaunchedEffect(key1 = location) {
         if (location?.x != 0.0) {
-            setPairOfClosestStations(location = location, onPairChange = { triple = it })
+            setPairOfClosestStations(location = location, onPairChange = { pair = it })
             log("x is not 0", location)
         }
     }
 
-    if (triple.first != "") {
+    if (pair.first != "") {
         isLoading = false
-        SuggestionStationsDialog(pair = findMatchingNames(triple))
+        log("my pair", pair)
+        SuggestionStationsDialog(
+            pair = findMatchingNames(pair),
+            visible = showDialog,
+            srcOnclick = { showDialog = false },
+            dstOnClicked = { showDialog = false })
     }
-
 }
 
-fun findMatchingNames(triple: Triple<String, String, String>): Pair<String, String> {
+fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
     val matchingNames = mutableSetOf<String>()
 
     // Check for a match with triple.first
     val firstName =
-        stationList.map { it.name }.find { it.contains(triple.first, ignoreCase = true) }
+        stationList.map { it.name }.find { pair.first.contains(it, ignoreCase = true) }
     if (firstName != null) {
         matchingNames.add(firstName)
     }
 
     // Check for a match with triple.second
     val secondName =
-        stationList.map { it.name }.find { it.contains(triple.second, ignoreCase = true) }
+        stationList.map { it.name }.find { pair.second.contains(it, ignoreCase = true) }
     if (secondName != null) {
         matchingNames.add(secondName)
-    }
-
-    // Check for a match with triple.third
-    val thirdName =
-        stationList.map { it.name }.find { it.contains(triple.third, ignoreCase = true) }
-    if (thirdName != null) {
-        matchingNames.add(thirdName)
     }
 
     return Pair(matchingNames.toList()[0], matchingNames.toList()[1])
