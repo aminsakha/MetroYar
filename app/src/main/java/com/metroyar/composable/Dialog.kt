@@ -25,8 +25,8 @@ fun SuggestionStationsDialog(
     visible: Boolean=true,
     pair: Pair<String, String>,
     onDismissRequest: () -> Unit = {},
-    srcOnclick: () -> Unit = {},
-    dstOnClicked: () -> Unit = {}
+    srcOnclick: (String) -> Unit = {},
+    dstOnClicked: (String) -> Unit = {}
 ) {
     if (visible)
         Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -50,12 +50,12 @@ fun SuggestionStationsDialog(
                     SuggestionStationItem(
                         stationName = pair.first,
                         dstOnClicked = dstOnClicked,
-                        srcOnclicked = srcOnclick
+                        srcOnclick = srcOnclick
                     )
                     SuggestionStationItem(
                         stationName = pair.second,
                         dstOnClicked = dstOnClicked,
-                        srcOnclicked = srcOnclick
+                        srcOnclick = srcOnclick
                     )
                 }
             }
@@ -63,7 +63,7 @@ fun SuggestionStationsDialog(
 }
 
 @Composable
-fun SuggestionStationItem(stationName: String, srcOnclicked: () -> Unit, dstOnClicked: () -> Unit) {
+fun SuggestionStationItem(stationName: String, srcOnclick: (String) -> Unit, dstOnClicked: (String) -> Unit) {
     Card(
         modifier = Modifier
             .background(Color.Blue)
@@ -79,13 +79,13 @@ fun SuggestionStationItem(stationName: String, srcOnclicked: () -> Unit, dstOnCl
         ) {
             Text(text = stationName, fontWeight = FontWeight.Bold)
             TextButton(
-                onClick = { srcOnclicked() },
+                onClick = { srcOnclick.invoke(stationName) },
                 modifier = Modifier.padding(4.dp),
             ) {
                 Text("انتخاب به عنوان مبدا")
             }
             TextButton(
-                onClick = { dstOnClicked() },
+                onClick = { dstOnClicked.invoke(stationName) },
                 modifier = Modifier.padding(4.dp),
             ) {
                 Text("انتخاب به عنوان مقصد")

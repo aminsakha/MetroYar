@@ -50,8 +50,8 @@ fun NavigatingScreen(context: Context) {
 
     var showDialog by remember { mutableStateOf(false) }
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
-    val focusRequesterDst by remember { mutableStateOf(FocusRequester()) }
-    val focusRequesterSrc by remember { mutableStateOf(FocusRequester()) }
+    val focusRequesterDst = remember { FocusRequester() }
+    val focusRequesterSrc = remember { FocusRequester() }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -59,7 +59,8 @@ fun NavigatingScreen(context: Context) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (stationList.map { it.name }.contains(srcInputText) && dstInputText.isEmpty())
-            focusRequesterDst.requestFocus()
+            if (focusRequesterDst != null)
+                focusRequesterDst.requestFocus()
 
         autoCompleteOutLinedTextField(
             label = "ایستگاه مبدا رو انتخاب کن",
@@ -93,7 +94,10 @@ fun NavigatingScreen(context: Context) {
 
         Spacer(Modifier.height(16.dp))
         if (isFindNearestButtonClicked) {
-            Test2(context)
+            Test2(
+                context = context,
+                onSrcClicked = { srcInputText = it },
+                onDstClicked = { dstInputText = it })
         }
 
         Button(onClick = {

@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.toSize
 import com.metroyar.R
 import com.metroyar.ui.theme.hint
 import com.metroyar.utils.GlobalObjects
-import com.metroyar.utils.GlobalObjects.startStation
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -51,7 +50,7 @@ fun autoCompleteOutLinedTextField(
     Column(
         modifier = Modifier
             .padding(15.dp)
-            .fillMaxWidth()
+            .fillMaxWidth().focusRequester(focusRequester)
             .clickable { expanded = false }
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current

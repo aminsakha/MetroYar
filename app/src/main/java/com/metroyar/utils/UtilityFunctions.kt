@@ -173,7 +173,7 @@ suspend fun setPairOfClosestStations(
 }
 
 @Composable
-fun Test2(context: Context) {
+fun Test2(context: Context, onDstClicked: (String) -> Unit, onSrcClicked: (String) -> Unit) {
     var showDialog by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(true) }
     var isLocEnabled by remember { mutableStateOf(false) }
@@ -210,8 +210,14 @@ fun Test2(context: Context) {
         SuggestionStationsDialog(
             pair = findMatchingNames(pair),
             visible = showDialog,
-            srcOnclick = { showDialog = false },
-            dstOnClicked = { showDialog = false })
+            srcOnclick = {
+                showDialog = false
+                onSrcClicked.invoke(it)
+            },
+            dstOnClicked = {
+                showDialog = false
+                onDstClicked.invoke(it)
+            })
     }
 }
 

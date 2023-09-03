@@ -22,7 +22,7 @@ import com.metroyar.utils.log
 @Composable
 fun EnableLocationDialog(onValueChange: (String) -> Unit) {
     val context: Context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    rememberCoroutineScope()
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
