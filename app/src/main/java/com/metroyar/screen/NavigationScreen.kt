@@ -96,8 +96,16 @@ fun NavigatingScreen(context: Context) {
         if (isFindNearestButtonClicked) {
             Test2(
                 context = context,
-                onSrcClicked = { srcInputText = it },
-                onDstClicked = { dstInputText = it })
+                onSrcClicked = {
+                    srcInputText = it
+                    startStation = srcInputText
+                    isFindNearestButtonClicked = false
+                },
+                onDstClicked = {
+                    dstInputText = it
+                    destStation = dstInputText
+                    isFindNearestButtonClicked = false
+                })
         }
 
         Button(onClick = {

@@ -208,6 +208,7 @@ fun Test2(context: Context, onDstClicked: (String) -> Unit, onSrcClicked: (Strin
         isLoading = false
         log("my pair", pair)
         SuggestionStationsDialog(
+            onDismissRequest = { showDialog = false },
             pair = findMatchingNames(pair),
             visible = showDialog,
             srcOnclick = {
@@ -231,12 +232,14 @@ fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
         matchingNames.add(firstName)
     }
 
-    // Check for a match with triple.second
     val secondName =
         stationList.map { it.name }.find { pair.second.contains(it, ignoreCase = true) }
     if (secondName != null) {
         matchingNames.add(secondName)
     }
 
-    return Pair(matchingNames.toList()[0], matchingNames.toList()[1])
+    return Pair(
+        matchingNames.toList().getOrNull(0) ?: "",
+        matchingNames.toList().getOrNull(1) ?: ""
+    )
 }
