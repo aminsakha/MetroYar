@@ -16,6 +16,8 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.metroyar.R
+import com.metroyar.composable.CircularProgressBar
+import com.metroyar.composable.SuggestionStationsDialog
 import com.metroyar.model.Location
 import com.metroyar.model.Station
 import com.metroyar.network.MetroYarNeshanApiService
@@ -207,6 +209,7 @@ suspend fun setPairOfClosestStationsFlow(
 
 @Composable
 fun Test2(context: Context) {
+    var isLoading by remember { mutableStateOf(true) }
     var isLocEnabled by remember { mutableStateOf(false) }
     var location by remember { mutableStateOf(Location(0.0, 0.0)) }
     var pair by remember { mutableStateOf(Pair("", "")) }
@@ -223,6 +226,7 @@ fun Test2(context: Context) {
     )
     // LaunchedEffect(key1 = isLocEnabled) {
     if (isLocEnabled) {
+        CircularProgressBar(visible = isLoading)
         getCurrentLocation(context, onLocationChange = { location = it })
         log("isLocEnabled", location)
     }
@@ -235,6 +239,9 @@ fun Test2(context: Context) {
         }
     }
 
-    if (pair.first != "")
-        log("my pair:", pair)
+    if (pair.first != ""){
+        isLoading=false
+        SuggestionStationsDialog(pair = pair)
+    }
+
 }
