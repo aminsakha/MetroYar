@@ -42,7 +42,7 @@ fun autoCompleteOutLinedTextField(
     label: String,
     focusRequester: FocusRequester,
 ) {
-    val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }.toSet()
+    val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }.toSet().sorted()
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -50,7 +50,8 @@ fun autoCompleteOutLinedTextField(
     Column(
         modifier = Modifier
             .padding(15.dp)
-            .fillMaxWidth().focusRequester(focusRequester)
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
             .clickable { expanded = false }
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -73,7 +74,9 @@ fun autoCompleteOutLinedTextField(
                 value = value,
                 onValueChange = {
                     onValueChange.invoke(it)
-                    expanded = true
+                    expanded = dropDownStationNamesList.binarySearch(it) < 0
+                    if (!expanded)
+                        keyboardController?.hide()
                 },
                 textStyle = TextStyle(textAlign = TextAlign.End, fontSize = 16.sp),
                 singleLine = true,
