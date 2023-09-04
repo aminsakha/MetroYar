@@ -3,11 +3,13 @@ package com.metroyar.composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -22,7 +24,7 @@ import androidx.compose.ui.window.Dialog
 
 @Composable
 fun SuggestionStationsDialog(
-    visible: Boolean=true,
+    visible: Boolean = true,
     pair: Pair<String, String>,
     onDismissRequest: () -> Unit = {},
     srcOnclick: (String) -> Unit = {},
@@ -47,23 +49,37 @@ fun SuggestionStationsDialog(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    SuggestionStationItem(
-                        stationName = pair.first,
-                        dstOnClicked = dstOnClicked,
-                        srcOnclick = srcOnclick
-                    )
-                    SuggestionStationItem(
-                        stationName = pair.second,
-                        dstOnClicked = dstOnClicked,
-                        srcOnclick = srcOnclick
-                    )
+                    if (pair.first.isEmpty() && pair.second.isEmpty()) {
+                        Text(text = "ایستگاه نزدیکی یافت نشد")
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(onClick = { onDismissRequest() }) {
+                            Text(text = "باشه")
+                        }
+                    }
+
+                    if (pair.first.isNotEmpty())
+                        SuggestionStationItem(
+                            stationName = pair.first,
+                            dstOnClicked = dstOnClicked,
+                            srcOnclick = srcOnclick
+                        )
+                    if (pair.second.isNotEmpty())
+                        SuggestionStationItem(
+                            stationName = pair.second,
+                            dstOnClicked = dstOnClicked,
+                            srcOnclick = srcOnclick
+                        )
                 }
             }
         }
 }
 
 @Composable
-fun SuggestionStationItem(stationName: String, srcOnclick: (String) -> Unit, dstOnClicked: (String) -> Unit) {
+fun SuggestionStationItem(
+    stationName: String,
+    srcOnclick: (String) -> Unit,
+    dstOnClicked: (String) -> Unit
+) {
     Card(
         modifier = Modifier
             .background(Color.Blue)
