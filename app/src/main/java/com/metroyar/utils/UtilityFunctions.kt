@@ -237,9 +237,14 @@ fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
     if (secondName != null) {
         matchingNames.add(secondName)
     }
-
-    return Pair(
-        matchingNames.toList().getOrNull(0) ?: "",
-        matchingNames.toList().getOrNull(1) ?: ""
-    )
+    return if (matchingNames.size > 1)
+        Pair(
+            matchingNames.toList().getOrNull(0) ?: "",
+            matchingNames.toList().getOrNull(1) ?: ""
+        )
+    else
+        Pair(
+            matchingNames.toList().getOrNull(0) ?: "",
+            ""
+        )
 }

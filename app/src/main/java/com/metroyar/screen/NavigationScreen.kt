@@ -47,7 +47,7 @@ fun NavigationScreen() {
 fun NavigatingScreen(context: Context) {
     var srcInputText by remember { mutableStateOf(startStation) }
     var dstInputText by remember { mutableStateOf(destStation) }
-
+    var alertMessageText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
     val focusRequesterDst = remember { FocusRequester() }
@@ -68,6 +68,7 @@ fun NavigatingScreen(context: Context) {
             value = srcInputText,
             onValueChange = {
                 srcInputText = it
+                startStation = srcInputText
             },
             onItemSelectedChange = {
                 srcInputText = it
@@ -84,6 +85,7 @@ fun NavigatingScreen(context: Context) {
             value = dstInputText,
             onValueChange = {
                 dstInputText = it
+                destStation = dstInputText
             },
             onItemSelectedChange = {
                 dstInputText = it
@@ -116,16 +118,22 @@ fun NavigatingScreen(context: Context) {
         Spacer(Modifier.height(8.dp))
         Button(
             onClick = {
-                if (srcInputText == dstInputText ||
-                    srcInputText.isEmpty() != dstInputText.isEmpty()
-                )
+                if (srcInputText == dstInputText && (srcInputText.isNotEmpty() && dstInputText.isNotEmpty())) {
+                    alertMessageText = " اشتباهی مبدا و مقصد رو یکی زدی "
                     showDialog = true
-                else
-                    resultList.value = Result(
-                        context,
-                        srcInputText,
-                        dstInputText
-                    ).convertPathToUserUnderstandableForm()
+                } else {
+                    if (stationList.map { it.name }
+                            .containsAll(Pair(srcInputText, dstInputText).toList()))
+                        resultList.value = Result(
+                            context,
+                            srcInputText,
+                            dstInputText
+                        ).convertPathToUserUnderstandableForm()
+                    else {
+                        alertMessageText = " مبدا و مقصد رو درست بزن لطفا "
+                        showDialog = true
+                    }
+                }
             },
             modifier = Modifier.align(Alignment.CenterHorizontally),
             shape = RoundedCornerShape(16.dp)
@@ -137,7 +145,7 @@ fun NavigatingScreen(context: Context) {
             onConfirm = { showDialog = false },
             onDismissRequest = { showDialog = false },
             title = stringResource(R.string.notice_text),
-            message = stringResource(R.string.same_input_output_message),
+            message = alertMessageText,
             okMessage = stringResource(R.string.ok_message)
         )
         Spacer(Modifier.height(12.dp))
