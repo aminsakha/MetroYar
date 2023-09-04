@@ -132,7 +132,6 @@ private fun ImageAlertDialog(
             when (imageResult) {
                 is ImageResult.Success -> {
                     Image(bitmap = imageResult.data.asImageBitmap(), contentDescription = null)
-                    PermissionScreen(onPermissionGranted = {
                         LaunchedEffect(key1 = true) {
                             log("into laun", true)
                             val res = saveBitmapAndGetUri(
@@ -144,7 +143,6 @@ private fun ImageAlertDialog(
                             }
                             log("res", res)
                         }
-                    })
                 }
 
                 is ImageResult.Error -> {
