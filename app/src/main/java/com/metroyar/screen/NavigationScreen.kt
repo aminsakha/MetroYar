@@ -11,10 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +33,7 @@ import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.utils.Test2
+import com.metroyar.utils.SuggestionStationsLayout
 
 @Composable
 fun NavigationScreen() {
@@ -96,7 +93,8 @@ fun NavigatingScreen(context: Context) {
 
         Spacer(Modifier.height(16.dp))
         if (isFindNearestButtonClicked) {
-            Test2(
+            SuggestionStationsLayout(
+                onSuggestionStationsDialogDisMiss = { isFindNearestButtonClicked = false },
                 context = context,
                 onSrcClicked = {
                     srcInputText = it
