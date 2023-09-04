@@ -1,5 +1,6 @@
 package com.metroyar.screen
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import com.metroyar.composable.ShareableImage
 import com.metroyar.utils.log
 import com.smarttoolfactory.screenshot.ImageResult
 import com.smarttoolfactory.screenshot.ScreenshotBox
@@ -55,6 +57,7 @@ fun ScreenshotDemo() {
 
     val screenshotState = rememberScreenshotState()
     var showDialog by remember { mutableStateOf(false) }
+    var uri by remember { mutableStateOf<Uri?>(null) }
     val imageResult: ImageResult = screenshotState.imageState.value
     val context = LocalContext.current
     // Show dialog only when ImageResult is success or error
@@ -77,10 +80,14 @@ fun ScreenshotDemo() {
             ScreenshotSample(screenshotState, paddingValues)
 
             if (showDialog) {
-                ImageAlertDialog(imageResult = imageResult, context = context) {
+                ImageAlertDialog(
+                    imageResult = imageResult,
+                    context = context,
+                    onUri = { uri = it }) {
                     showDialog = false
                 }
             }
+            uri?.let { ShareableImage(it) }
         }
     )
 }
@@ -103,7 +110,12 @@ private fun ScreenshotSample(screenshotState: ScreenshotState, paddingValues: Pa
 }
 
 @Composable
-private fun ImageAlertDialog(context: Context, imageResult: ImageResult, onDismiss: () -> Unit) {
+private fun ImageAlertDialog(
+    onUri: (Uri) -> Unit,
+    context: Context,
+    imageResult: ImageResult,
+    onDismiss: () -> Unit
+) {
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -127,6 +139,9 @@ private fun ImageAlertDialog(context: Context, imageResult: ImageResult, onDismi
                                 bitmap = imageResult.data.asImageBitmap().asAndroidBitmap(),
                                 context = context
                             )
+                            if (res != null) {
+                                onUri.invoke(res)
+                            }
                             log("res", res)
                         }
                     })
@@ -175,6 +190,7 @@ suspend fun saveBitmapAndGetUri(context: Context, bitmap: Bitmap): Uri? =
         }
     }
 
+@SuppressLint("Range")
 fun getImageContentUri(context: Context, imagePath: String): Uri? {
     val cursor = context.contentResolver.query(
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
