@@ -1,7 +1,9 @@
 package com.metroyar.network
 
+import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.metroyar.model.NeshanSearchResponseModel
+import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.log
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -20,7 +22,7 @@ import java.util.concurrent.TimeUnit
 private const val BASE_URL = "https://api.neshan.org/"
 
 val loggingInterceptor = HttpLoggingInterceptor { message ->
-    log("http call", message)
+    Log.i(GlobalObjects.TAG,message)
 }.apply {
     level = HttpLoggingInterceptor.Level.BODY
 }

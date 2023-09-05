@@ -3,6 +3,11 @@ package com.metroyar.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.LinkProperties
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -256,4 +261,45 @@ fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
             matchingNames.toList().getOrNull(0) ?: "",
             ""
         )
+}
+
+fun checkInternetConnection(context: Context) {
+    val networkRequest = NetworkRequest.Builder()
+        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+        .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+        .build()
+    log("build", true)
+    val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onUnavailable() {
+            super.onUnavailable()
+            log("netw", "nist asn")
+        }
+
+        // network is available for use
+        override fun onAvailable(network: Network) {
+            log("network stat", "okeye")
+            super.onAvailable(network)
+        }
+
+        // Network capabilities have changed for the network
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
+            super.onCapabilitiesChanged(network, networkCapabilities)
+            log("network stat", "change")
+        }
+
+        // lost network connection
+        override fun onLost(network: Network) {
+            log("network stat", "ok nist")
+            super.onLost(network)
+        }
+    }
+    val connectivityManager =
+        context.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
+    if (connectivityManager.activeNetwork == null)
+        log("stat", connectivityManager.activeNetwork)
+    connectivityManager.requestNetwork(networkRequest, networkCallback)
 }

@@ -34,6 +34,7 @@ import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.SuggestionStationsLayout
+import com.metroyar.utils.checkInternetConnection
 
 @Composable
 fun NavigationScreen() {
@@ -58,6 +59,10 @@ fun NavigatingScreen(context: Context) {
         if (stationList.map { it.name }.contains(srcInputText) && dstInputText.isEmpty())
             if (focusRequesterDst != null)
                 focusRequesterDst.requestFocus()
+
+        Button(onClick = { checkInternetConnection(context) }) {
+            Text(text = "click")
+        }
 
         autoCompleteOutLinedTextField(
             label = "ایستگاه مبدا رو انتخاب کن",
