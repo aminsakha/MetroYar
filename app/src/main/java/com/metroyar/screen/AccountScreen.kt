@@ -7,17 +7,19 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,8 +34,7 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
-import com.metroyar.composable.ShareableImage
+import com.metroyar.composable.shareBitmap
 import com.metroyar.utils.log
 import com.smarttoolfactory.screenshot.ImageResult
 import com.smarttoolfactory.screenshot.ScreenshotBox
@@ -54,130 +55,81 @@ fun AccountScreen() {
 
 @Composable
 fun ScreenshotDemo() {
-
     val screenshotState = rememberScreenshotState()
-    var showDialog by remember { mutableStateOf(false) }
     var uri by remember { mutableStateOf<Uri?>(null) }
     val imageResult: ImageResult = screenshotState.imageState.value
     val context = LocalContext.current
-    // Show dialog only when ImageResult is success or error
+
     LaunchedEffect(key1 = imageResult) {
-        if (imageResult is ImageResult.Success || imageResult is ImageResult.Error) {
-            showDialog = true
+        when (imageResult) {
+            is ImageResult.Success -> {
+                log("into suc", true)
+                val res = saveBitmapAndGetUri(
+                    bitmap = imageResult.data.asImageBitmap().asAndroidBitmap(),
+                    context = context
+                )
+                if (res != null) {
+                    uri = res
+                    log("uri", uri)
+                }
+            }
+
+            is ImageResult.Error -> {
+
+            }
+
+            else -> {}
         }
     }
 
     Scaffold(
         floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = {
-                screenshotState.capture()
-            }) {
-                Text(text = "Capture")
-            }
+            ExtendedFloatingActionButton(
+                onClick = { screenshotState.capture() },
+                icon = { Icon(Icons.Filled.Share, "") },
+                text = { Text(text = "ارسال مسیر") },
+            )
         },
         floatingActionButtonPosition = FabPosition.End,
-        content = { paddingValues: PaddingValues ->
-            ScreenshotSample(screenshotState, paddingValues)
-
-            if (showDialog) {
-                ImageAlertDialog(
-                    imageResult = imageResult,
-                    context = context,
-                    onUri = { uri = it }) {
-                    showDialog = false
-                }
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                ScreenshotSample(screenshotState)
+                uri?.let { shareBitmap(context, it) }
             }
-            uri?.let { ShareableImage(it) }
         }
     )
 }
 
 @Composable
-private fun ScreenshotSample(screenshotState: ScreenshotState, paddingValues: PaddingValues) {
-    Column(
-        modifier = Modifier.background(Color(0xffECEFF1))
+private fun ScreenshotSample(screenshotState: ScreenshotState) {
+    Spacer(modifier = Modifier.height(30.dp))
+
+    ScreenshotBox(
+        modifier = Modifier.fillMaxSize(),
+        screenshotState = screenshotState
     ) {
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        ScreenshotBox(
-            modifier = Modifier.fillMaxSize(),
-            screenshotState = screenshotState
-        ) {
-            Text(text = "hellow")
-        }
+        Text(text = "hello dude")
     }
-}
-
-@Composable
-private fun ImageAlertDialog(
-    onUri: (Uri) -> Unit,
-    context: Context,
-    imageResult: ImageResult,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            FilledTonalButton(onClick = { onDismiss() }) {
-                Text(text = "Confirm")
-            }
-        },
-        dismissButton = {
-            FilledTonalButton(onClick = { onDismiss() }) {
-                Text(text = "Dismiss")
-            }
-        },
-        text = {
-            when (imageResult) {
-                is ImageResult.Success -> {
-                    Image(bitmap = imageResult.data.asImageBitmap(), contentDescription = null)
-                        LaunchedEffect(key1 = true) {
-                            log("into laun", true)
-                            val res = saveBitmapAndGetUri(
-                                bitmap = imageResult.data.asImageBitmap().asAndroidBitmap(),
-                                context = context
-                            )
-                            if (res != null) {
-                                onUri.invoke(res)
-                            }
-                            log("res", res)
-                        }
-                }
-
-                is ImageResult.Error -> {
-                    Text(text = "Error: ${imageResult.exception.message}")
-                }
-
-                else -> {}
-            }
-        })
 }
 
 suspend fun saveBitmapAndGetUri(context: Context, bitmap: Bitmap): Uri? =
     withContext(Dispatchers.IO) {
-        // Generate a random filename
         val filename = "${UUID.randomUUID()}.jpg"
-
-        // Get the external storage Downloads directory
         val directory =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-
-        // Create a new file in the downloads directory
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val file = File(directory, filename)
 
         try {
-            // Open the file output stream
             val stream: OutputStream = FileOutputStream(file)
 
-            // Compress the bitmap
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
 
-            // Flush and close the stream
             stream.flush()
             stream.close()
-            log("flsh", true)
-            // Get the content URI for the file
             val contentUri =
                 getImageContentUri(context, file.absolutePath)
 
