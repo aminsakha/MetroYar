@@ -15,9 +15,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,17 +43,26 @@ import com.metroyar.R
 import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @RootNavGraph(start = true)
 @Destination
 @Composable
-fun NavigationBottom() {
+fun NavigationBottom(navigator: DestinationsNavigator) {
     var selectedIndex by remember { mutableStateOf(1) }
+    var selectedScreenTopBarTitle by remember { mutableStateOf(NavBarItems.Navigation.title) }
     val navBarItems = remember { NavBarItems.values() }
 
     Scaffold(
         modifier = Modifier.padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(text = selectedScreenTopBarTitle)
+                })
+        },
         bottomBar = {
             AnimatedNavigationBar(
                 selectedIndex = selectedIndex,
@@ -69,6 +84,7 @@ fun NavigationBottom() {
                             .nonRipple {
                                 playSound(context)
                                 selectedIndex = it.ordinal
+                                selectedScreenTopBarTitle = it.title
                                 val vibrator =
                                     context.getSystemService(VIBRATOR_SERVICE) as Vibrator
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -101,16 +117,16 @@ fun NavigationBottom() {
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                DeciderOfScreensInNavBotBar(input = selectedIndex)
+                DeciderOfScreensInNavBotBar(input = selectedIndex, navigator = navigator)
             }
         }
     )
 }
 
-enum class NavBarItems(val icon: Int) {
-    Account(icon = R.drawable.baseline_account_circle_24),
-    Navigation(icon = R.drawable.baseline_near_me_24),
-    MetroMap(icon = R.drawable.baseline_map_24)
+enum class NavBarItems(val icon: Int, val title: String) {
+    Account(icon = R.drawable.baseline_account_circle_24, title = "مترویارمن"),
+    Navigation(icon = R.drawable.baseline_near_me_24, title = "مسیریابی"),
+    MetroMap(icon = R.drawable.baseline_map_24, title = "بروزترین نسخه نقشه مترو")
 }
 
 fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
@@ -124,10 +140,10 @@ fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
 }
 
 @Composable
-fun DeciderOfScreensInNavBotBar(input: Int) {
+fun DeciderOfScreensInNavBotBar(input: Int, navigator: DestinationsNavigator) {
     when (input) {
         0 -> AccountScreen()
-        1 -> NavigationScreen()
+        1 -> NavigationScreen(context = LocalContext.current, navigator = navigator)
         2 -> MetroMapScreen()
     }
 }

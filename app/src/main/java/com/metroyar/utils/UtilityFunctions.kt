@@ -176,7 +176,7 @@ suspend fun setPairOfClosestStations(
         )
         log("filter list", pair)
         onPairChange.invoke(pair)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
     }
 }
 

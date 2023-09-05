@@ -24,10 +24,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.Navigator
 import com.metroyar.R
 import com.metroyar.classes.Result
 import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.composable.autoCompleteOutLinedTextField
+import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
@@ -35,14 +37,10 @@ import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.SuggestionStationsLayout
 import com.metroyar.utils.checkInternetConnection
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-fun NavigationScreen() {
-    NavigatingScreen(LocalContext.current)
-}
-
-@Composable
-fun NavigatingScreen(context: Context) {
+fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var srcInputText by remember { mutableStateOf(startStation) }
     var dstInputText by remember { mutableStateOf(destStation) }
     var alertMessageText by remember { mutableStateOf("") }
@@ -122,13 +120,14 @@ fun NavigatingScreen(context: Context) {
                     showDialog = true
                 } else {
                     if (stationList.map { it.name }
-                            .containsAll(Pair(srcInputText, dstInputText).toList()))
+                            .containsAll(Pair(srcInputText, dstInputText).toList())) {
                         resultList.value = Result(
                             context,
                             srcInputText,
                             dstInputText
                         ).convertPathToUserUnderstandableForm()
-                    else {
+                        navigator.navigate(PathResultScreenDestination)
+                    } else {
                         alertMessageText = " مبدا و مقصد رو درست بزن لطفا "
                         showDialog = true
                     }
@@ -147,20 +146,5 @@ fun NavigatingScreen(context: Context) {
             message = alertMessageText,
             okMessage = stringResource(R.string.ok_message)
         )
-        Spacer(Modifier.height(12.dp))
-
-        LazyColumn {
-            itemsIndexed(resultList.value) { index, item ->
-                Text(
-                    item,
-                    Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.End
-                )
-                if (index < resultList.value.lastIndex)
-                    Divider(color = line, thickness = 1.dp)
-            }
-        }
     }
 }
