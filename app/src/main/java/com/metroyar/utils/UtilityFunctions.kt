@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
 import android.net.ConnectivityManager
-import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
@@ -22,6 +21,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.metroyar.R
 import com.metroyar.composable.CircularProgressBar
+import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.composable.SuggestionStationsDialog
 import com.metroyar.model.Location
 import com.metroyar.model.Station
@@ -162,19 +162,22 @@ suspend fun setPairOfClosestStations(
     location: Location,
     onPairChange: (Pair<String, String>) -> Unit
 ) {
-    val response =
-        MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
-            latitude = location.y,
-            longitude = location.x,
-            term = "ایستگاه مترو"
+    try {
+        val response =
+            MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
+                latitude = location.y,
+                longitude = location.x,
+                term = "ایستگاه مترو"
+            )
+        val filteredList = response.items.filter { it.type == "subway_station" }
+        val pair = Pair(
+            filteredList.getOrNull(0)?.title ?: "",
+            filteredList.getOrNull(1)?.title ?: ""
         )
-    val filteredList = response.items.filter { it.type == "subway_station" }
-    val pair = Pair(
-        filteredList.getOrNull(0)?.title ?: "",
-        filteredList.getOrNull(1)?.title ?: ""
-    )
-    log("filter list", pair)
-    onPairChange.invoke(pair)
+        log("filter list", pair)
+        onPairChange.invoke(pair)
+    } catch (e: Exception) {
+    }
 }
 
 @Composable
@@ -184,9 +187,11 @@ fun SuggestionStationsLayout(
     onSrcClicked: (String) -> Unit,
     onSuggestionStationsDialogDisMiss: () -> Unit
 ) {
-    var showDialog by remember { mutableStateOf(true) }
+    var showSuggestionDialog by remember { mutableStateOf(true) }
+    var showInternetDialog by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(true) }
     var isLocEnabled by remember { mutableStateOf(false) }
+    var isWiFiEnabled by remember { mutableStateOf(false) }
     var location by remember { mutableStateOf(Location(0.0, 0.0)) }
     var pair by remember { mutableStateOf(Pair("", "")) }
     PermissionScreen(
@@ -200,18 +205,29 @@ fun SuggestionStationsLayout(
                 isLocEnabled = true
         }
     )
+    LaunchedEffect(key1 = isWiFiEnabled) {
+        checkInternetConnection(context, onStatChange = { isWiFiEnabled = it })
+    }
 
-    if (isLocEnabled && location?.x == 0.0) {
+    if (!isWiFiEnabled && location.x == 0.0) {
+        OneBtnAlertDialog(
+            visible = showInternetDialog,
+            onConfirm = { showInternetDialog = false },
+            onDismissRequest = { showInternetDialog = false },
+            title = "قطعی اینترنت",
+            message = "اینترنت باید وصل باشه",
+            okMessage = "اوکیه"
+        )
+    }
+    if (isWiFiEnabled && isLocEnabled && location.x == 0.0) {
         CircularProgressBar(visible = isLoading)
         getCurrentLocation(context, onLocationChange = { location = it })
         log("isLocEnabled", location)
     }
 
     LaunchedEffect(key1 = location) {
-        if (location?.x != 0.0) {
+        if (location.x != 0.0)
             setPairOfClosestStations(location = location, onPairChange = { pair = it })
-            log("x is not 0", location)
-        }
     }
 
     if (pair.first != "") {
@@ -219,17 +235,17 @@ fun SuggestionStationsLayout(
         log("my pair", pair)
         SuggestionStationsDialog(
             onDismissRequest = {
-                showDialog = false
+                showSuggestionDialog = false
                 onSuggestionStationsDialogDisMiss.invoke()
             },
             pair = findMatchingNames(pair),
-            visible = showDialog,
+            visible = showSuggestionDialog,
             srcOnclick = {
-                showDialog = false
+                showSuggestionDialog = false
                 onSrcClicked.invoke(it)
             },
             dstOnClicked = {
-                showDialog = false
+                showSuggestionDialog = false
                 onDstClicked.invoke(it)
             })
     }
@@ -263,22 +279,18 @@ fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
         )
 }
 
-fun checkInternetConnection(context: Context) {
+fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
     val networkRequest = NetworkRequest.Builder()
         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         .build()
-    log("build", true)
     val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onUnavailable() {
-            super.onUnavailable()
-            log("netw", "nist asn")
-        }
 
         // network is available for use
         override fun onAvailable(network: Network) {
             log("network stat", "okeye")
+            onStatChange.invoke(true)
             super.onAvailable(network)
         }
 
@@ -294,12 +306,16 @@ fun checkInternetConnection(context: Context) {
         // lost network connection
         override fun onLost(network: Network) {
             log("network stat", "ok nist")
+            onStatChange.invoke(false)
             super.onLost(network)
         }
     }
     val connectivityManager =
         context.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
-    if (connectivityManager.activeNetwork == null)
-        log("stat", connectivityManager.activeNetwork)
+    if (connectivityManager.activeNetwork == null) {
+        onStatChange.invoke(false)
+        log("sat", "null")
+    } else
+        onStatChange.invoke(true)
     connectivityManager.requestNetwork(networkRequest, networkCallback)
 }

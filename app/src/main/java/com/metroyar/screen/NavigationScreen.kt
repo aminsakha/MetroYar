@@ -60,10 +60,6 @@ fun NavigatingScreen(context: Context) {
             if (focusRequesterDst != null)
                 focusRequesterDst.requestFocus()
 
-        Button(onClick = { checkInternetConnection(context) }) {
-            Text(text = "click")
-        }
-
         autoCompleteOutLinedTextField(
             label = "ایستگاه مبدا رو انتخاب کن",
             focusRequester = focusRequesterSrc,
