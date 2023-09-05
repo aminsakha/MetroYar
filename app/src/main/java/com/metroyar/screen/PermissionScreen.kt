@@ -1,6 +1,7 @@
 package com.metroyar.screen
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.runtime.Composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -11,7 +12,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun PermissionScreen(
     onPermissionGranted: @Composable () -> Unit = {},
-    onLocationDataReceived:  () -> Unit = {}
+    onLocationDataReceived: () -> Unit = {}
 ) =
     RequestSmsPermission(onPermissionGranted, onLocationDataReceived)
 
@@ -22,14 +23,19 @@ private fun RequestSmsPermission(
     onLocationDataReceived: () -> Unit = {}
 ) {
     val locationPermissionsState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
+        else
+            listOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            )
     )
 
     if (locationPermissionsState.allPermissionsGranted) {
-        log("got into persmission", true)
         onPermissionGranted()
         onLocationDataReceived()
     } else {
