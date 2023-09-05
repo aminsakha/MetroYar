@@ -16,6 +16,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,9 +59,11 @@ fun NavigatingScreen(context: Context) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (stationList.map { it.name }.contains(srcInputText) && dstInputText.isEmpty())
-            if (focusRequesterDst != null)
+        LaunchedEffect(srcInputText){
+            if (stationList.map { it.name }
+                    .contains(srcInputText) && dstInputText.isEmpty())
                 focusRequesterDst.requestFocus()
+        }
 
         autoCompleteOutLinedTextField(
             label = "ایستگاه مبدا رو انتخاب کن",
