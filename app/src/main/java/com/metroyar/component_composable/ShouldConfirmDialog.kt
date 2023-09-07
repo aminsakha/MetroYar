@@ -1,4 +1,4 @@
-package com.metroyar.composable
+package com.metroyar.component_composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog

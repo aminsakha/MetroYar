@@ -31,7 +31,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
@@ -52,7 +51,6 @@ import com.smarttoolfactory.screenshot.ScreenshotState
 import com.smarttoolfactory.screenshot.rememberScreenshotState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -81,11 +79,6 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
                     log("uri", uri)
                 }
             }
-
-            is ImageResult.Error -> {
-
-            }
-
             else -> {}
         }
     }
@@ -96,7 +89,6 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
                 delay(10)
                 screenshotState.capture()
                 visible = true
-                //shouldCapture = false
             }
         }
         onDispose { }
@@ -118,7 +110,6 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ),
                 title = "دسترسی به فضای دستگاه",
-
                 bodyMessage = "برای ارسال عکس نیاز به دسترسی فضای ذخیره سازی داریم",
                 confirmBtnText = "اوکیه"
             )
@@ -160,7 +151,7 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                extracted(screenshotState)
+                BestPathLayout(screenshotState)
                 uri?.let { shareBitmap(context, it) }
             }
         }
@@ -168,7 +159,7 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
 }
 
 @Composable
-fun extracted(screenshotState: ScreenshotState) {
+fun BestPathLayout(screenshotState: ScreenshotState) {
     ScreenshotBox(
         modifier = Modifier.fillMaxSize(),
         screenshotState = screenshotState

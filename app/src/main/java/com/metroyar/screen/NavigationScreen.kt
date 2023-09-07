@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.BestPathResult
-import com.metroyar.composable.ShouldConfirmAlertDialog
-import com.metroyar.composable.AutoCompleteOutLinedTextField
+import com.metroyar.component_composable.ShouldConfirmAlertDialog
+import com.metroyar.component_composable.AutoCompleteOutLinedTextField
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
@@ -46,7 +46,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LaunchedEffect(srcInputText){
+        LaunchedEffect(srcInputText) {
             if (stationList.map { it.stationName }
                     .contains(srcInputText) && dstInputText.isEmpty())
                 focusRequesterDst.requestFocus()

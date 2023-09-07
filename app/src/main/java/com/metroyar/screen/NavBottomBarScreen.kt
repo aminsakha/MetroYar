@@ -1,9 +1,12 @@
 package com.metroyar.screen
 
+import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.os.VibratorManager
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,10 +41,12 @@ import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
 import com.metroyar.utils.playSound
+import com.metroyar.utils.vibratePhone
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
 @Destination
@@ -78,17 +83,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                 playSound(context = context, soundResourceId = R.raw.sound)
                                 selectedMenuIndex = it.ordinal
                                 selectedScreenTopBarTitle = it.title
-                                val vibrator =
-                                    context.getSystemService(VIBRATOR_SERVICE) as Vibrator
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    vibrator.vibrate(
-                                        VibrationEffect.createOneShot(
-                                            20,
-                                            VibrationEffect.DEFAULT_AMPLITUDE
-                                        )
-                                    )
-                                } else
-                                    vibrator.vibrate(20)
+                                vibratePhone(context)
                             },
                         contentAlignment = Alignment.Center
                     ) {

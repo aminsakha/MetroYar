@@ -3,6 +3,11 @@
     <string name="notice_text">🙄</string>
     <string name="same_input_output_message">" اشتباهی مبدا و مقصد رو یکی زدی "</string>
     <string name="ok_message">حله</string>
+    <string name="enableLoc">فعال کردن موقعیت مکانی</string>
+    <string name="enableLocMessage">برای اینکه بهتون بگیم دقیقا چه ایستگاهایی نزدیکتونن باید این دسترسی رو داشته باشیم</string>
+    <string name="confirmBtn">باشه</string>
+    <string name="netLostTitle">قطعی اینترنت</string>
+    <string name="internetLostMessage">اینترنت باید وصل باشه</string>
 
     <string-array name="stationsOnLine1">
         <item>تجریش</item>

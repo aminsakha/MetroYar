@@ -4,35 +4,25 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+import android.net.*
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import com.google.android.gms.location.*
 import com.metroyar.R
-import com.metroyar.composable.CircularProgressBar
-import com.metroyar.composable.ShouldConfirmAlertDialog
-import com.metroyar.composable.UserClosestStationsDialog
+import com.metroyar.component_composable.*
 import com.metroyar.model.Station
 import com.metroyar.network.MetroYarNeshanApiService
-import com.metroyar.composable.EnableLocationDialog
+import com.metroyar.component_composable.EnableLocationDialog
 import com.metroyar.model.GPSCoordinate
 import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
-
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
     var stationId = -1
@@ -153,13 +143,12 @@ fun getCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Un
     locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
 }
 
-@SuppressLint("ServiceCast")
 fun isGpsEnabled(context: Context): Boolean {
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
 
-suspend fun setPairOfClosestStations(
+suspend fun findClosestStations(
     location: GPSCoordinate,
     onPairChange: (Pair<String, String>) -> Unit
 ) {
@@ -207,9 +196,9 @@ fun SuggestionStationsLayout(
             shouldShowPermission = false
             onDisMiss.invoke(false)
         },
-        title = "فعال کردن موقعیت مکانی",
-        bodyMessage = "برای اینکه بهتون بگیم دقیقا چه ایستگاهایی نزدیکتونن باید این دسترسی رو داشته باشیم",
-        confirmBtnText = "باشه",
+        title = stringResource(R.string.enableLoc),
+        bodyMessage = stringResource(R.string.enableLocMessage),
+        confirmBtnText = stringResource(R.string.confirmBtn),
         onPermissionGranted = {
             shouldShowPermission = false
             if (!isGpsEnabled(context))
@@ -232,9 +221,9 @@ fun SuggestionStationsLayout(
                 showInternetDialog = false
                 onDisMiss.invoke(false)
             },
-            title = "قطعی اینترنت",
-            message = "اینترنت باید وصل باشه",
-            confirmBtnText = "اوکیه"
+            title = stringResource(R.string.netLostTitle),
+            message = stringResource(R.string.internetLostMessage),
+            confirmBtnText = stringResource(R.string.confirmBtn)
         )
     }
     if (isWiFiEnabled && isLocEnabled && location.x == 0.0) {
@@ -244,7 +233,7 @@ fun SuggestionStationsLayout(
 
     LaunchedEffect(key1 = location) {
         if (location.x != 0.0)
-            setPairOfClosestStations(location = location, onPairChange = { pair = it })
+            findClosestStations(location = location, onPairChange = { pair = it })
     }
 
     if (pair.first != "") {
@@ -255,7 +244,7 @@ fun SuggestionStationsLayout(
                 showSuggestionDialog = false
                 onSuggestionStationsDialogDisMiss.invoke(false)
             },
-            pair = findMatchingNames(pair),
+            pair = convertNeshanStationNameToMyFormat(pair),
             visible = showSuggestionDialog,
             srcOnclick = {
                 showSuggestionDialog = false
@@ -268,32 +257,16 @@ fun SuggestionStationsLayout(
     }
 }
 
-fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
-    val matchingNames = mutableSetOf<String>()
-
-    // Check for a match with triple.first
-    val firstName =
-        stationList.map { it.stationName }.find { pair.first.contains(it, ignoreCase = true) }
-    if (firstName != null) {
-        matchingNames.add(firstName)
-    }
-
-    val secondName =
-        stationList.map { it.stationName }.find { pair.second.contains(it, ignoreCase = true) }
-    if (secondName != null) {
-        matchingNames.add(secondName)
-    }
-
-    return if (matchingNames.size > 1)
-        Pair(
-            matchingNames.toList().getOrNull(0) ?: "",
-            matchingNames.toList().getOrNull(1) ?: ""
-        )
-    else
-        Pair(
-            matchingNames.toList().getOrNull(0) ?: "",
-            ""
-        )
+fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String, String> {
+    val matchingNames = stationList.map { it.stationName }
+        .filter {
+            pair.first.contains(it, ignoreCase = true) || pair.second.contains(
+                it,
+                ignoreCase = true
+            )
+        }
+        .take(2)
+    return Pair(matchingNames.getOrNull(1) ?: "", matchingNames.getOrNull(0) ?: "")
 }
 
 fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
@@ -303,24 +276,12 @@ fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         .build()
     val networkCallback = object : ConnectivityManager.NetworkCallback() {
-
-        // network is available for use
         override fun onAvailable(network: Network) {
             log("network stat", "okeye")
             onStatChange.invoke(true)
             super.onAvailable(network)
         }
 
-        // Network capabilities have changed for the network
-        override fun onCapabilitiesChanged(
-            network: Network,
-            networkCapabilities: NetworkCapabilities
-        ) {
-            super.onCapabilitiesChanged(network, networkCapabilities)
-            log("network stat", "change")
-        }
-
-        // lost network connection
         override fun onLost(network: Network) {
             log("network stat", "ok nist")
             onStatChange.invoke(false)
@@ -329,10 +290,28 @@ fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
     }
     val connectivityManager =
         context.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
-    if (connectivityManager.activeNetwork == null) {
+    if (connectivityManager.activeNetwork == null)
         onStatChange.invoke(false)
-        log("sat", "null")
-    } else
+    else
         onStatChange.invoke(true)
     connectivityManager.requestNetwork(networkRequest, networkCallback)
+}
+
+ fun vibratePhone(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val vibratorManager =
+            context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        val vibrator = vibratorManager.defaultVibrator
+        vibrator.vibrate(
+            VibrationEffect.createOneShot(
+                20,
+                VibrationEffect.EFFECT_TICK
+            )
+        )
+    } else {
+        val vibrator =
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        @Suppress("DEPRECATION")
+        vibrator.vibrate(20)
+    }
 }
