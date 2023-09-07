@@ -6,7 +6,6 @@ import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.model.Station
 import com.metroyar.utils.GlobalObjects.adjNodesLineNum
-import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.findStationObjectFromItsId
 import com.metroyar.utils.findStationObjectFromItsName
 import com.metroyar.utils.getDirectionFromInterchangeStations
@@ -14,7 +13,7 @@ import com.metroyar.utils.log
 import java.util.PriorityQueue
 
 
-class Result(
+class BestPathResult(
     private val context: Context,
     private var startStationName: String,
     private var destStationName: String
@@ -55,12 +54,12 @@ class Result(
 
     fun convertPathToUserUnderstandableForm(): MutableList<String> {
         val path = generatePossiblePaths().peek()!!
-        val stations = path.stationsOnPath.distinctBy { it.name }.toMutableList()
-        log("path is :", path.stationsOnPath.map { it.name }.toSet().toMutableList())
+        val stations = path.stationsOnPath.distinctBy { it.stationName }.toMutableList()
+        log("path is :", path.stationsOnPath.map { it.stationName }.toSet().toMutableList())
         val pathStationNamesResult = mutableSetOf<String>().toMutableList()
         pathStationNamesResult.add("حرکت از ایستگاه ")
         pathStationNamesResult[pathStationNamesResult.lastIndex] =
-            pathStationNamesResult.last() + stations[0].name
+            pathStationNamesResult.last() + stations[0].stationName
         pathStationNamesResult[pathStationNamesResult.lastIndex] =
             pathStationNamesResult.last() + " به سمت ${
                 detectWhereToGoFromStartStation(
@@ -71,8 +70,8 @@ class Result(
         stations.removeFirst()
         for (stationIndex in stations.indices) {
             try {
-                pathStationNamesResult.add(stations[stationIndex].name)
-                if (intersectionNames.contains(stations[stationIndex].name)) {
+                pathStationNamesResult.add(stations[stationIndex].stationName)
+                if (intersectionNames.contains(stations[stationIndex].stationName)) {
                     val plus = getDirectionFromInterchangeStations(
                         stations[stationIndex].id,
                         stations[stationIndex + 1].id
@@ -105,8 +104,8 @@ class Result(
                     context.packageName
                 )
             )
-            if (curLine.contains(startStation.name) && curLine.contains(nextStation.name)) {
-                return if (curLine.indexOf(startStation.name) < curLine.indexOf(nextStation.name))
+            if (curLine.contains(startStation.stationName) && curLine.contains(nextStation.stationName)) {
+                return if (curLine.indexOf(startStation.stationName) < curLine.indexOf(nextStation.stationName))
                     tripleOfLinesAndTheirStartAndEndStations.find { it.first == i }!!.third
                 else
                     tripleOfLinesAndTheirStartAndEndStations.find { it.first == i }!!.second
@@ -132,7 +131,5 @@ class Result(
                     nextStation.id
                 )] && (it.second == "شاهد - باقرشهر" || it.second == "بیمه")
             }!!.second
-
-        //return "wrong"
     }
 }

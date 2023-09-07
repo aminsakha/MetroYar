@@ -2,18 +2,16 @@ package com.metroyar.network
 
 import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.metroyar.model.NeshanSearchResponseModel
+import com.metroyar.model.NeshanSearchPlaceResponseModel
 import com.metroyar.utils.GlobalObjects
-import com.metroyar.utils.log
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.ConnectionPool
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -36,15 +34,13 @@ val client: OkHttpClient.Builder =
         .readTimeout(15, TimeUnit.SECONDS)
         .addInterceptor(loggingInterceptor)
 
+@OptIn(ExperimentalSerializationApi::class)
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
     .client(client.build())
     .build()
-private val retrofitWithStringOutPut = Retrofit.Builder()
-    .addConverterFactory(ScalarsConverterFactory.create())
-    .baseUrl(BASE_URL)
-    .build()
+
 interface NeshanApiService {
     @GET("/v1/search")
     suspend fun findNearestStationsFromApi(
@@ -52,14 +48,11 @@ interface NeshanApiService {
         @Query("term") term: String,
         @Query("lat") latitude: Double,
         @Query("lng") longitude: Double
-    ): NeshanSearchResponseModel
+    ): NeshanSearchPlaceResponseModel
 }
 
 object MetroYarNeshanApiService {
     val retrofitService: NeshanApiService by lazy {
         retrofit.create(NeshanApiService::class.java)
-    }
-    val retrofitServiceWithStringOutPut: NeshanApiService by lazy {
-        retrofitWithStringOutPut.create(NeshanApiService::class.java)
     }
 }

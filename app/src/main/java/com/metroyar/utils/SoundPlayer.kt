@@ -1,17 +1,15 @@
 package com.metroyar.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.metroyar.R
 
-fun playSound(context: Context) {
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+fun  playSound(context: Context, soundResourceId:Int) {
     val player = ExoPlayer.Builder(context).build()
-    val resourceId = R.raw.sound
-    val uri = Uri.parse("android.resource://${context.packageName}/$resourceId")
+    val uri = Uri.parse("android.resource://${context.packageName}/$soundResourceId")
     val mediaItem = MediaItem.fromUri(uri)
     player.apply {
         setMediaItem(mediaItem)
@@ -20,7 +18,8 @@ fun playSound(context: Context) {
         play()
     }
     player.addListener(object : Player.Listener {
-        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            super.onPlaybackStateChanged(playbackState)
             if (playbackState == Player.STATE_ENDED)
                 player.release()
         }

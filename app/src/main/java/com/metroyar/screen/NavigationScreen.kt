@@ -20,9 +20,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
-import com.metroyar.classes.Result
-import com.metroyar.composable.OneBtnAlertDialog
-import com.metroyar.composable.autoCompleteOutLinedTextField
+import com.metroyar.classes.BestPathResult
+import com.metroyar.composable.ShouldConfirmAlertDialog
+import com.metroyar.composable.AutoCompleteOutLinedTextField
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
@@ -47,16 +47,16 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LaunchedEffect(srcInputText){
-            if (stationList.map { it.name }
+            if (stationList.map { it.stationName }
                     .contains(srcInputText) && dstInputText.isEmpty())
                 focusRequesterDst.requestFocus()
         }
 
-        autoCompleteOutLinedTextField(
+        AutoCompleteOutLinedTextField(
             label = "ایستگاه مبدا رو انتخاب کن",
             focusRequester = focusRequesterSrc,
-            value = srcInputText,
-            onValueChange = {
+            inputValue = srcInputText,
+            onInputValueChange = {
                 srcInputText = it
                 startStation = srcInputText
             },
@@ -69,11 +69,11 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
 
         Spacer(Modifier.height(16.dp))
 
-        autoCompleteOutLinedTextField(
+        AutoCompleteOutLinedTextField(
             label = "ایستگاه مقصد رو انتخاب کن",
             focusRequester = focusRequesterDst,
-            value = dstInputText,
-            onValueChange = {
+            inputValue = dstInputText,
+            onInputValueChange = {
                 dstInputText = it
                 destStation = dstInputText
             },
@@ -114,9 +114,9 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     alertMessageText = " اشتباهی مبدا و مقصد رو یکی زدی "
                     showDialog = true
                 } else {
-                    if (stationList.map { it.name }
+                    if (stationList.map { it.stationName }
                             .containsAll(Pair(srcInputText, dstInputText).toList())) {
-                        resultList.value = Result(
+                        resultList.value = BestPathResult(
                             context,
                             srcInputText,
                             dstInputText
@@ -133,7 +133,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         ) {
             Text("برام بهترین مسیرو پیدا کن", color = MaterialTheme.colorScheme.onPrimary)
         }
-        OneBtnAlertDialog(
+        ShouldConfirmAlertDialog(
             visible = showDialog,
             onConfirm = { showDialog = false },
             onDismissRequest = { showDialog = false },

@@ -39,10 +39,11 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.metroyar.composable.shareBitmap
 import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.log
+import com.metroyar.utils.saveBitmapAndGetUri
+import com.metroyar.utils.shareBitmap
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smarttoolfactory.screenshot.ImageResult
@@ -151,7 +152,6 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
                     icon = { Icon(Icons.Filled.Share, "") },
                     text = { Text(text = "ارسال مسیر") },
                 )
-
         },
         floatingActionButtonPosition = FabPosition.Center,
         content = { padding ->

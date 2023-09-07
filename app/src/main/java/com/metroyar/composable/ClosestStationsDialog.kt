@@ -22,13 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun SuggestionStationsDialog(
+fun UserClosestStationsDialog(
     visible: Boolean = true,
     pair: Pair<String, String>,
     onDismissRequest: () -> Unit = {},
@@ -64,19 +63,19 @@ fun SuggestionStationsDialog(
 
                     if (pair.first.isNotEmpty())
                         Row {
-                            SuggestionStationItem(
+                            SuggestionStationItemCard(
                                 stationName = pair.first,
-                                dstOnClicked = dstOnClicked,
-                                srcOnclick = srcOnclick
+                                onDstClicked = dstOnClicked,
+                                onSrcClicked = srcOnclick
                             )
                             Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "")
                         }
 
                     if (pair.second.isNotEmpty())
-                        SuggestionStationItem(
+                        SuggestionStationItemCard(
                             stationName = pair.second,
-                            dstOnClicked = dstOnClicked,
-                            srcOnclick = srcOnclick
+                            onDstClicked = dstOnClicked,
+                            onSrcClicked = srcOnclick
                         )
                 }
             }
@@ -84,10 +83,10 @@ fun SuggestionStationsDialog(
 }
 
 @Composable
-fun SuggestionStationItem(
+fun SuggestionStationItemCard(
     stationName: String,
-    srcOnclick: (String) -> Unit,
-    dstOnClicked: (String) -> Unit
+    onSrcClicked: (String) -> Unit,
+    onDstClicked: (String) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -104,13 +103,13 @@ fun SuggestionStationItem(
         ) {
             Text(text = stationName, fontWeight = FontWeight.Bold)
             TextButton(
-                onClick = { srcOnclick.invoke(stationName) },
+                onClick = { onSrcClicked.invoke(stationName) },
                 modifier = Modifier.padding(4.dp),
             ) {
                 Text("انتخاب به عنوان مبدا")
             }
             TextButton(
-                onClick = { dstOnClicked.invoke(stationName) },
+                onClick = { onDstClicked.invoke(stationName) },
                 modifier = Modifier.padding(4.dp),
             ) {
                 Text("انتخاب به عنوان مقصد")

@@ -14,8 +14,8 @@ class Path(val stationsOnPath: MutableList<Station>) {
     private fun calculateInterchangesScore() {
         var currLine = -1
         stationsOnPath.forEach { currStation ->
-            if (currStation.lineNum != currLine) {
-                currLine = currStation.lineNum
+            if (currStation.lineNumber != currLine) {
+                currLine = currStation.lineNumber
                 interchangesScore++
             }
         }

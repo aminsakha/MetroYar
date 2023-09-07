@@ -30,23 +30,22 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.metroyar.R
 import com.metroyar.ui.theme.hint
-import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.GlobalObjects.stationList
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun autoCompleteOutLinedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
+fun AutoCompleteOutLinedTextField(
+    inputValue: String,
+    onInputValueChange: (String) -> Unit,
     onItemSelectedChange: (String) -> Unit,
     onTrashIconClick: (String) -> Unit,
     label: String,
     focusRequester: FocusRequester,
 ) {
-    val dropDownStationNamesList = GlobalObjects.stationList.map { it.name }.toSet().sorted()
+    val dropDownStationNamesList = stationList.map { it.stationName }.toSet().sorted()
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
-
     Column(
         modifier = Modifier
             .padding(15.dp)
@@ -71,9 +70,9 @@ fun autoCompleteOutLinedTextField(
                     )
                 },
                 shape = RoundedCornerShape(8.dp),
-                value = value,
+                value = inputValue,
                 onValueChange = {
-                    onValueChange.invoke(it)
+                    onInputValueChange.invoke(it)
                     expanded = dropDownStationNamesList.binarySearch(it) < 0
                     if (!expanded)
                         keyboardController?.hide()
@@ -106,9 +105,9 @@ fun autoCompleteOutLinedTextField(
                             .heightIn(max = 150.dp)
                             .background(MaterialTheme.colorScheme.secondaryContainer)
                     ) {
-                        if (value.isNotEmpty()) {
-                            items(dropDownStationNamesList.filter { it.contains(value) }) { title ->
-                                CategoryItems(title = title) {
+                        if (inputValue.isNotEmpty()) {
+                            items(dropDownStationNamesList.filter { it.contains(inputValue) }) { title ->
+                                DropDownStationSuggestionItem(itemName = title) {
                                     onItemSelectedChange.invoke(title)
                                     expanded = false
                                     focusManager.clearFocus()
@@ -123,16 +122,16 @@ fun autoCompleteOutLinedTextField(
 }
 
 @Composable
-fun CategoryItems(
-    title: String,
-    onSelect: (String) -> Unit
+fun DropDownStationSuggestionItem(
+    itemName: String,
+    onItemSelected: (String) -> Unit
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .clickable { onSelect(title) }
+        .clickable { onItemSelected(itemName) }
         .padding(10.dp)) {
         Text(
-            text = title,
+            text = itemName,
             fontSize = 16.sp,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End

@@ -3,7 +3,7 @@ package com.metroyar.screen
 import androidx.compose.runtime.Composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.metroyar.composable.OneBtnAlertDialog
+import com.metroyar.composable.ShouldConfirmAlertDialog
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -17,7 +17,7 @@ fun PermissionScreen(
         onPermissionGranted()
     else {
         if (visible)
-            OneBtnAlertDialog(
+            ShouldConfirmAlertDialog(
                 onDismissRequest = { onDismissRequest() },
                 onConfirm = { locationPermissionsState.launchMultiplePermissionRequest() },
                 title = title,

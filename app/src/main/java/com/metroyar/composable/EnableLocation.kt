@@ -1,4 +1,4 @@
-package com.metroyar.screen
+package com.metroyar.composable
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
@@ -17,12 +17,10 @@ import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
-import com.metroyar.utils.log
 
 @Composable
 fun EnableLocationDialog(onValueChange: (Boolean) -> Unit) {
     val context: Context = LocalContext.current
-    rememberCoroutineScope()
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
@@ -69,8 +67,7 @@ fun checkLocationSetting(
                     .Builder(exception.resolution)
                     .build()
                 onDisabled(intentSenderRequest)
-            } catch (sendEx: IntentSender.SendIntentException) {
-                // ignore here
+            } catch (_: IntentSender.SendIntentException) {
             }
         }
     }

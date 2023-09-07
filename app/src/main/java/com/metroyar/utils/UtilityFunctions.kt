@@ -22,12 +22,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.metroyar.R
 import com.metroyar.composable.CircularProgressBar
-import com.metroyar.composable.OneBtnAlertDialog
-import com.metroyar.composable.SuggestionStationsDialog
-import com.metroyar.model.Location
+import com.metroyar.composable.ShouldConfirmAlertDialog
+import com.metroyar.composable.UserClosestStationsDialog
 import com.metroyar.model.Station
 import com.metroyar.network.MetroYarNeshanApiService
-import com.metroyar.screen.EnableLocationDialog
+import com.metroyar.composable.EnableLocationDialog
+import com.metroyar.model.GPSCoordinate
 import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.metroGraph
@@ -49,7 +49,7 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
         curLine.forEach { stationName ->
             try {
                 stationList.add(Station(++stationId, stationName, i))
-                if (stationList.last().lineNum == stationList[stationList.lastIndex - 1].lineNum) {
+                if (stationList.last().lineNumber == stationList[stationList.lastIndex - 1].lineNumber) {
                     metroGraph.addEdge(
                         stationList[stationList.lastIndex - 1].id,
                         stationList.last().id,
@@ -86,19 +86,19 @@ private fun connectInterchangeStations(context: Context) {
             Pair(
                 foundedTwoSameNameStations[0].id,
                 foundedTwoSameNameStations[1].id
-            ), foundedTwoSameNameStations[1].lineNum
+            ), foundedTwoSameNameStations[1].lineNumber
         )
         setAdjNodesLineNum(
             Pair(
                 foundedTwoSameNameStations[1].id,
                 foundedTwoSameNameStations[0].id
-            ), foundedTwoSameNameStations[0].lineNum
+            ), foundedTwoSameNameStations[0].lineNumber
         )
     }
 }
 
 fun findStationObjectFromItsName(stationName: String) =
-    stationList.filter { it.name == stationName }
+    stationList.filter { it.stationName == stationName }
 
 fun findStationObjectFromItsId(stationId: Int) = stationList.find { it.id == stationId }!!
 
@@ -131,7 +131,7 @@ fun connectSideStations(context: Context) {
 }
 
 @SuppressLint("MissingPermission")
-fun getCurrentLocation(context: Context, onLocationChange: (Location) -> Unit) {
+fun getCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Unit) {
     log("got into getCurrentLocation", true)
     val locationRequest = LocationRequest.Builder(
         Priority.PRIORITY_HIGH_ACCURACY,
@@ -146,7 +146,7 @@ fun getCurrentLocation(context: Context, onLocationChange: (Location) -> Unit) {
     val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val location = locationResult.locations.lastOrNull() ?: return
-            onLocationChange.invoke(Location(location.longitude, location.latitude))
+            onLocationChange.invoke(GPSCoordinate(location.longitude, location.latitude))
         }
     }
     // Request location updates and listen for the callback.
@@ -160,7 +160,7 @@ fun isGpsEnabled(context: Context): Boolean {
 }
 
 suspend fun setPairOfClosestStations(
-    location: Location,
+    location: GPSCoordinate,
     onPairChange: (Pair<String, String>) -> Unit
 ) {
     try {
@@ -195,7 +195,7 @@ fun SuggestionStationsLayout(
     var isLocEnabled by remember { mutableStateOf(false) }
     var shouldShowPermission by remember { mutableStateOf(true) }
     var isWiFiEnabled by remember { mutableStateOf(false) }
-    var location by remember { mutableStateOf(Location(0.0, 0.0)) }
+    var location by remember { mutableStateOf(GPSCoordinate(0.0, 0.0)) }
     var pair by remember { mutableStateOf(Pair("", "")) }
     PermissionScreen(
         visible = shouldShowPermission,
@@ -225,7 +225,7 @@ fun SuggestionStationsLayout(
     }
 
     if (!isWiFiEnabled && location.x == 0.0) {
-        OneBtnAlertDialog(
+        ShouldConfirmAlertDialog(
             visible = showInternetDialog,
             onConfirm = { showInternetDialog = false },
             onDismissRequest = {
@@ -250,7 +250,7 @@ fun SuggestionStationsLayout(
     if (pair.first != "") {
         isLoading = false
         log("my pair", pair)
-        SuggestionStationsDialog(
+        UserClosestStationsDialog(
             onDismissRequest = {
                 showSuggestionDialog = false
                 onSuggestionStationsDialogDisMiss.invoke(false)
@@ -273,13 +273,13 @@ fun findMatchingNames(pair: Pair<String, String>): Pair<String, String> {
 
     // Check for a match with triple.first
     val firstName =
-        stationList.map { it.name }.find { pair.first.contains(it, ignoreCase = true) }
+        stationList.map { it.stationName }.find { pair.first.contains(it, ignoreCase = true) }
     if (firstName != null) {
         matchingNames.add(firstName)
     }
 
     val secondName =
-        stationList.map { it.name }.find { pair.second.contains(it, ignoreCase = true) }
+        stationList.map { it.stationName }.find { pair.second.contains(it, ignoreCase = true) }
     if (secondName != null) {
         matchingNames.add(secondName)
     }

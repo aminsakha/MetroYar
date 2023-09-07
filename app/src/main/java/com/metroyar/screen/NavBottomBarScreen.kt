@@ -4,7 +4,6 @@ import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,17 +14,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,14 +43,14 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.S)
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun NavigationBottom(navigator: DestinationsNavigator) {
-    var selectedIndex by remember { mutableStateOf(1) }
-    var selectedScreenTopBarTitle by remember { mutableStateOf(NavBarItems.Navigation.title) }
-    val navBarItems = remember { NavBarItems.values() }
+    val context = LocalContext.current
+    var selectedMenuIndex by remember { mutableIntStateOf(1) }
+    var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
+    val bottomBarItems = remember { BottomNavItem.values() }
 
     Scaffold(
         modifier = Modifier.padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
@@ -65,7 +62,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
         },
         bottomBar = {
             AnimatedNavigationBar(
-                selectedIndex = selectedIndex,
+                selectedIndex = selectedMenuIndex,
                 modifier = Modifier.height(64.dp),
                 cornerRadius = shapeCornerRadius(cornerRadius = 34.dp),
                 ballAnimation = Parabolic(tween(300)),
@@ -73,17 +70,13 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                 barColor = MaterialTheme.colorScheme.primary,
                 ballColor = MaterialTheme.colorScheme.primary
             ) {
-                val context = LocalContext.current
-                navBarItems.forEach {
+                bottomBarItems.forEach {
                     Box(
                         modifier = Modifier
-                            .clickable {
-
-                            }
                             .fillMaxSize()
                             .nonRipple {
-                                playSound(context)
-                                selectedIndex = it.ordinal
+                                playSound(context = context, soundResourceId = R.raw.sound)
+                                selectedMenuIndex = it.ordinal
                                 selectedScreenTopBarTitle = it.title
                                 val vibrator =
                                     context.getSystemService(VIBRATOR_SERVICE) as Vibrator
@@ -94,9 +87,8 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                             VibrationEffect.DEFAULT_AMPLITUDE
                                         )
                                     )
-                                } else {
+                                } else
                                     vibrator.vibrate(20)
-                                }
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -105,7 +97,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                 .size(26.dp),
                             painter = painterResource(id = it.icon),
                             contentDescription = "",
-                            tint = if (selectedIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
+                            tint = if (selectedMenuIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
                             else MaterialTheme.colorScheme.onPrimary
                         )
                     }
@@ -117,13 +109,13 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                DeciderOfScreensInNavBotBar(input = selectedIndex, navigator = navigator)
+                DeciderOfScreensInNavBotBar(input = selectedMenuIndex, navigator = navigator)
             }
         }
     )
 }
 
-enum class NavBarItems(val icon: Int, val title: String) {
+enum class BottomNavItem(val icon: Int, val title: String) {
     Account(icon = R.drawable.baseline_account_circle_24, title = "مترویارمن"),
     Navigation(icon = R.drawable.baseline_near_me_24, title = "مسیریابی"),
     MetroMap(icon = R.drawable.baseline_map_24, title = "بروزترین نسخه نقشه مترو")
