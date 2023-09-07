@@ -1,5 +1,6 @@
 package com.metroyar.utils
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
@@ -185,21 +186,35 @@ fun SuggestionStationsLayout(
     context: Context,
     onDstClicked: (String) -> Unit,
     onSrcClicked: (String) -> Unit,
-    onSuggestionStationsDialogDisMiss: () -> Unit
+    onSuggestionStationsDialogDisMiss: (Boolean) -> Unit,
+    onDisMiss: (Boolean) -> Unit
 ) {
     var showSuggestionDialog by remember { mutableStateOf(true) }
     var showInternetDialog by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(true) }
     var isLocEnabled by remember { mutableStateOf(false) }
+    var shouldShowPermission by remember { mutableStateOf(true) }
     var isWiFiEnabled by remember { mutableStateOf(false) }
     var location by remember { mutableStateOf(Location(0.0, 0.0)) }
     var pair by remember { mutableStateOf(Pair("", "")) }
     PermissionScreen(
+        visible = shouldShowPermission,
+        permissionList = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        ),
+        onDismissRequest = {
+            shouldShowPermission = false
+            onDisMiss.invoke(false)
+        },
+        title = "فعال کردن موقعیت مکانی",
+        bodyMessage = "برای اینکه بهتون بگیم دقیقا چه ایستگاهایی نزدیکتونن باید این دسترسی رو داشته باشیم",
+        confirmBtnText = "باشه",
         onPermissionGranted = {
+            shouldShowPermission = false
             if (!isGpsEnabled(context))
                 EnableLocationDialog {
                     isLocEnabled = true
-                    log("enabled got 2", true)
                 }
             else
                 isLocEnabled = true
@@ -213,16 +228,18 @@ fun SuggestionStationsLayout(
         OneBtnAlertDialog(
             visible = showInternetDialog,
             onConfirm = { showInternetDialog = false },
-            onDismissRequest = { showInternetDialog = false },
+            onDismissRequest = {
+                showInternetDialog = false
+                onDisMiss.invoke(false)
+            },
             title = "قطعی اینترنت",
             message = "اینترنت باید وصل باشه",
-            okMessage = "اوکیه"
+            confirmBtnText = "اوکیه"
         )
     }
     if (isWiFiEnabled && isLocEnabled && location.x == 0.0) {
         CircularProgressBar(visible = isLoading)
         getCurrentLocation(context, onLocationChange = { location = it })
-        log("isLocEnabled", location)
     }
 
     LaunchedEffect(key1 = location) {
@@ -236,7 +253,7 @@ fun SuggestionStationsLayout(
         SuggestionStationsDialog(
             onDismissRequest = {
                 showSuggestionDialog = false
-                onSuggestionStationsDialogDisMiss.invoke()
+                onSuggestionStationsDialogDisMiss.invoke(false)
             },
             pair = findMatchingNames(pair),
             visible = showSuggestionDialog,

@@ -1,6 +1,8 @@
 package com.metroyar.screen
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -57,6 +59,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PathResultScreen(navigator: DestinationsNavigator) {
+    var showPermissionLayout by remember { mutableStateOf(false) }
+    var shouldShowPermission by remember { mutableStateOf(true) }
     var visible by remember { mutableStateOf(true) }
     var shouldCapture by remember { mutableStateOf(false) }
     val screenshotState = rememberScreenshotState()
@@ -67,7 +71,6 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
     LaunchedEffect(key1 = imageResult) {
         when (imageResult) {
             is ImageResult.Success -> {
-                log("into suc", true)
                 val res = saveBitmapAndGetUri(
                     bitmap = imageResult.data.asImageBitmap().asAndroidBitmap(),
                     context = context
@@ -88,41 +91,62 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
 
     DisposableEffect(shouldCapture) {
         if (shouldCapture) {
-            // Delay is used to allow the UI to recompose and hide the FAB before capturing screenshot
-            // You can adjust the delay duration as per your need
             CoroutineScope(Dispatchers.Main).launch {
-                delay(10) // 200ms delay
+                delay(10)
                 screenshotState.capture()
                 visible = true
-                shouldCapture = false
+                //shouldCapture = false
             }
         }
-        onDispose { /* Clean up goes here if needed */ }
+        onDispose { }
     }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = "بهترین مسیر")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Go back"
-                        )
+    if (showPermissionLayout) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+            PermissionScreen(
+                visible = shouldShowPermission,
+                onDismissRequest = { shouldShowPermission = false },
+                onPermissionGranted = {
+                    shouldShowPermission = false
+                    if (!shouldCapture) {
+                        shouldCapture = true
+                        visible = false
                     }
-                })
-        },
+                },
+                permissionList = listOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                title = "دسترسی به فضای دستگاه",
+
+                bodyMessage = "برای ارسال عکس نیاز به دسترسی فضای ذخیره سازی داریم",
+                confirmBtnText = "اوکیه"
+            )
+    }
+
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(
+            title = {
+                Text(text = "بهترین مسیر")
+            },
+            navigationIcon = {
+                IconButton(onClick = { navigator.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Go back"
+                    )
+                }
+            })
+    },
         floatingActionButton = {
             if (visible)
                 ExtendedFloatingActionButton(
                     onClick = {
-                        if (!shouldCapture) {
-                            shouldCapture = true
-                            visible = false
-                        }
+                        showPermissionLayout = true
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                            if (!shouldCapture) {
+                                shouldCapture = true
+                                visible = false
+                            }
                     },
                     icon = { Icon(Icons.Filled.Share, "") },
                     text = { Text(text = "ارسال مسیر") },
@@ -141,8 +165,6 @@ fun PathResultScreen(navigator: DestinationsNavigator) {
             }
         }
     )
-
-
 }
 
 @Composable
