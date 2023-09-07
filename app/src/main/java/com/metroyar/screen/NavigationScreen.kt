@@ -5,16 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,28 +17,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.Result
 import com.metroyar.composable.OneBtnAlertDialog
 import com.metroyar.composable.autoCompleteOutLinedTextField
-import com.metroyar.ui.theme.line
+import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.utils.Test2
+import com.metroyar.utils.SuggestionStationsLayout
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-fun NavigationScreen() {
-    NavigatingScreen(LocalContext.current)
-}
-
-@Composable
-fun NavigatingScreen(context: Context) {
+fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var srcInputText by remember { mutableStateOf(startStation) }
     var dstInputText by remember { mutableStateOf(destStation) }
     var alertMessageText by remember { mutableStateOf("") }
@@ -99,7 +86,9 @@ fun NavigatingScreen(context: Context) {
 
         Spacer(Modifier.height(16.dp))
         if (isFindNearestButtonClicked) {
-            Test2(
+            SuggestionStationsLayout(
+                onDisMiss = { isFindNearestButtonClicked = it },
+                onSuggestionStationsDialogDisMiss = { isFindNearestButtonClicked = it },
                 context = context,
                 onSrcClicked = {
                     srcInputText = it
@@ -126,13 +115,14 @@ fun NavigatingScreen(context: Context) {
                     showDialog = true
                 } else {
                     if (stationList.map { it.name }
-                            .containsAll(Pair(srcInputText, dstInputText).toList()))
+                            .containsAll(Pair(srcInputText, dstInputText).toList())) {
                         resultList.value = Result(
                             context,
                             srcInputText,
                             dstInputText
                         ).convertPathToUserUnderstandableForm()
-                    else {
+                        navigator.navigate(PathResultScreenDestination)
+                    } else {
                         alertMessageText = " مبدا و مقصد رو درست بزن لطفا "
                         showDialog = true
                     }
@@ -149,22 +139,7 @@ fun NavigatingScreen(context: Context) {
             onDismissRequest = { showDialog = false },
             title = stringResource(R.string.notice_text),
             message = alertMessageText,
-            okMessage = stringResource(R.string.ok_message)
+            confirmBtnText = stringResource(R.string.ok_message)
         )
-        Spacer(Modifier.height(12.dp))
-
-        LazyColumn {
-            itemsIndexed(resultList.value) { index, item ->
-                Text(
-                    item,
-                    Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.End
-                )
-                if (index < resultList.value.lastIndex)
-                    Divider(color = line, thickness = 1.dp)
-            }
-        }
     }
 }

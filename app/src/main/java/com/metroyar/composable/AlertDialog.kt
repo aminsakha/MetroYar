@@ -24,7 +24,7 @@ import androidx.compose.ui.window.Dialog
 fun OneBtnAlertDialog(
     title: String,
     message: String,
-    okMessage: String,
+    confirmBtnText: String,
     visible: Boolean = true,
     onDismissRequest: () -> Unit = {},
     onConfirm: () -> Unit = {}
@@ -47,7 +47,7 @@ fun OneBtnAlertDialog(
             confirmButton = {
                 TextButton(onClick = onConfirm) {
                     Text(
-                        text = okMessage, modifier = Modifier.fillMaxWidth(),
+                        text = confirmBtnText, modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End
                     )
                 }
