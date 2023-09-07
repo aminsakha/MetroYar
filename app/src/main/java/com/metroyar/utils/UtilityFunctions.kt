@@ -214,7 +214,7 @@ fun SuggestionStationsLayout(
             shouldShowPermission = false
             if (!isGpsEnabled(context))
                 EnableLocationDialog {
-                    isLocEnabled = true
+                    isLocEnabled = it
                 }
             else
                 isLocEnabled = true

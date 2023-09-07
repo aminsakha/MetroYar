@@ -20,16 +20,16 @@ import com.google.android.gms.tasks.Task
 import com.metroyar.utils.log
 
 @Composable
-fun EnableLocationDialog(onValueChange: (String) -> Unit) {
+fun EnableLocationDialog(onValueChange: (Boolean) -> Unit) {
     val context: Context = LocalContext.current
     rememberCoroutineScope()
     val settingResultRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { activityResult ->
         if (activityResult.resultCode == RESULT_OK) {
-            onValueChange.invoke("")
+            onValueChange.invoke(true)
         } else
-            log("appDebug", "Denied")
+            onValueChange.invoke(false)
     }
     checkLocationSetting(
         context = context,
