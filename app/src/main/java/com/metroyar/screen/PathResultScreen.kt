@@ -48,6 +48,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.GlobalObjects.currentLineOfStartStation
+import com.metroyar.utils.getNextTrain
 import com.metroyar.utils.log
 import com.metroyar.utils.saveBitmapAndGetUri
 import com.metroyar.utils.shareBitmap
@@ -61,6 +63,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 @Destination
 @OptIn(ExperimentalMaterial3Api::class)
@@ -190,7 +193,14 @@ fun BestPathLayout(
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Text(
-                    text = startStation,
+                    text = startStation.plus(
+                        " حرکت از ساعت ${
+                            getNextTrain(
+                                currentTime = LocalTime.now(),
+                                lineNumber = currentLineOfStartStation
+                            )
+                        } "
+                    ),
                     textAlign = TextAlign.End,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -200,7 +210,9 @@ fun BestPathLayout(
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = "",
-                    modifier = Modifier.align(Alignment.End).padding(end = 24.dp)
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(end = 24.dp)
                 )
                 Spacer(modifier = Modifier.heightIn(4.dp))
                 Text(

@@ -6,6 +6,7 @@ import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.model.Station
 import com.metroyar.utils.GlobalObjects.adjNodesLineNum
+import com.metroyar.utils.GlobalObjects.currentLineOfStartStation
 import com.metroyar.utils.findStationObjectFromItsId
 import com.metroyar.utils.findStationObjectFromItsName
 import com.metroyar.utils.getDirectionFromInterchangeStations
@@ -54,6 +55,7 @@ class BestPathResult(
 
     fun convertPathToUserUnderstandableForm(): MutableList<String> {
         val path = generatePossiblePaths().peek()!!
+        currentLineOfStartStation = path.stationsOnPath[0].lineNumber
         val stations = path.stationsOnPath.distinctBy { it.stationName }.toMutableList()
         log("path is :", path.stationsOnPath.map { it.stationName }.toSet().toMutableList())
         val pathStationNamesResult = mutableSetOf<String>().toMutableList()

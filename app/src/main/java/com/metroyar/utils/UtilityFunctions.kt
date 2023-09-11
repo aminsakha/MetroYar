@@ -19,10 +19,20 @@ import com.metroyar.model.Station
 import com.metroyar.network.MetroYarNeshanApiService
 import com.metroyar.component_composable.EnableLocationDialog
 import com.metroyar.model.GPSCoordinate
+import com.metroyar.model.line.LineFIve
+import com.metroyar.model.line.LineFour
+import com.metroyar.model.line.LineOne
+import com.metroyar.model.line.LineSeven
+import com.metroyar.model.line.LineSix
+import com.metroyar.model.line.LineThree
+import com.metroyar.model.line.LineTwo
 import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
+import java.time.Duration
+import java.time.LocalTime
+import kotlin.math.roundToLong
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
     var stationId = -1
@@ -297,7 +307,7 @@ fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
     connectivityManager.requestNetwork(networkRequest, networkCallback)
 }
 
- fun vibratePhone(context: Context) {
+fun vibratePhone(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val vibratorManager =
             context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -314,4 +324,27 @@ fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
         @Suppress("DEPRECATION")
         vibrator.vibrate(20)
     }
+}
+
+fun getNextTrain(lineNumber: Int, currentTime: LocalTime): LocalTime? {
+    val metroLines =
+        listOf(LineOne(), LineTwo(), LineThree(), LineFour(), LineFIve(), LineSix(), LineSeven())
+    val metroLine = metroLines.find { it.number == lineNumber }
+
+    metroLine?.let {
+        for (timeChunk in it.timeTable) {
+            if (currentTime.isAfter(timeChunk.start) && currentTime.isBefore(timeChunk.end)) {
+                val minutesSinceChunkStart =
+                    Duration.between(timeChunk.start, currentTime).toMinutes()
+                val nextTrainIn =
+                    timeChunk.frequency.toDouble() - (minutesSinceChunkStart % timeChunk.frequency.toDouble())
+
+                return currentTime.plusMinutes(nextTrainIn.roundToLong())
+            }
+        }
+    }
+    return LocalTime.of(
+        5,
+        30
+    )
 }

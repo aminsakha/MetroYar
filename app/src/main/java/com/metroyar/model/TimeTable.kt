@@ -2,8 +2,8 @@ package com.metroyar.model
 
 import java.time.LocalTime
 
-data class TimeChunk(
+data class TimeTable(
     val start: LocalTime,
     val end: LocalTime,
-    val frequency: Int  // in minutes
+    val frequency: Number  // in minutes
 )

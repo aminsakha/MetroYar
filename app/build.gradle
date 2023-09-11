@@ -32,6 +32,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -93,6 +94,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
     implementation 'com.github.SmartToolFactory:Compose-Screenshot:1.0.3'
     implementation 'io.realm.kotlin:library-base:1.11.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     implementation 'io.realm.kotlin:library-sync:1.11.0'// If using Device Sync
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1' // If using coroutines with the SDK
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
+    // If using coroutines with the SDK
 }
