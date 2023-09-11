@@ -53,7 +53,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         }
 
         AutoCompleteOutLinedTextField(
-            label = "ایستگاه مبدا رو انتخاب کن",
+            label = stringResource(R.string.chosseSrc),
             focusRequester = focusRequesterSrc,
             inputValue = srcInputText,
             onInputValueChange = {
@@ -70,7 +70,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         Spacer(Modifier.height(16.dp))
 
         AutoCompleteOutLinedTextField(
-            label = "ایستگاه مقصد رو انتخاب کن",
+            label = stringResource(R.string.chooseDst),
             focusRequester = focusRequesterDst,
             inputValue = dstInputText,
             onInputValueChange = {
@@ -121,7 +121,12 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                             srcInputText,
                             dstInputText
                         ).convertPathToUserUnderstandableForm()
-                        navigator.navigate(PathResultScreenDestination)
+                        navigator.navigate(
+                            PathResultScreenDestination(
+                                startStation = startStation,
+                                destinationStation = destStation
+                            )
+                        )
                     } else {
                         alertMessageText = " مبدا و مقصد رو درست بزن لطفا "
                         showDialog = true
