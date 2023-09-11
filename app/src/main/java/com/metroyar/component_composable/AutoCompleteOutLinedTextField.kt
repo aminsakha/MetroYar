@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,26 +21,19 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.metroyar.R
-import com.metroyar.db.RealmObject
-import com.metroyar.db.deleteItem
-import com.metroyar.db.getItems
-import com.metroyar.db.insertToDb
+import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.ui.theme.hint
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.utils.log
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -55,7 +46,7 @@ fun AutoCompleteOutLinedTextField(
     label: String,
     focusRequester: FocusRequester,
 ) {
-    val dataBaseList = getItems(realm = RealmObject.realm)
+    val dataBaseList = realmRepo.getListOfFavoriteStations()
     val dropDownStationNamesList =
         stationList.map { it.stationName }.toSet().sortedWith(compareBy { element ->
             dataBaseList.indexOf(element)
@@ -144,12 +135,9 @@ fun AutoCompleteOutLinedTextField(
                                 onStarSelected = {
                                     coroutineScope.launch {
                                         if (it)
-                                            deleteItem(stationName, RealmObject.realm)
+                                            realmRepo.deleteStation(stationName)
                                         else
-                                            insertToDb(
-                                                name = stationName,
-                                                realm = RealmObject.realm
-                                            )
+                                            realmRepo.insertStation(stationName = stationName)
                                     }
                                 },
                                 itemName = stationName,
