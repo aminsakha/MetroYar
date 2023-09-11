@@ -121,7 +121,12 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                             srcInputText,
                             dstInputText
                         ).convertPathToUserUnderstandableForm()
-                        navigator.navigate(PathResultScreenDestination)
+                        navigator.navigate(
+                            PathResultScreenDestination(
+                                startStation = startStation,
+                                destinationStation = destStation
+                            )
+                        )
                     } else {
                         alertMessageText = " مبدا و مقصد رو درست بزن لطفا "
                         showDialog = true
