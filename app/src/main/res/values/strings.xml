@@ -8,6 +8,8 @@
     <string name="confirmBtn">باشه</string>
     <string name="netLostTitle">قطعی اینترنت</string>
     <string name="internetLostMessage">اینترنت باید وصل باشه</string>
+    <string name="chosseSrc">ایستگاه مبدا رو انتخاب کن</string>
+    <string name="chooseDst">ایستگاه مقصد رو انتخاب کن</string>
 
     <string-array name="stationsOnLine1">
         <item>تجریش</item>
