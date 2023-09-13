@@ -95,7 +95,8 @@ dependencies {
     implementation 'com.github.SmartToolFactory:Compose-Screenshot:1.0.3'
     implementation 'io.realm.kotlin:library-base:1.11.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
-    implementation 'io.realm.kotlin:library-sync:1.11.0'// If using Device Sync
+    implementation 'io.realm.kotlin:library-sync:1.11.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }

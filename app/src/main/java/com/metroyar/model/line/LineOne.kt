@@ -8,16 +8,16 @@ class LineOne : Line() {
     override val timeTable = mutableListOf(
         TimeTable(
             start = LocalTime.of(5, 30),
-            end = LocalTime.of(6, 30),
-            frequency = 15
+            end = LocalTime.of(10, 0),
+            frequency = 6.5
         ),
         TimeTable(
-            start = LocalTime.of(6, 30),
-            end = LocalTime.of(20, 10),
+            start = LocalTime.of(10, 0),
+            end = LocalTime.of(19, 30),
             frequency = 5
         ),
         TimeTable(
-            start = LocalTime.of(20, 10),
+            start = LocalTime.of(19, 30),
             end = LocalTime.of(22, 0),
             frequency = 8
         ),

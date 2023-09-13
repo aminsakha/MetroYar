@@ -9,7 +9,7 @@ class LineFIve : Line() {
         TimeTable(
             start = LocalTime.of(5, 30),
             end = LocalTime.of(22, 0),
-            frequency = 16
+            frequency = 12
         ),
     )
 }

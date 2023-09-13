@@ -8,13 +8,18 @@ class LineThree : Line() {
     override val timeTable = mutableListOf(
         TimeTable(
             start = LocalTime.of(5, 30),
-            end = LocalTime.of(19, 0),
-            frequency = 8.5
+            end = LocalTime.of(7, 20),
+            frequency = 10.5
         ),
         TimeTable(
-            start = LocalTime.of(19, 0),
+            start = LocalTime.of(7, 20),
+            end = LocalTime.of(15, 0),
+            frequency = 7.5
+        ),
+        TimeTable(
+            start = LocalTime.of(15, 0),
             end = LocalTime.of(22, 0),
-            frequency = 9
+            frequency = 8
         ),
     )
 }

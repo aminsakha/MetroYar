@@ -56,7 +56,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
         containerColor=MaterialTheme.colorScheme.onPrimary,
         topBar = {
             CenterAlignedTopAppBar(
-                modifier = Modifier.height(50.dp),
+                modifier = Modifier.height(50.dp).background(Color.White),
                 title = {
                     Box(Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(text = selectedScreenTopBarTitle)
