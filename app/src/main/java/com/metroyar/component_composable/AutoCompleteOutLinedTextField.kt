@@ -48,16 +48,13 @@ fun AutoCompleteOutLinedTextField(
 ) {
     val dataBaseList = realmRepo.getListOfFavoriteStations()
     val dropDownStationNamesList =
-        stationList.map { it.stationName }.toSet().sortedWith(compareBy { element ->
-            dataBaseList.indexOf(element)
-        })
+        stationList.map { it.stationName }.toSet().sorted()
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
     Column(
-        modifier = Modifier
-            .padding(15.dp)
+        modifier = Modifier.padding(horizontal = 24.dp)
             .fillMaxWidth()
             .focusRequester(focusRequester)
             .clickable { expanded = false }
@@ -118,7 +115,7 @@ fun AutoCompleteOutLinedTextField(
                     LazyColumn(
                         modifier = Modifier
                             .heightIn(max = 150.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .background(MaterialTheme.colorScheme.onSecondary)
                     ) {
                         val filteredList =
                             if (inputValue.isEmpty() && dataBaseList.isNotEmpty())

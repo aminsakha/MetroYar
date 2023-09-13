@@ -1,22 +1,17 @@
 package com.metroyar.screen
 
-import android.content.Context
-import android.content.Context.VIBRATOR_SERVICE
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,6 +27,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -40,13 +38,13 @@ import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
+import com.metroyar.ui.theme.turnedOff
 import com.metroyar.utils.playSound
 import com.metroyar.utils.vibratePhone
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
 @Destination
@@ -58,22 +56,25 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
     val bottomBarItems = remember { BottomNavItem.values() }
 
     Scaffold(
-        modifier = Modifier.padding(start = 8.dp, bottom = 8.dp, end = 8.dp),
+        containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text(text = selectedScreenTopBarTitle)
-                })
+                modifier = Modifier
+                    .shadow(8.dp)
+                    .background(Color.White),
+                title = { Text(text = selectedScreenTopBarTitle) })
         },
         bottomBar = {
             AnimatedNavigationBar(
                 selectedIndex = selectedMenuIndex,
-                modifier = Modifier.height(64.dp),
+                modifier = Modifier
+                    .height(70.dp)
+                    .padding(start = 12.dp, bottom = 12.dp, end = 12.dp),
                 cornerRadius = shapeCornerRadius(cornerRadius = 34.dp),
                 ballAnimation = Parabolic(tween(300)),
                 indentAnimation = Height(tween(600)),
-                barColor = MaterialTheme.colorScheme.primary,
-                ballColor = MaterialTheme.colorScheme.primary
+                barColor = MaterialTheme.colorScheme.onSecondary,
+                ballColor = MaterialTheme.colorScheme.secondaryContainer
             ) {
                 bottomBarItems.forEach {
                     Box(
@@ -93,7 +94,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                             painter = painterResource(id = it.icon),
                             contentDescription = "",
                             tint = if (selectedMenuIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
-                            else MaterialTheme.colorScheme.onPrimary
+                            else turnedOff
                         )
                     }
                 }
@@ -102,7 +103,6 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
             Column(
                 modifier = Modifier
                     .padding(padding)
-                    .background(MaterialTheme.colorScheme.background)
             ) {
                 DeciderOfScreensInNavBotBar(input = selectedMenuIndex, navigator = navigator)
             }

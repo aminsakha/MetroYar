@@ -4,63 +4,39 @@ import android.Manifest
 import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Card
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.GlobalObjects.currentLineOfStartStation
+import com.metroyar.utils.getNextTrain
 import com.metroyar.utils.log
+import com.metroyar.utils.minuteToLocalTime
 import com.metroyar.utils.saveBitmapAndGetUri
 import com.metroyar.utils.shareBitmap
+import com.metroyar.utils.toStringWithCustomFormat
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.smarttoolfactory.screenshot.ImageResult
-import com.smarttoolfactory.screenshot.ScreenshotBox
-import com.smarttoolfactory.screenshot.ScreenshotState
-import com.smarttoolfactory.screenshot.rememberScreenshotState
+import com.smarttoolfactory.screenshot.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 @Destination
 @OptIn(ExperimentalMaterial3Api::class)
@@ -130,6 +106,7 @@ fun PathResultScreen(
 
     Scaffold(topBar = {
         CenterAlignedTopAppBar(
+            modifier = Modifier.shadow(8.dp),
             title = {
                 Text(text = "بهترین مسیر")
             },
@@ -190,7 +167,15 @@ fun BestPathLayout(
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Text(
-                    text = startStation,
+                    text = startStation.plus(
+                        " حرکت از ساعت ${
+                            getNextTrain(
+                                currentTime = LocalTime.now(),
+                                lineNumber = currentLineOfStartStation
+                            )
+                        } \n" +
+                                "زمان رسیدن : ${minuteToLocalTime().toStringWithCustomFormat()} "
+                    ),
                     textAlign = TextAlign.End,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -200,7 +185,9 @@ fun BestPathLayout(
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = "",
-                    modifier = Modifier.align(Alignment.End).padding(end = 24.dp)
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(end = 24.dp)
                 )
                 Spacer(modifier = Modifier.heightIn(4.dp))
                 Text(

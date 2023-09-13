@@ -10,6 +10,8 @@ object GlobalObjects {
     val stationList = mutableListOf<Station>()
     val metroGraph = MetroGraph(155)
     var startStation = ""
+    var currentLineOfStartStation = 0
+    var currentPathTimeTravel = 0.0
     var destStation = ""
     var resultList = mutableStateOf(listOf<String>())
     val tripleOfLinesAndTheirStartAndEndStations =
