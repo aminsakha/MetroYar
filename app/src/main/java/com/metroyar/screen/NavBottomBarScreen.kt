@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,7 +27,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -53,20 +56,20 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
     val bottomBarItems = remember { BottomNavItem.values() }
 
     Scaffold(
-        containerColor=MaterialTheme.colorScheme.onPrimary,
+        containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             CenterAlignedTopAppBar(
-                modifier = Modifier.height(50.dp).background(Color.White),
-                title = {
-                    Box(Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
-                        Text(text = selectedScreenTopBarTitle)
-                    }
-                })
+                modifier = Modifier
+                    .shadow(8.dp)
+                    .background(Color.White),
+                title = { Text(text = selectedScreenTopBarTitle) })
         },
         bottomBar = {
             AnimatedNavigationBar(
                 selectedIndex = selectedMenuIndex,
-                modifier = Modifier.height(70.dp).padding(start = 12.dp, bottom = 12.dp, end = 12.dp),
+                modifier = Modifier
+                    .height(70.dp)
+                    .padding(start = 12.dp, bottom = 12.dp, end = 12.dp),
                 cornerRadius = shapeCornerRadius(cornerRadius = 34.dp),
                 ballAnimation = Parabolic(tween(300)),
                 indentAnimation = Height(tween(600)),

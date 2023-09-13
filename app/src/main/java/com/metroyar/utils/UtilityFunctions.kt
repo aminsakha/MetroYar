@@ -28,6 +28,7 @@ import com.metroyar.model.line.LineThree
 import com.metroyar.model.line.LineTwo
 import com.metroyar.screen.PermissionScreen
 import com.metroyar.utils.GlobalObjects.TAG
+import com.metroyar.utils.GlobalObjects.currentPathTimeTravel
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
 import java.time.Duration
@@ -347,3 +348,9 @@ fun getNextTrain(lineNumber: Int, currentTime: LocalTime): String? {
 }
 
 fun LocalTime.toStringWithCustomFormat() = "$minute : $hour"
+
+fun minuteToLocalTime(): LocalTime {
+    val hours = currentPathTimeTravel.toInt() / 60
+    val minutesLeft = currentPathTimeTravel.toInt() % 60
+    return LocalTime.of(hours, minutesLeft)
+}
