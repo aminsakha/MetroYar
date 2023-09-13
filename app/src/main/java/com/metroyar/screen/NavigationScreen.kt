@@ -39,6 +39,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
 
     Scaffold(floatingActionButton = {
         FloatingActionButton(
+            shape=FloatingActionButtonDefaults.largeShape,
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
