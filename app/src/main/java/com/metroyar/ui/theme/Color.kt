@@ -2,13 +2,13 @@ package com.metroyar.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val md_theme_light_primary = Color(0xFF006686)
-val md_theme_light_onPrimary = Color(0xFFFFFFFF)
+val md_theme_light_primary = Color(0xFFf9c758)
+val md_theme_light_onPrimary = Color(0xfff3f3f3)
 val md_theme_light_primaryContainer = Color(0xFFA7EDFF)
 val md_theme_light_onPrimaryContainer = Color(0xFF001F25)
 val md_theme_light_secondary = Color(0xFF705D00)
 val md_theme_light_onSecondary = Color(0xFFFFFFFF)
-val md_theme_light_secondaryContainer = Color(0xFFFFE16F)
+val md_theme_light_secondaryContainer = Color(0xFFf9c758)
 val md_theme_light_onSecondaryContainer = Color(0xFF221B00)
 val md_theme_light_tertiary = Color(0xFF006686)
 val md_theme_light_onTertiary = Color(0xFFFFFFFF)
@@ -67,3 +67,4 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 val hint = Color(0xFFA0A0A0)
 val line = Color(0xFFC4C7C5)
+val turnedOff = Color(0xFFccc1ab)

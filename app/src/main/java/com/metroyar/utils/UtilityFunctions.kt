@@ -270,13 +270,10 @@ fun SuggestionStationsLayout(
 fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String, String> {
     val matchingNames = stationList.map { it.stationName }
         .filter {
-            pair.first.contains(it, ignoreCase = true) || pair.second.contains(
-                it,
-                ignoreCase = true
-            )
+            pair.first.contains(it) || pair.second.contains(it)
         }
-        .take(2)
-    return Pair(matchingNames.getOrNull(1) ?: "", matchingNames.getOrNull(0) ?: "")
+
+    return Pair(matchingNames.getOrNull(0) ?: "", matchingNames.getOrNull(1) ?: "")
 }
 
 fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
@@ -326,7 +323,7 @@ fun vibratePhone(context: Context) {
     }
 }
 
-fun getNextTrain(lineNumber: Int, currentTime: LocalTime): LocalTime? {
+fun getNextTrain(lineNumber: Int, currentTime: LocalTime): String? {
     val metroLines =
         listOf(LineOne(), LineTwo(), LineThree(), LineFour(), LineFIve(), LineSix(), LineSeven())
     val metroLine = metroLines.find { it.number == lineNumber }
@@ -339,12 +336,14 @@ fun getNextTrain(lineNumber: Int, currentTime: LocalTime): LocalTime? {
                 val nextTrainIn =
                     timeChunk.frequency.toDouble() - (minutesSinceChunkStart % timeChunk.frequency.toDouble())
 
-                return currentTime.plusMinutes(nextTrainIn.roundToLong())
+                return currentTime.plusMinutes(nextTrainIn.roundToLong()).toStringWithCustomFormat()
             }
         }
     }
     return LocalTime.of(
         5,
         30
-    )
+    ).toStringWithCustomFormat()
 }
+
+fun LocalTime.toStringWithCustomFormat() = "$minute : $hour"

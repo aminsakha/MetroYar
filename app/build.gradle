@@ -97,5 +97,5 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     implementation 'io.realm.kotlin:library-sync:1.11.0'// If using Device Sync
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
-    // If using coroutines with the SDK
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }
