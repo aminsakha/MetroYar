@@ -32,7 +32,7 @@ fun AccountScreen() {
         InfoCardItem(
             infoItem = InfoItem(
                 title = "قابلیت های مترویار",
-                icon = Icons.Filled.Search,
+                icon = ImageVector.vectorResource(id = R.drawable.baseline_dashboard_24),
                 onClickedScreen = {})
         )
         InfoCardItem(
@@ -44,7 +44,7 @@ fun AccountScreen() {
         InfoCardItem(
             infoItem = InfoItem(
                 title = "نسخه ",
-                icon = Icons.Filled.DateRange,
+                icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
                 onClickedScreen = {})
         )
     }

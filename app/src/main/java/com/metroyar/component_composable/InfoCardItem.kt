@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.metroyar.model.InfoItem
 
 
@@ -41,7 +42,7 @@ fun InfoCardItem(modifier: Modifier = Modifier, infoItem: InfoItem) {
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.End
         ) {
             Icon(
@@ -52,10 +53,11 @@ fun InfoCardItem(modifier: Modifier = Modifier, infoItem: InfoItem) {
             )
             Text(
                 text = infoItem.title,
+                fontSize=14.sp,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Icon(
                 imageVector = infoItem.icon,
                 contentDescription = infoItem.title,
