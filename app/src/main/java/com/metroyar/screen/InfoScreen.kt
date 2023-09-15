@@ -11,6 +11,7 @@ import com.metroyar.R
 import com.metroyar.component_composable.InfoCardItem
 import com.metroyar.model.InfoItem
 import com.metroyar.screen.destinations.AboutUsScreenDestination
+import com.metroyar.screen.destinations.FavoriteStationsScreenDestination
 import com.metroyar.utils.log
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -21,7 +22,7 @@ fun AccountScreen(navigator: DestinationsNavigator) {
             infoItem = InfoItem(
                 title = "ایستگاه های نشان شده من",
                 icon = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24_filled),
-                onClickedItem = {})
+                onClickedItem = {navigator.navigate(FavoriteStationsScreenDestination())})
         )
         InfoCardItem(
             infoItem = InfoItem(
@@ -46,7 +47,7 @@ fun AccountScreen(navigator: DestinationsNavigator) {
         )
         InfoCardItem(
             infoItem = InfoItem(
-                title = "نسخه 1.0.0 ",
+                title = "نسخه   1.0.0 ",
                 icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
                 onClickedItem = {})
         )

@@ -32,7 +32,7 @@ fun AboutUsScreen(navigator: DestinationsNavigator) {
         CenterAlignedTopAppBar(
             modifier = Modifier.shadow(8.dp),
             title = {
-                Text(text = "بهترین مسیر")
+                Text(text = "درباره ما")
             },
             navigationIcon = {
                 IconButton(onClick = { navigator.popBackStack() }) {

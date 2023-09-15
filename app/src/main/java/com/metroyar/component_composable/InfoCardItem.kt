@@ -62,6 +62,5 @@ fun InfoCardItem(modifier: Modifier = Modifier, infoItem: InfoItem) {
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
         }
-
     }
 }
