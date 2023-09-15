@@ -44,7 +44,8 @@ fun DropDownStationSuggestionItem(
             isStarred = !isStarred
         }) {
             Icon(
-                imageVector = if (isStarred) Icons.Filled.Star else ImageVector.vectorResource(id = R.drawable.baseline_star_outline_24),
+                imageVector = if (isStarred) ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24_filled)
+                else ImageVector.vectorResource(id = R.drawable.baseline_bookmark_border_24_out_lined),
                 contentDescription = "Star",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(start = 10.dp, end = 10.dp)

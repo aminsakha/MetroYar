@@ -38,7 +38,9 @@ import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
+import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.ui.theme.turnedOff
+import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.playSound
 import com.metroyar.utils.vibratePhone
 import com.ramcosta.composedestinations.annotation.Destination
@@ -51,7 +53,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
-    var selectedMenuIndex by remember { mutableIntStateOf(1) }
+    var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
     var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
     val bottomBarItems = remember { BottomNavItem.values() }
 
@@ -81,10 +83,13 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                         modifier = Modifier
                             .fillMaxSize()
                             .nonRipple {
-                                playSound(context = context, soundResourceId = R.raw.sound)
+                                if (realmRepo.getShouldPlaySound())
+                                    playSound(context = context, soundResourceId = R.raw.sound)
                                 selectedMenuIndex = it.ordinal
+                                lastMenuItemIndex = selectedMenuIndex
                                 selectedScreenTopBarTitle = it.title
-                                vibratePhone(context)
+                                if (realmRepo.getShouldVibrate())
+                                    vibratePhone(context)
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -111,7 +116,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
 }
 
 enum class BottomNavItem(val icon: Int, val title: String) {
-    Account(icon = R.drawable.baseline_account_circle_24, title = "مترویارمن"),
+    Account(icon = R.drawable.baseline_feed_24, title = "اطلاعات"),
     Navigation(icon = R.drawable.baseline_near_me_24, title = "مسیریابی"),
     MetroMap(icon = R.drawable.baseline_map_24, title = "بروزترین نسخه نقشه مترو")
 }
@@ -129,7 +134,7 @@ fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
 @Composable
 fun DeciderOfScreensInNavBotBar(input: Int, navigator: DestinationsNavigator) {
     when (input) {
-        0 -> AccountScreen()
+        0 -> AccountScreen(navigator)
         1 -> NavigationScreen(context = LocalContext.current, navigator = navigator)
         2 -> MetroMapScreen()
     }
