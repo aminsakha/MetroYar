@@ -12,6 +12,7 @@ import com.metroyar.component_composable.InfoCardItem
 import com.metroyar.model.InfoItem
 import com.metroyar.screen.destinations.AboutUsScreenDestination
 import com.metroyar.screen.destinations.FavoriteStationsScreenDestination
+import com.metroyar.screen.destinations.SettingScreenDestination
 import com.metroyar.utils.log
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -28,7 +29,7 @@ fun AccountScreen(navigator: DestinationsNavigator) {
             infoItem = InfoItem(
                 title = "تنظیمات",
                 icon = Icons.Filled.Settings,
-                onClickedItem = {})
+                onClickedItem = {navigator.navigate(SettingScreenDestination())})
         )
         InfoCardItem(
             infoItem = InfoItem(

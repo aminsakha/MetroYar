@@ -38,6 +38,7 @@ import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
+import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.ui.theme.turnedOff
 import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.playSound
@@ -82,11 +83,13 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                         modifier = Modifier
                             .fillMaxSize()
                             .nonRipple {
-                                playSound(context = context, soundResourceId = R.raw.sound)
+                                if (realmRepo.getShouldPlaySound())
+                                    playSound(context = context, soundResourceId = R.raw.sound)
                                 selectedMenuIndex = it.ordinal
                                 lastMenuItemIndex = selectedMenuIndex
                                 selectedScreenTopBarTitle = it.title
-                                vibratePhone(context)
+                                if (realmRepo.getShouldVibrate())
+                                    vibratePhone(context)
                             },
                         contentAlignment = Alignment.Center
                     ) {

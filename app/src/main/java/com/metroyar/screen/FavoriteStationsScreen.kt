@@ -108,6 +108,7 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                                     fontSize = 14.sp,
                                     textAlign = TextAlign.End,
                                     modifier = Modifier.weight(1f)
+
                                 )
                                 IconButton(
                                     onClick = {
