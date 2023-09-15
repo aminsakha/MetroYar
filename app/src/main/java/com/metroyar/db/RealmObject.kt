@@ -9,4 +9,3 @@ object RealmObject {
     val realm: Realm = Realm.open(config)
     val realmRepo=MongoRepositoryImpl(realm = realm)
 }
-

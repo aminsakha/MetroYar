@@ -61,7 +61,7 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
         CenterAlignedTopAppBar(
             modifier = Modifier.shadow(8.dp),
             title = {
-                Text(text = "ایستگاه های مورد علاقه")
+                Text(text = "ایستگاه های نشان شده ")
             },
             navigationIcon = {
                 IconButton(onClick = { navigator.popBackStack() }) {
@@ -87,55 +87,58 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                     mutableStateOf(
                         RealmObject.realmRepo.getListOfFavoriteStations().filter { it != "" })
                 }
-                LazyColumn(modifier = Modifier.padding(padding)) {
-                    items(dbList) { favoriteStationName ->
-                        ElevatedCard(
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.White,
-                            ),
-                            onClick = { },
-                            shape = RectangleShape
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(14.dp),
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
+                if (dbList.isEmpty())
+                    Text(text = "هنوز ایستگاهی نشان نکردی که",modifier = Modifier.padding(padding).fillMaxWidth(), textAlign = TextAlign.End)
+                else
+                    LazyColumn(modifier = Modifier.padding(padding)) {
+                        items(dbList) { favoriteStationName ->
+                            ElevatedCard(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.White,
+                                ),
+                                onClick = { },
+                                shape = RectangleShape
                             ) {
-                                Text(
-                                    text = favoriteStationName,
-                                    fontSize = 14.sp,
-                                    textAlign = TextAlign.End,
-                                    modifier = Modifier.weight(1f)
-
-                                )
-                                IconButton(
-                                    onClick = {
-                                        coroutineScope.launch {
-                                            RealmObject.realmRepo.deleteStation(favoriteStationName)
-                                            dbList =
-                                                RealmObject.realmRepo.getListOfFavoriteStations()
-                                                    .filter { it != "" }
-                                        }
-                                    },
-                                    modifier = Modifier.weight(0.5f)
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(14.dp),
+                                    horizontalArrangement = Arrangement.End,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(
-                                        imageVector = ImageVector.vectorResource(id = R.drawable.icons8_trash_128),
-                                        contentDescription = "",
-                                        tint = MaterialTheme.colorScheme.primary,
-                                    )
-                                }
+                                    Text(
+                                        text = favoriteStationName,
+                                        fontSize = 14.sp,
+                                        textAlign = TextAlign.End,
+                                        modifier = Modifier.weight(1f)
 
+                                    )
+                                    IconButton(
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                RealmObject.realmRepo.deleteStation(
+                                                    favoriteStationName
+                                                )
+                                                dbList =
+                                                    RealmObject.realmRepo.getListOfFavoriteStations()
+                                                        .filter { it != "" }
+                                            }
+                                        },
+                                        modifier = Modifier.weight(0.5f)
+                                    ) {
+                                        Icon(
+                                            imageVector = ImageVector.vectorResource(id = R.drawable.icons8_trash_128),
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colorScheme.primary,
+                                        )
+                                    }
+
+                                }
                             }
                         }
                     }
-                }
             }
 
         }
     )
-
-
 }
