@@ -10,6 +10,7 @@
     <string name="internetLostMessage">اینترنت باید وصل باشه</string>
     <string name="chosseSrc">ایستگاه مبدا رو انتخاب کن</string>
     <string name="chooseDst">ایستگاه مقصد رو انتخاب کن</string>
+    <string name="about_us">مترویار، یار مترویی شما</string>
 
     <string-array name="stationsOnLine1">
         <item>تجریش</item>

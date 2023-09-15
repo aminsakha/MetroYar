@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material3.AlertDialogDefaults.containerColor
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +33,7 @@ fun InfoCardItem(modifier: Modifier = Modifier, infoItem: InfoItem) {
             containerColor = Color.White,
         ),
         modifier = modifier,
-        onClick = { infoItem.onClickedScreen },
+        onClick = { infoItem.onClickedItem() },
         shape = RectangleShape
     ) {
         Row(

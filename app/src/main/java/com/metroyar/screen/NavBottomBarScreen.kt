@@ -39,6 +39,7 @@ import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
 import com.metroyar.ui.theme.turnedOff
+import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.playSound
 import com.metroyar.utils.vibratePhone
 import com.ramcosta.composedestinations.annotation.Destination
@@ -51,7 +52,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
-    var selectedMenuIndex by remember { mutableIntStateOf(1) }
+    var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
     var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
     val bottomBarItems = remember { BottomNavItem.values() }
 
@@ -83,6 +84,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                             .nonRipple {
                                 playSound(context = context, soundResourceId = R.raw.sound)
                                 selectedMenuIndex = it.ordinal
+                                lastMenuItemIndex = selectedMenuIndex
                                 selectedScreenTopBarTitle = it.title
                                 vibratePhone(context)
                             },
@@ -129,7 +131,7 @@ fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
 @Composable
 fun DeciderOfScreensInNavBotBar(input: Int, navigator: DestinationsNavigator) {
     when (input) {
-        0 -> AccountScreen()
+        0 -> AccountScreen(navigator)
         1 -> NavigationScreen(context = LocalContext.current, navigator = navigator)
         2 -> MetroMapScreen()
     }
