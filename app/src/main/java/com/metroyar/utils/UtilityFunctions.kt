@@ -133,25 +133,28 @@ fun connectSideStations(context: Context) {
 
 @SuppressLint("MissingPermission")
 fun getCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Unit) {
-    log("got into getCurrentLocation", true)
-    val locationRequest = LocationRequest.Builder(
-        Priority.PRIORITY_HIGH_ACCURACY,
-        300000
-    )
-        .setWaitForAccurateLocation(true)
-        .setMinUpdateIntervalMillis(1000)
-        .setMaxUpdateDelayMillis(100)
-        .build()
+    try {
+        val locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            300000
+        )
+            .setWaitForAccurateLocation(true)
+            .setMinUpdateIntervalMillis(1000)
+            .setMaxUpdateDelayMillis(100)
+            .build()
 
-    val locationProvider = LocationServices.getFusedLocationProviderClient(context)
-    val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            val location = locationResult.locations.lastOrNull() ?: return
-            onLocationChange.invoke(GPSCoordinate(location.longitude, location.latitude))
+        val locationProvider = LocationServices.getFusedLocationProviderClient(context)
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                val location = locationResult.locations.lastOrNull() ?: return
+                onLocationChange.invoke(GPSCoordinate(location.longitude, location.latitude))
+            }
         }
+        // Request location updates and listen for the callback.
+        locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
+    } catch (_: Exception) {
     }
-    // Request location updates and listen for the callback.
-    locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
+
 }
 
 fun isGpsEnabled(context: Context): Boolean {
