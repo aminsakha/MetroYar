@@ -25,6 +25,7 @@ import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.SuggestionStationsLayout
+import com.metroyar.utils.log
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
@@ -39,7 +40,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
 
     Scaffold(floatingActionButton = {
         FloatingActionButton(
-            shape=FloatingActionButtonDefaults.largeShape,
+            shape = FloatingActionButtonDefaults.largeShape,
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),

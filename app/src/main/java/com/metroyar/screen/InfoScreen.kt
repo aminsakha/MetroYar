@@ -55,7 +55,7 @@ fun AccountScreen(navigator: DestinationsNavigator) {
                 icon = Icons.Filled.Warning,
                 onClickedItem = {
                     val intent = Intent(Intent.ACTION_SENDTO).apply {
-                        data = Uri.parse("mailto:amin.sakha00@gmail.com")
+                        data = Uri.parse("mailto:metroyarsupprt@gmail.com")
                     }
                     context.startActivity(intent)
                 })
