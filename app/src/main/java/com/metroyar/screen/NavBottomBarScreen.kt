@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -67,43 +70,66 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                 title = { Text(text = selectedScreenTopBarTitle) })
         },
         bottomBar = {
-            AnimatedNavigationBar(
-                selectedIndex = selectedMenuIndex,
+            Box(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .height(70.dp)
-                    .padding(start = 12.dp, bottom = 12.dp, end = 12.dp),
-                cornerRadius = shapeCornerRadius(cornerRadius = 34.dp),
-                ballAnimation = Parabolic(tween(300)),
-                indentAnimation = Height(tween(600)),
-                barColor = MaterialTheme.colorScheme.onSecondary,
-                ballColor = MaterialTheme.colorScheme.secondaryContainer
+                    .background(MaterialTheme.colorScheme.onPrimary)
             ) {
-                bottomBarItems.forEach {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .nonRipple {
-                                if (realmRepo.getShouldPlaySound())
-                                    playSound(context = context, soundResourceId = R.raw.sound)
-                                selectedMenuIndex = it.ordinal
-                                lastMenuItemIndex = selectedMenuIndex
-                                selectedScreenTopBarTitle = it.title
-                                if (realmRepo.getShouldVibrate())
-                                    vibratePhone(context)
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(26.dp),
-                            painter = painterResource(id = it.icon),
-                            contentDescription = "",
-                            tint = if (selectedMenuIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
-                            else turnedOff
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    Color.Black.copy(alpha = 0.03f),  // Adjust opacity as needed
+                                ),
+                                startY = 0.5f  // Adjust position as needed
+                            )
                         )
+                ) {
+                    AnimatedNavigationBar(
+                        selectedIndex = selectedMenuIndex,
+                        modifier = Modifier.padding(start = 12.dp, bottom = 12.dp, end = 12.dp),
+                        cornerRadius = shapeCornerRadius(cornerRadius = 34.dp),
+                        ballAnimation = Parabolic(tween(300)),
+                        indentAnimation = Height(tween(600)),
+                        barColor = MaterialTheme.colorScheme.onSecondary,
+                        ballColor = MaterialTheme.colorScheme.secondaryContainer
+                    ) {
+                        bottomBarItems.forEach {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .nonRipple {
+                                        if (realmRepo.getShouldPlaySound())
+                                            playSound(
+                                                context = context,
+                                                soundResourceId = R.raw.sound
+                                            )
+                                        selectedMenuIndex = it.ordinal
+                                        lastMenuItemIndex = selectedMenuIndex
+                                        selectedScreenTopBarTitle = it.title
+                                        if (realmRepo.getShouldVibrate())
+                                            vibratePhone(context)
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(26.dp),
+                                    painter = painterResource(id = it.icon),
+                                    contentDescription = "",
+                                    tint = if (selectedMenuIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
+                                    else turnedOff
+                                )
+                            }
+                        }
                     }
                 }
             }
+
         }, content = { padding ->
             Column(
                 modifier = Modifier
