@@ -3,8 +3,10 @@ package com.metroyar.utils
 import androidx.compose.runtime.mutableStateOf
 import com.metroyar.classes.MetroGraph
 import com.metroyar.model.Station
+import java.util.Stack
 
 object GlobalObjects {
+    val stack:Stack<Int> = Stack<Int>().apply { push(1) }
     const val TAG = "testMetroYar"
     val adjNodesLineNum = mutableMapOf<Pair<Int, Int>, Int>()
     val stationList = mutableListOf<Station>()

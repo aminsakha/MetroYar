@@ -1,11 +1,11 @@
 package com.metroyar.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -45,6 +45,8 @@ import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.ui.theme.turnedOff
 import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
+import com.metroyar.utils.GlobalObjects.stack
+import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.metroyar.utils.vibratePhone
 import com.ramcosta.composedestinations.annotation.Destination
@@ -58,7 +60,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
-    var test by remember { mutableStateOf(0) }
+    var test0 by remember { mutableStateOf(false) }
+    var test1 by remember { mutableStateOf(true) }
+    var test2 by remember { mutableStateOf(false) }
     var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
     val bottomBarItems = remember { BottomNavItem.values() }
 
@@ -105,12 +109,25 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .nonRipple {
+                                        if (stack.isNotEmpty())
+                                            when (stack.peek()) {
+                                                0 -> test0 = false
+                                                1 -> test1 = false
+                                                2 -> test2 = false
+                                                else -> {}
+                                            }
                                         if (realmRepo.getShouldPlaySound())
                                             playSound(
                                                 context = context,
                                                 soundResourceId = R.raw.sound
                                             )
                                         selectedMenuIndex = it.ordinal
+                                        stack.push(selectedMenuIndex)
+                                        when (selectedMenuIndex) {
+                                            0 -> test0 = true
+                                            1 -> test1 = true
+                                            2 -> test2 = true
+                                        }
                                         lastMenuItemIndex = selectedMenuIndex
                                         selectedScreenTopBarTitle = it.title
                                         if (realmRepo.getShouldVibrate())
@@ -133,16 +150,30 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
             }
 
         }, content = { padding ->
-            AnimatedVisibility(
-                visible = ( selectedMenuIndex == 1 ||selectedMenuIndex == 2 ),
-                enter =  fadeIn(),
-                exit =  fadeOut()
+            Column(
+                modifier = Modifier
+                    .padding(padding)
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(padding)
+                AnimatedVisibility(
+                    visible = test0,
+                    enter = slideInHorizontally() + fadeIn(),
+                    exit = ExitTransition.None
                 ) {
-                    DeciderOfScreensInNavBotBar(input = selectedMenuIndex, navigator = navigator)
+                    InfoScreen(navigator)
+                }
+                AnimatedVisibility(
+                    visible = test1,
+                    enter = slideInHorizontally() + fadeIn(),
+                    exit = ExitTransition.None
+                ) {
+                    NavigationScreen(context = LocalContext.current, navigator = navigator)
+                }
+                AnimatedVisibility(
+                    visible = test2,
+                    enter = slideInHorizontally() + fadeIn(),
+                    exit = ExitTransition.None
+                ) {
+                    MetroMapScreen()
                 }
             }
         }
@@ -162,14 +193,5 @@ fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
             MutableInteractionSource()
         }) {
         onclick()
-    }
-}
-
-@Composable
-fun DeciderOfScreensInNavBotBar(input: Int, navigator: DestinationsNavigator) {
-    when (input) {
-        0 -> InfoScreen(navigator)
-        1 -> NavigationScreen(context = LocalContext.current, navigator = navigator)
-        2 -> MetroMapScreen()
     }
 }
