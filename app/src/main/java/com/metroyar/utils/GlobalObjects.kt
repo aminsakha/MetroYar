@@ -13,7 +13,7 @@ object GlobalObjects {
     var currentLineOfStartStation = 0
     var currentPathTimeTravel = 0.0
     var destStation = ""
-    var lastMenuItemIndex=1
+    var lastMenuItemIndex = 1
     var resultList = mutableStateOf(listOf<String>())
     val tripleOfLinesAndTheirStartAndEndStations =
         mutableListOf<Triple<Int, String, String>>().apply {

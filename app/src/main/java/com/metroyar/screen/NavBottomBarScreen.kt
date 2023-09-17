@@ -1,19 +1,21 @@
 package com.metroyar.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,7 +34,6 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
+    var test by remember { mutableStateOf(0) }
     var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
     val bottomBarItems = remember { BottomNavItem.values() }
 
@@ -131,11 +133,17 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
             }
 
         }, content = { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
+            AnimatedVisibility(
+                visible = ( selectedMenuIndex == 1 ||selectedMenuIndex == 2 ),
+                enter =  fadeIn(),
+                exit =  fadeOut()
             ) {
-                DeciderOfScreensInNavBotBar(input = selectedMenuIndex, navigator = navigator)
+                Column(
+                    modifier = Modifier
+                        .padding(padding)
+                ) {
+                    DeciderOfScreensInNavBotBar(input = selectedMenuIndex, navigator = navigator)
+                }
             }
         }
     )
@@ -160,7 +168,7 @@ fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
 @Composable
 fun DeciderOfScreensInNavBotBar(input: Int, navigator: DestinationsNavigator) {
     when (input) {
-        0 -> AccountScreen(navigator)
+        0 -> InfoScreen(navigator)
         1 -> NavigationScreen(context = LocalContext.current, navigator = navigator)
         2 -> MetroMapScreen()
     }
