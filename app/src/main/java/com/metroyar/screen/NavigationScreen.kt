@@ -14,6 +14,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.BestPathResult
@@ -116,7 +117,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         })
                 }
 
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(16.dp))
                 Button(
                     onClick = {
                         if (srcInputText == dstInputText && (srcInputText.isNotEmpty() && dstInputText.isNotEmpty())) {
@@ -147,7 +148,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 ) {
                     Text(
                         "برام بهترین مسیرو پیدا کن",
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                        color = MaterialTheme.colorScheme.onTertiaryContainer, fontWeight = FontWeight.Bold
                     )
                 }
                 ShouldConfirmAlertDialog(

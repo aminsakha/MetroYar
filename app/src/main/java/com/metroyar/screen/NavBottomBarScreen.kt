@@ -159,21 +159,21 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                 log("test1", test1)
                 AnimatedVisibility(
                     visible = test0,
-                    enter = slideInHorizontally() + fadeIn(),
+                    enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     InfoScreen(navigator)
                 }
                 AnimatedVisibility(
                     visible = test1,
-                    enter = slideInHorizontally() + fadeIn(),
+                    enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     NavigationScreen(context = LocalContext.current, navigator = navigator)
                 }
                 AnimatedVisibility(
                     visible = test2,
-                    enter = slideInHorizontally() + fadeIn(),
+                    enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     MetroMapScreen()
