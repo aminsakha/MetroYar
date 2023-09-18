@@ -10,17 +10,10 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusOrder
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import com.google.android.gms.location.*
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.metroyar.R
 import com.metroyar.component_composable.*
 import com.metroyar.model.Station
@@ -133,29 +126,25 @@ fun connectSideStations(context: Context) {
 }
 
 @SuppressLint("MissingPermission")
-fun getCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Unit) {
-    try {
-        val locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            300000
-        )
-            .setWaitForAccurateLocation(true)
-            .setMinUpdateIntervalMillis(1000)
-            .setMaxUpdateDelayMillis(100)
-            .build()
-
-        val locationProvider = LocationServices.getFusedLocationProviderClient(context)
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                val location = locationResult.locations.lastOrNull() ?: return
-                onLocationChange.invoke(GPSCoordinate(location.longitude, location.latitude))
-            }
-        }
-        // Request location updates and listen for the callback.
-        locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
-    } catch (_: Exception) {
+@Composable
+fun GetCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Unit) {
+    val locationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
     }
-
+    LaunchedEffect(key1 = Unit) {
+        val priority = Priority.PRIORITY_HIGH_ACCURACY
+        locationClient.getCurrentLocation(
+            priority,
+            CancellationTokenSource().token,
+        ).addOnSuccessListener {
+            onLocationChange.invoke(
+                GPSCoordinate(
+                    it.longitude,
+                    it.latitude
+                )
+            )
+        }
+    }
 }
 
 fun isGpsEnabled(context: Context): Boolean {
@@ -243,7 +232,7 @@ fun SuggestionStationsLayout(
     }
     if (isWiFiEnabled && isLocEnabled && location.x == 0.0) {
         CircularProgressBar(visible = isLoading)
-        getCurrentLocation(context, onLocationChange = { location = it })
+        GetCurrentLocation(context, onLocationChange = { location = it })
     }
 
     LaunchedEffect(key1 = location) {
