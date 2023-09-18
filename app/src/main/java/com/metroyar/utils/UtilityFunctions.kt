@@ -208,6 +208,10 @@ fun SuggestionStationsLayout(
             if (!isGpsEnabled(context))
                 EnableLocationDialog {
                     isLocEnabled = it
+                    if (!isLocEnabled){
+                        log("here",true)
+                        onDisMiss.invoke(false)
+                    }
                 }
             else
                 isLocEnabled = true
