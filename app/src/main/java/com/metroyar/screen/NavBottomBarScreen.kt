@@ -60,9 +60,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
-    var test0 by remember { mutableStateOf(false) }
-    var test1 by remember { mutableStateOf(true) }
-    var test2 by remember { mutableStateOf(false) }
+    var test0 by remember { mutableStateOf(lastMenuItemIndex == 0) }
+    var test1 by remember { mutableStateOf(lastMenuItemIndex == 1) }
+    var test2 by remember { mutableStateOf(lastMenuItemIndex == 2) }
     var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
     val bottomBarItems = remember { BottomNavItem.values() }
 
@@ -82,6 +82,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                     .height(70.dp)
                     .background(MaterialTheme.colorScheme.onPrimary)
             ) {
+                log("again", lastMenuItemIndex)
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -110,7 +111,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                     .fillMaxSize()
                                     .nonRipple {
                                         if (stack.isNotEmpty())
-                                            when (stack.peek()) {
+                                            when (stack.pop()) {
                                                 0 -> test0 = false
                                                 1 -> test1 = false
                                                 2 -> test2 = false
@@ -154,6 +155,8 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                 modifier = Modifier
                     .padding(padding)
             ) {
+                log("test0", test0)
+                log("test1", test1)
                 AnimatedVisibility(
                     visible = test0,
                     enter = slideInHorizontally() + fadeIn(),

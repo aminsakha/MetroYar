@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.R
 import com.metroyar.db.RealmObject
+import com.metroyar.screen.destinations.NavigationBottomDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -59,7 +60,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
                 Text(text = "درباره ما")
             },
             navigationIcon = {
-                IconButton(onClick = { navigator.popBackStack() }) {
+                IconButton(onClick = { navigator.navigate(NavigationBottomDestination()) }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Go back"

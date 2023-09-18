@@ -103,7 +103,6 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 if (isFindNearestButtonClicked) {
                     SuggestionStationsLayout(
                         onDisMiss = { isFindNearestButtonClicked = it },
-                        onSuggestionStationsDialogDisMiss = { isFindNearestButtonClicked = it },
                         context = context,
                         onSrcClicked = {
                             srcInputText = it
