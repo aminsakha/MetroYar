@@ -69,13 +69,6 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
                             stationList.last().id
                         ), i
                     )
-                    setAdjNodesLineNum(
-                        Pair(
-                            stationList.last().id,
-                            stationList[stationList.lastIndex - 1].id,
-                        ), i
-                    )
-
                     setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
                 }
             } catch (_: Exception) {
