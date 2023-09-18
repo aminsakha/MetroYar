@@ -9,7 +9,9 @@ import com.metroyar.db.RealmObject
 import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.screen.NavGraphs
 import com.metroyar.ui.theme.MetroYarTheme
+import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.initiateStationsAndAdjNodesLineNum
+import com.metroyar.utils.log
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
@@ -29,6 +31,7 @@ class MainActivity : ComponentActivity() {
             MetroYarTheme {
                 realmRepo.initRealmObject(RealmObject.realm)
                 initiateStationsAndAdjNodesLineNum(LocalContext.current)
+                log("sattions", GlobalObjects.stationList)
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }

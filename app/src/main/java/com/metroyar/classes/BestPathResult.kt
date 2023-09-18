@@ -51,6 +51,7 @@ class BestPathResult(
                 )
             }
         }
+        log("path", possiblePathsQueue.toMutableList().toString())
         return possiblePathsQueue
     }
 

@@ -10,7 +10,7 @@ object GlobalObjects {
     const val TAG = "testMetroYar"
     val adjNodesLineNum = mutableMapOf<Pair<Int, Int>, Int>()
     val stationList = mutableListOf<Station>()
-    val metroGraph = MetroGraph(155)
+    val metroGraph = MetroGraph(350)
     var startStation = ""
     var currentLineOfStartStation = 0
     var currentPathTimeTravel = 0.0
