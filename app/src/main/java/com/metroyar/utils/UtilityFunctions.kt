@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import com.google.android.gms.location.*
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.metroyar.R
 import com.metroyar.component_composable.*
 import com.metroyar.model.Station
@@ -61,13 +62,6 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
                             stationList.last().id
                         ), i
                     )
-                    setAdjNodesLineNum(
-                        Pair(
-                            stationList.last().id,
-                            stationList[stationList.lastIndex - 1].id,
-                        ), i
-                    )
-
                     setAdjNodesLineNum(Pair(stationList.last().id, stationList.last().id), i)
                 }
             } catch (_: Exception) {
@@ -132,29 +126,31 @@ fun connectSideStations(context: Context) {
 }
 
 @SuppressLint("MissingPermission")
-fun getCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Unit) {
-    try {
-        val locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            300000
-        )
-            .setWaitForAccurateLocation(true)
-            .setMinUpdateIntervalMillis(1000)
-            .setMaxUpdateDelayMillis(100)
-            .build()
-
-        val locationProvider = LocationServices.getFusedLocationProviderClient(context)
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                val location = locationResult.locations.lastOrNull() ?: return
-                onLocationChange.invoke(GPSCoordinate(location.longitude, location.latitude))
-            }
-        }
-        // Request location updates and listen for the callback.
-        locationProvider.requestLocationUpdates(locationRequest, locationCallback, null)
-    } catch (_: Exception) {
+@Composable
+fun GetCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Unit) {
+    val locationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
     }
-
+    LaunchedEffect(key1 = Unit) {
+        try {
+            val priority = Priority.PRIORITY_HIGH_ACCURACY
+            locationClient.getCurrentLocation(
+                priority,
+                CancellationTokenSource().token,
+            ).addOnSuccessListener { location ->
+                if (location != null) {
+                    onLocationChange.invoke(
+                        GPSCoordinate(
+                            location.longitude,
+                            location.latitude
+                        )
+                    )
+                    log("loc", location)
+                }
+            }
+        } catch (e: Exception) {
+        }
+    }
 }
 
 fun isGpsEnabled(context: Context): Boolean {
@@ -189,17 +185,17 @@ fun SuggestionStationsLayout(
     context: Context,
     onDstClicked: (String) -> Unit,
     onSrcClicked: (String) -> Unit,
-    onSuggestionStationsDialogDisMiss: (Boolean) -> Unit,
     onDisMiss: (Boolean) -> Unit
 ) {
     var showSuggestionDialog by remember { mutableStateOf(true) }
+    var shouldShowRash by remember { mutableStateOf(false) }
     var showInternetDialog by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(true) }
     var isLocEnabled by remember { mutableStateOf(false) }
     var shouldShowPermission by remember { mutableStateOf(true) }
     var isWiFiEnabled by remember { mutableStateOf(false) }
     var location by remember { mutableStateOf(GPSCoordinate(0.0, 0.0)) }
-    var pair by remember { mutableStateOf(Pair("", "")) }
+    var closestStationsPair by remember { mutableStateOf(Pair("", "")) }
     PermissionScreen(
         visible = shouldShowPermission,
         permissionList = listOf(
@@ -211,13 +207,18 @@ fun SuggestionStationsLayout(
             onDisMiss.invoke(false)
         },
         title = stringResource(R.string.enableLoc),
-        bodyMessage = stringResource(R.string.enableLocMessage),
+        bodyMessage = if (!shouldShowRash) stringResource(R.string.enableLocMessage) else stringResource(
+            R.string.enableLocMessageRash
+        ),
         confirmBtnText = stringResource(R.string.confirmBtn),
+        shouldShowRational = { shouldShowRash = it },
         onPermissionGranted = {
             shouldShowPermission = false
             if (!isGpsEnabled(context))
                 EnableLocationDialog {
                     isLocEnabled = it
+                    if (!isLocEnabled)
+                        onDisMiss.invoke(false)
                 }
             else
                 isLocEnabled = true
@@ -233,7 +234,6 @@ fun SuggestionStationsLayout(
             onConfirm = { showInternetDialog = false },
             onDismissRequest = {
                 showInternetDialog = false
-                onDisMiss.invoke(false)
             },
             title = stringResource(R.string.netLostTitle),
             message = stringResource(R.string.internetLostMessage),
@@ -242,23 +242,22 @@ fun SuggestionStationsLayout(
     }
     if (isWiFiEnabled && isLocEnabled && location.x == 0.0) {
         CircularProgressBar(visible = isLoading)
-        getCurrentLocation(context, onLocationChange = { location = it })
+        GetCurrentLocation(context, onLocationChange = { location = it })
     }
 
     LaunchedEffect(key1 = location) {
         if (location.x != 0.0)
-            findClosestStations(location = location, onPairChange = { pair = it })
+            findClosestStations(location = location, onPairChange = { closestStationsPair = it })
     }
 
-    if (pair.first != "") {
-        isLoading = false
-        log("my pair", pair)
+    if (closestStationsPair.first != "") {
+        log("my pair", closestStationsPair)
         UserClosestStationsDialog(
             onDismissRequest = {
                 showSuggestionDialog = false
-                onSuggestionStationsDialogDisMiss.invoke(false)
+                onDisMiss.invoke(false)
             },
-            pair = convertNeshanStationNameToMyFormat(pair),
+            pair = convertNeshanStationNameToMyFormat(closestStationsPair),
             visible = showSuggestionDialog,
             srcOnclick = {
                 showSuggestionDialog = false
@@ -268,6 +267,7 @@ fun SuggestionStationsLayout(
                 showSuggestionDialog = false
                 onDstClicked.invoke(it)
             })
+        isLoading = false
     }
 }
 

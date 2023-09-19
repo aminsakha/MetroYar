@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.R
 import com.metroyar.db.RealmObject
+import com.metroyar.screen.destinations.NavigationBottomDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -64,7 +65,7 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                 Text(text = "ایستگاه های نشان شده ")
             },
             navigationIcon = {
-                IconButton(onClick = { navigator.popBackStack() }) {
+                IconButton(onClick = { navigator.navigate(NavigationBottomDestination()) }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Go back"

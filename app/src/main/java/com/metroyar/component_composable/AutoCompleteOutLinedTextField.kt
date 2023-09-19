@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -90,7 +91,7 @@ fun AutoCompleteOutLinedTextField(
                     if (!expanded)
                         keyboardController?.hide()
                 },
-                textStyle = TextStyle(textAlign = TextAlign.End, fontSize = 16.sp),
+                textStyle = TextStyle( fontSize = 16.sp,textDirection = TextDirection.Content),
                 singleLine = true,
                 trailingIcon = {
                     IconButton(onClick = {

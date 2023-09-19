@@ -71,7 +71,7 @@ fun UserClosestStationsDialog(
                             Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "")
                         }
 
-                    if (pair.second.isNotEmpty())
+                    if (pair.second.isNotEmpty() && pair.second != pair.first)
                         SuggestionStationItemCard(
                             stationName = pair.second,
                             onDstClicked = dstOnClicked,
