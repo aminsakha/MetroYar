@@ -45,6 +45,7 @@ import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.ui.theme.hint
 import com.metroyar.ui.theme.line
+import com.metroyar.ui.theme.textColor
 import com.metroyar.ui.theme.turnedOff
 import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.GlobalObjects.stack
@@ -74,8 +75,8 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
             CenterAlignedTopAppBar(
                 modifier = Modifier
                     .shadow(8.dp)
-                    .background(Color.White),
-                title = { Text(text = selectedScreenTopBarTitle) })
+                    .background(MaterialTheme.colorScheme.onSecondary),
+                title = { Text(text = selectedScreenTopBarTitle, color = textColor) })
         },
         bottomBar = {
             Box(

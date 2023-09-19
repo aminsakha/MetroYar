@@ -89,7 +89,7 @@ fun MetroYarTheme(
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setStatusBarColor(
-            color = Color.White,
+            color = Color(0xFFFFFFFF),
             darkIcons = true
         )
     }

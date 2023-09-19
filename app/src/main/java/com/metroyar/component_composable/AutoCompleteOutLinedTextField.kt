@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.toSize
 import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.ui.theme.hint
+import com.metroyar.ui.theme.textColor
+import com.metroyar.ui.theme.turnedOff2
 import com.metroyar.utils.GlobalObjects.stationList
 import kotlinx.coroutines.launch
 
@@ -91,7 +93,7 @@ fun AutoCompleteOutLinedTextField(
                     if (!expanded)
                         keyboardController?.hide()
                 },
-                textStyle = TextStyle( fontSize = 16.sp,textDirection = TextDirection.Content),
+                textStyle = TextStyle( fontSize = 16.sp,textDirection = TextDirection.Content, color = textColor),
                 singleLine = true,
                 trailingIcon = {
                     IconButton(onClick = {
