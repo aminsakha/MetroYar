@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.material3.BadgeDefaults.containerColor
 import androidx.compose.runtime.*
@@ -73,7 +74,9 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                             .contains(srcInputText) && dstInputText.isEmpty())
                         focusRequesterDst.requestFocus()
                 }
+
                 Spacer(modifier = Modifier.height(deviceHeightInDp / 7))
+
                 AutoCompleteOutLinedTextField(
                     label = stringResource(R.string.chosseSrc),
                     focusRequester = focusRequesterSrc,
@@ -127,7 +130,8 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
 
                 ElevatedButton(
                     colors = ButtonDefaults.elevatedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ),
                     onClick = {
                         if (srcInputText == dstInputText && (srcInputText.isNotEmpty() && dstInputText.isNotEmpty())) {
@@ -161,6 +165,9 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         fontWeight = FontWeight.Bold
                     )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(Icons.Filled.Search, "")
+
                 }
                 ShouldConfirmAlertDialog(
                     visible = showDialog,
