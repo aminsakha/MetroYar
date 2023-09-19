@@ -1,16 +1,20 @@
 package com.metroyar.screen
 
 import android.content.Context
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
+import androidx.compose.material3.BadgeDefaults.containerColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -22,6 +26,7 @@ import com.metroyar.component_composable.AutoCompleteOutLinedTextField
 import com.metroyar.component_composable.ShouldConfirmAlertDialog
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.utils.GlobalObjects.destStation
+import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
@@ -29,6 +34,7 @@ import com.metroyar.utils.SuggestionStationsLayout
 import com.metroyar.utils.log
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var srcInputText by remember { mutableStateOf(startStation) }
@@ -44,7 +50,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
             shape = FloatingActionButtonDefaults.largeShape,
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            modifier = Modifier.padding(bottom = 8.dp, end = 8.dp),
+            modifier = Modifier.padding(bottom = 12.dp, end = 8.dp),
             onClick = { isFindNearestButtonClicked = true },
         ) {
             Icon(
@@ -59,7 +65,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 modifier = Modifier
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.onPrimary)
-                    .fillMaxSize(), verticalArrangement = Arrangement.Center,
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LaunchedEffect(srcInputText) {
@@ -67,7 +73,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                             .contains(srcInputText) && dstInputText.isEmpty())
                         focusRequesterDst.requestFocus()
                 }
-
+                Spacer(modifier = Modifier.height(deviceHeightInDp / 7))
                 AutoCompleteOutLinedTextField(
                     label = stringResource(R.string.chosseSrc),
                     focusRequester = focusRequesterSrc,
@@ -118,7 +124,11 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 }
 
                 Spacer(Modifier.height(16.dp))
-                Button(
+
+                ElevatedButton(
+                    colors = ButtonDefaults.elevatedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ),
                     onClick = {
                         if (srcInputText == dstInputText && (srcInputText.isNotEmpty() && dstInputText.isNotEmpty())) {
                             alertMessageText = " اشتباهی مبدا و مقصد رو یکی زدی "
@@ -147,8 +157,9 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        "برام بهترین مسیرو پیدا کن",
-                        color = MaterialTheme.colorScheme.onTertiaryContainer, fontWeight = FontWeight.Bold
+                        "بهترین مسیرو پیدا کن",
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        fontWeight = FontWeight.Bold
                     )
                 }
                 ShouldConfirmAlertDialog(
