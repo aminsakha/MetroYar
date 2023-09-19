@@ -99,8 +99,8 @@ fun PathResultScreen(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ),
                 title = "دسترسی به فضای دستگاه",
-                bodyMessage = "برای ارسال عکس نیاز به دسترسی فضای ذخیره سازی داریم",
-                confirmBtnText = "اوکیه"
+                bodyMessage = "برای ارسال عکس نیاز به دسترسی فضای ذخیره سازی داریم اگر دسترسی را قطع کنید دفعات بعدی باید به صورت دستی این دسترسی را بدهید وگرنه این قابلیت کار نخواهد کرد",
+                confirmBtnText = "اوکیه", shouldShowRational = {}
             )
     }
 

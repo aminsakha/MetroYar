@@ -20,7 +20,7 @@ import com.metroyar.screen.destinations.SettingScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-fun AccountScreen(navigator: DestinationsNavigator) {
+fun InfoScreen(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     Column {
         InfoCardItem(

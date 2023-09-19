@@ -13,7 +13,6 @@ class MongoRepositoryImpl(private val realm: Realm) : MongoDBRepository {
 
     override fun initRealmObject(realm: Realm) {
         val oldItems: RealmResults<MetroYarDb> = realm.query<MetroYarDb>().find()
-        log("empty", false)
         if (oldItems.isEmpty()) {
             log("empty", true)
             realm.writeBlocking {
