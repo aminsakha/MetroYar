@@ -43,6 +43,8 @@ import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
+import com.metroyar.ui.theme.hint
+import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.turnedOff
 import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.GlobalObjects.stack
@@ -142,7 +144,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                     painter = painterResource(id = it.icon),
                                     contentDescription = "",
                                     tint = if (selectedMenuIndex == it.ordinal) MaterialTheme.colorScheme.secondaryContainer
-                                    else turnedOff
+                                    else line
                                 )
                             }
                         }
@@ -185,7 +187,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
 
 enum class BottomNavItem(val icon: Int, val title: String) {
     Account(icon = R.drawable.baseline_feed_24, title = "اطلاعات"),
-    Navigation(icon = R.drawable.baseline_near_me_24, title = "مسیریابی"),
+    Navigation(icon = R.drawable.baseline_near_me_24, title = "مسیریابی بین دو ایستگاه مترو"),
     MetroMap(icon = R.drawable.baseline_map_24, title = "بروزترین نسخه نقشه مترو")
 }
 

@@ -92,7 +92,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     onTrashIconClick = { srcInputText = "" }
                 )
 
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(deviceHeightInDp / 24))
 
                 AutoCompleteOutLinedTextField(
                     label = stringResource(R.string.chooseDst),
