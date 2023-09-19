@@ -11,7 +11,7 @@
     <string name="internetLostMessage" translatable="false">اینترنت باید وصل باشه</string>
     <string name="chosseSrc" translatable="false">ایستگاه مبدا رو انتخاب کن</string>
     <string name="chooseDst" translatable="false">ایستگاه مقصد رو انتخاب کن</string>
-    <string name="about_us" translatable="false">مترویار، یار مترویی شما</string>
+    <string name="about_us" translatable="false">مترو یار، یار مترویی شما</string>
 
     <string-array name="stationsOnLine1">
         <item>تجریش</item>

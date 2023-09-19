@@ -43,14 +43,14 @@ fun InfoScreen(navigator: DestinationsNavigator) {
         Divider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.3.dp)
         InfoCardItem(
             infoItem = InfoItem(
-                title = "قابلیت های مترویار",
+                title = "قابلیت های مترو یار",
                 icon = ImageVector.vectorResource(id = R.drawable.baseline_dashboard_24),
                 onClickedItem = {})
         )
         Divider(modifier = Modifier.padding(horizontal = 16.dp), thickness = 0.3.dp)
         InfoCardItem(
             infoItem = InfoItem(
-                title = "درباره ما",
+                title = "درباره ما",
                 icon = Icons.Filled.Info,
                 onClickedItem = {
                     navigator.navigate(AboutUsScreenDestination())
@@ -71,7 +71,7 @@ fun InfoScreen(navigator: DestinationsNavigator) {
         Divider(modifier = Modifier.padding(horizontal = 12.dp), thickness = 0.3.dp)
         InfoCardItem(
             infoItem = InfoItem(
-                title = "نسخه  ",
+                title = "نسخه ",
                 endText = "1.0.0",
                 icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
                 onClickedItem = {})

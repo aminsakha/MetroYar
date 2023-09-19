@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,7 @@ import com.metroyar.R
 import com.metroyar.classes.BestPathResult
 import com.metroyar.component_composable.AutoCompleteOutLinedTextField
 import com.metroyar.component_composable.ShouldConfirmAlertDialog
+import com.metroyar.component_composable.StationsDialog
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.ui.theme.textColor
 import com.metroyar.ui.theme.turnedOff2
@@ -49,17 +51,32 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     val focusRequesterSrc = remember { FocusRequester() }
 
     Scaffold(floatingActionButton = {
-        FloatingActionButton(
+        ElevatedButton(
+            colors = ButtonDefaults.elevatedButtonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
             shape = FloatingActionButtonDefaults.largeShape,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            modifier = Modifier.padding(bottom = 12.dp, end = 8.dp),
+            modifier = Modifier.padding(bottom = 16.dp, end = 8.dp),
             onClick = { isFindNearestButtonClicked = true },
         ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.baseline_my_location_24),
-                ""
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "ایستگاه های نزدیک", color = textColor,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.train),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(bottom = 1.dp),
+                    contentDescription = ""
+                )
+            }
         }
     },
         floatingActionButtonPosition = FabPosition.End,
@@ -113,19 +130,20 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
 
                 Spacer(Modifier.height(16.dp))
                 if (isFindNearestButtonClicked) {
-                    SuggestionStationsLayout(
-                        onDisMiss = { isFindNearestButtonClicked = it },
-                        context = context,
-                        onSrcClicked = {
-                            srcInputText = it
-                            startStation = srcInputText
-                            isFindNearestButtonClicked = false
-                        },
-                        onDstClicked = {
-                            dstInputText = it
-                            destStation = dstInputText
-                            isFindNearestButtonClicked = false
-                        })
+                    StationsDialog()
+//                    SuggestionStationsLayout(
+//                        onDisMiss = { isFindNearestButtonClicked = it },
+//                        context = context,
+//                        onSrcClicked = {
+//                            srcInputText = it
+//                            startStation = srcInputText
+//                            isFindNearestButtonClicked = false
+//                        },
+//                        onDstClicked = {
+//                            dstInputText = it
+//                            destStation = dstInputText
+//                            isFindNearestButtonClicked = false
+//                        })
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -162,14 +180,18 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(16.dp)
                 ) {
-                    Text(
-                        "بهترین مسیرو پیدا کن",
-                        color = textColor,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Icon(Icons.Filled.Search, "")
-
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            "بهترین مسیرو پیدا کن",
+                            color = textColor,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Icon(Icons.Filled.Search, "")
+                    }
                 }
                 ShouldConfirmAlertDialog(
                     visible = showDialog,
