@@ -257,7 +257,7 @@ fun SuggestionStationsLayout(
                 showSuggestionDialog = false
                 onDisMiss.invoke(false)
             },
-            pair = convertNeshanStationNameToMyFormat(closestStationsPair),
+            pairOfClosestStations = convertNeshanStationNameToMyFormat(closestStationsPair),
             visible = showSuggestionDialog,
             srcOnclick = {
                 showSuggestionDialog = false

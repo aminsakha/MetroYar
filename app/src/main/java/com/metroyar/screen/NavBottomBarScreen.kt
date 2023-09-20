@@ -85,7 +85,6 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                     .height(70.dp)
                     .background(MaterialTheme.colorScheme.onPrimary)
             ) {
-                log("again", lastMenuItemIndex)
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -158,8 +157,6 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                 modifier = Modifier
                     .padding(padding)
             ) {
-                log("test0", test0)
-                log("test1", test1)
                 AnimatedVisibility(
                     visible = test0,
                     enter = fadeIn(),

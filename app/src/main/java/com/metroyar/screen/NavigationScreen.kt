@@ -130,20 +130,19 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
 
                 Spacer(Modifier.height(16.dp))
                 if (isFindNearestButtonClicked) {
-                    StationsDialog()
-//                    SuggestionStationsLayout(
-//                        onDisMiss = { isFindNearestButtonClicked = it },
-//                        context = context,
-//                        onSrcClicked = {
-//                            srcInputText = it
-//                            startStation = srcInputText
-//                            isFindNearestButtonClicked = false
-//                        },
-//                        onDstClicked = {
-//                            dstInputText = it
-//                            destStation = dstInputText
-//                            isFindNearestButtonClicked = false
-//                        })
+                    SuggestionStationsLayout(
+                        onDisMiss = { isFindNearestButtonClicked = it },
+                        context = context,
+                        onSrcClicked = {
+                            srcInputText = it
+                            startStation = srcInputText
+                            isFindNearestButtonClicked = false
+                        },
+                        onDstClicked = {
+                            dstInputText = it
+                            destStation = dstInputText
+                            isFindNearestButtonClicked = false
+                        })
                 }
 
                 Spacer(Modifier.height(16.dp))

@@ -29,7 +29,7 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun UserClosestStationsDialog(
     visible: Boolean = true,
-    pair: Pair<String, String>,
+    pairOfClosestStations: Pair<String, String>,
     onDismissRequest: () -> Unit = {},
     srcOnclick: (String) -> Unit = {},
     dstOnClicked: (String) -> Unit = {}
@@ -53,7 +53,7 @@ fun UserClosestStationsDialog(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    if (pair.first.isEmpty() && pair.second.isEmpty()) {
+                    if (pairOfClosestStations.first.isEmpty() && pairOfClosestStations.second.isEmpty()) {
                         Text(text = "ایستگاه نزدیکی یافت نشد")
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { onDismissRequest() }) {
@@ -61,19 +61,19 @@ fun UserClosestStationsDialog(
                         }
                     }
 
-                    if (pair.first.isNotEmpty())
+                    if (pairOfClosestStations.first.isNotEmpty())
                         Row {
                             SuggestionStationItemCard(
-                                stationName = pair.first,
+                                stationName = pairOfClosestStations.first,
                                 onDstClicked = dstOnClicked,
                                 onSrcClicked = srcOnclick
                             )
                             Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "")
                         }
 
-                    if (pair.second.isNotEmpty() && pair.second != pair.first)
+                    if (pairOfClosestStations.second.isNotEmpty() && pairOfClosestStations.second != pairOfClosestStations.first)
                         SuggestionStationItemCard(
-                            stationName = pair.second,
+                            stationName = pairOfClosestStations.second,
                             onDstClicked = dstOnClicked,
                             onSrcClicked = srcOnclick
                         )

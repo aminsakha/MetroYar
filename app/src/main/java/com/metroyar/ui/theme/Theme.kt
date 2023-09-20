@@ -85,7 +85,7 @@ fun MetroYarTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors =LightColors
+    val colors = LightColors
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setStatusBarColor(
