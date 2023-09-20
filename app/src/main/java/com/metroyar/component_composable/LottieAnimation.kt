@@ -52,6 +52,6 @@ fun ShowLottieAnimation(
     LottieAnimation(
         composition,
         progressShit,
-        modifier = Modifier.size((deviceHeightInDp + deviceWidthInDp) / 8)
+        modifier = Modifier.size((deviceHeightInDp + deviceWidthInDp) /4)
     )
 }

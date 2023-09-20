@@ -29,7 +29,6 @@ import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.SuggestionStationsLayout
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var srcInputText by remember { mutableStateOf(startStation) }
@@ -118,7 +117,6 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     onTrashIconClick = { dstInputText = "" }
                 )
 
-                Spacer(Modifier.height(16.dp))
                 if (isFindNearestButtonClicked) {
                     SuggestionStationsLayout(
                         onDisMiss = { isFindNearestButtonClicked = it },
@@ -135,7 +133,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         })
                 }
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(32.dp))
 
                 ElevatedButton(
                     colors = ButtonDefaults.elevatedButtonColors(
