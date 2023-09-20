@@ -16,15 +16,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.airbnb.lottie.compose.LottieClipSpec
+import com.metroyar.R
+import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.GlobalObjects.deviceHeightInDp
+import com.metroyar.utils.log
 
 @Composable
 fun UserClosestStationsDialog(
@@ -32,15 +42,21 @@ fun UserClosestStationsDialog(
     pairOfClosestStations: Pair<String, String>,
     onDismissRequest: () -> Unit = {},
     srcOnclick: (String) -> Unit = {},
-    dstOnClicked: (String) -> Unit = {}
+    dstOnClicked: (String) -> Unit = {},
+    clipSpec: LottieClipSpec
 ) {
+    var isAnimationFinished by remember {
+        mutableStateOf(false)
+    }
     if (visible)
         Dialog(onDismissRequest = { onDismissRequest() }) {
             Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.onTertiary,
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(410.dp)
-                    .width(200.dp),
+                    .height(deviceHeightInDp.times(0.4f)),
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 10.dp
@@ -48,12 +64,18 @@ fun UserClosestStationsDialog(
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    if (pairOfClosestStations.first.isEmpty() && pairOfClosestStations.second.isEmpty()) {
+                    ShowLottieAnimation(
+                        animationRawId = R.raw.station_loading_animation,
+                        clipSpec = clipSpec,
+                        speed = 0.5f,
+                        onAnimationFinished = { isAnimationFinished = it }
+                    )
+
+                    if (isAnimationFinished && pairOfClosestStations.first.isEmpty() && pairOfClosestStations.second.isEmpty()) {
                         Text(text = "ایستگاه نزدیکی یافت نشد")
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { onDismissRequest() }) {
@@ -61,7 +83,8 @@ fun UserClosestStationsDialog(
                         }
                     }
 
-                    if (pairOfClosestStations.first.isNotEmpty())
+                    if (isAnimationFinished && pairOfClosestStations.first.isNotEmpty()) {
+                        log("its raedy", true)
                         Row {
                             SuggestionStationItemCard(
                                 stationName = pairOfClosestStations.first,
@@ -71,7 +94,9 @@ fun UserClosestStationsDialog(
                             Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "")
                         }
 
-                    if (pairOfClosestStations.second.isNotEmpty() && pairOfClosestStations.second != pairOfClosestStations.first)
+                    }
+
+                    if (isAnimationFinished && pairOfClosestStations.second.isNotEmpty() && pairOfClosestStations.second != pairOfClosestStations.first)
                         SuggestionStationItemCard(
                             stationName = pairOfClosestStations.second,
                             onDstClicked = dstOnClicked,
