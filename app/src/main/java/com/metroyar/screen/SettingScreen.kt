@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import com.metroyar.R
 import com.metroyar.db.RealmObject
 import com.metroyar.screen.destinations.NavigationBottomDestination
+import com.metroyar.ui.theme.line
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -57,7 +60,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         CenterAlignedTopAppBar(
             modifier = Modifier.shadow(8.dp),
             title = {
-                Text(text = "درباره ما")
+                Text(text = "تنظیمات")
             },
             navigationIcon = {
                 IconButton(onClick = { navigator.navigate(NavigationBottomDestination()) }) {
@@ -71,7 +74,7 @@ fun SettingScreen(navigator: DestinationsNavigator) {
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
                 SettingItem(
-                    title = " پخش صدای جابجایی بین صفحات منو",
+                    title = " پخش صدای جابجایی منو",
                     initialValue = RealmObject.realmRepo.getShouldPlaySound(),
                     onSwitchClicked = {
                         coroutine.launch {
@@ -94,57 +97,70 @@ fun SettingScreen(navigator: DestinationsNavigator) {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun SettingItem(title: String, initialValue: Boolean, onSwitchClicked: (Boolean) -> Unit) {
-    ElevatedCard(
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
-        onClick = { },
-        shape = RectangleShape
+
+    Row(
+        modifier = Modifier
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+
+        ElevatedCard(
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 4.dp
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White,
+            ),
             modifier = Modifier
+                .padding(8.dp)
                 .fillMaxWidth()
-                .padding(14.dp),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
+                .weight(2f),
+            onClick = { },
         ) {
             Text(
                 text = title,
                 fontSize = 14.sp,
-                textAlign = TextAlign.End,
-                modifier = Modifier.weight(1f)
-            )
-
-            var checked by remember { mutableStateOf(initialValue) }
-            val icon: (@Composable () -> Unit)? = if (checked) {
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = null,
-                        modifier = Modifier.size(SwitchDefaults.IconSize),
-                    )
-                }
-            } else {
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = null,
-                        modifier = Modifier.size(SwitchDefaults.IconSize),
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Switch(
                 modifier = Modifier
-                    .semantics { contentDescription = "" }
-                    .weight(0.5f),
-                checked = checked,
-                onCheckedChange = {
-                    checked = it
-                    onSwitchClicked.invoke(it)
-                },
-                thumbContent = icon
+                    .align(Alignment.CenterHorizontally)
+                    .padding(10.dp)
             )
         }
+        var checked by remember { mutableStateOf(initialValue) }
+        val icon: (@Composable () -> Unit)? = if (checked) {
+            {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                )
+            }
+        } else {
+            {
+                Icon(
+                    imageVector = Icons.Filled.Clear,
+                    contentDescription = null,
+                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                )
+            }
+        }
+        //Spacer(modifier = Modifier.width(8.dp))
+        Switch(
+            modifier = Modifier
+                .semantics { contentDescription = "" }
+                .weight(1f),
+            checked = checked,
+            onCheckedChange = {
+                checked = it
+                onSwitchClicked.invoke(it)
+            },
+            thumbContent = icon
+        )
     }
+    Divider(
+        color = line,
+        modifier = Modifier.padding(horizontal = 26.dp),
+        thickness = 0.18.dp
+    )
 }

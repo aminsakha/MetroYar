@@ -281,7 +281,7 @@ fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String,
             pair.first.contains(it) || pair.second.contains(it)
         }
 
-    return Pair( "",  "")
+    return Pair(matchingNames.getOrNull(0) ?: "", matchingNames.getOrNull(1) ?: "")
 }
 
 fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {

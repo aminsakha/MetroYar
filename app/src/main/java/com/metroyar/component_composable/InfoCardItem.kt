@@ -1,5 +1,6 @@
 package com.metroyar.component_composable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,17 +31,9 @@ import com.metroyar.ui.theme.textColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfoCardItem(modifier: Modifier = Modifier, infoItem: InfoItem) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
-        modifier = modifier.padding(),
-        onClick = { infoItem.onClickedItem() },
-        shape = RectangleShape
-    ) {
         Row(
             modifier = modifier
-                .fillMaxWidth()
+                .fillMaxWidth().clickable { infoItem.onClickedItem() }
                 .padding(16.dp),
             horizontalArrangement = Arrangement.End
         ) {
@@ -71,4 +64,3 @@ fun InfoCardItem(modifier: Modifier = Modifier, infoItem: InfoItem) {
 
         }
     }
-}

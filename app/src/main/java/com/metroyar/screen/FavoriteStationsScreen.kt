@@ -1,27 +1,20 @@
 package com.metroyar.screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,14 +34,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
+import com.metroyar.component_composable.ShowLottieAnimation
 import com.metroyar.db.RealmObject
 import com.metroyar.screen.destinations.NavigationBottomDestination
+import com.metroyar.ui.theme.line
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -74,72 +68,82 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
             })
     },
         content = { padding ->
-            AnimatedVisibility(
-                visible = true,
-                enter = fadeIn(),
-                exit = fadeOut(
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = LinearEasing
+            var dbList by remember {
+                mutableStateOf(
+                    RealmObject.realmRepo.getListOfFavoriteStations().filter { it != "" })
+            }
+            if (dbList.isEmpty()) {
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ShowLottieAnimation(
+                        animationRawId = R.raw.empty,
+                        clipSpec = LottieClipSpec.Progress(0.0f, 1f),
+                        speed = 2.5f,
+                        iterations = 1,
+                        onAnimationFinished = {},
+                        shouldStopAnimation = false
                     )
-                )
-            ) {
-                var dbList by remember {
-                    mutableStateOf(
-                        RealmObject.realmRepo.getListOfFavoriteStations().filter { it != "" })
                 }
-                if (dbList.isEmpty())
-                    Text(text = "هنوز ایستگاهی نشان نکردی که",modifier = Modifier.padding(padding).fillMaxWidth(), textAlign = TextAlign.End)
-                else
-                    LazyColumn(modifier = Modifier.padding(padding)) {
-                        items(dbList) { favoriteStationName ->
+            } else
+                LazyColumn(modifier = Modifier.padding(padding)) {
+                    items(dbList) { favoriteStationName ->
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
                             ElevatedCard(
+                                shape = RoundedCornerShape(8.dp),
+                                elevation = CardDefaults.cardElevation(
+                                    defaultElevation = 4.dp
+                                ),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White,
                                 ),
+                                modifier = Modifier
+                                    .padding(8.dp).fillMaxWidth()
+                                    .weight(2f),
                                 onClick = { },
-                                shape = RectangleShape
                             ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(14.dp),
-                                    horizontalArrangement = Arrangement.End,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = favoriteStationName,
-                                        fontSize = 14.sp,
-                                        textAlign = TextAlign.End,
-                                        modifier = Modifier.weight(1f)
-
-                                    )
-                                    IconButton(
-                                        onClick = {
-                                            coroutineScope.launch {
-                                                RealmObject.realmRepo.deleteStation(
-                                                    favoriteStationName
-                                                )
-                                                dbList =
-                                                    RealmObject.realmRepo.getListOfFavoriteStations()
-                                                        .filter { it != "" }
-                                            }
-                                        },
-                                        modifier = Modifier.weight(0.5f)
-                                    ) {
-                                        Icon(
-                                            imageVector = ImageVector.vectorResource(id = R.drawable.icons8_trash_128),
-                                            contentDescription = "",
-                                            tint = MaterialTheme.colorScheme.primary,
-                                        )
-                                    }
-
-                                }
+                                Text(
+                                    text = favoriteStationName,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp)
+                                )
                             }
-                        }
-                    }
-            }
+                            IconButton(
+                                modifier = Modifier.weight(1f),
+                                onClick = {
+                                    coroutineScope.launch {
+                                        RealmObject.realmRepo.deleteStation(
+                                            favoriteStationName
+                                        )
+                                        dbList =
+                                            RealmObject.realmRepo.getListOfFavoriteStations()
+                                                .filter { it != "" }
+                                    }
+                                },
+                            ) {
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.icons8_trash_128),
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
 
+                        }
+                        Divider(
+                            color = line,
+                            modifier = Modifier.padding(horizontal = 26.dp),
+                            thickness = 0.18.dp
+                        )
+                    }
+                }
         }
     )
 }

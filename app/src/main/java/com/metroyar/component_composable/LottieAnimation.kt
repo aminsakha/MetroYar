@@ -25,7 +25,9 @@ fun ShowLottieAnimation(
     animationRawId: Int,
     speed: Float = 1f,
     clipSpec: LottieClipSpec,
-    onAnimationFinished: (Boolean) -> Unit
+    iterations:Int=LottieConstants.IterateForever,
+    onAnimationFinished: (Boolean) -> Unit,
+    shouldStopAnimation: Boolean = true
 ) {
     var isPlaying by remember {
         mutableStateOf(true)
@@ -33,7 +35,7 @@ fun ShowLottieAnimation(
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRawId))
     val progressShit by animateLottieCompositionAsState(
         composition,
-        iterations = LottieConstants.IterateForever,
+        iterations = iterations,
         speed = speed,
         cancellationBehavior = LottieCancellationBehavior.OnIterationFinish,
         clipSpec = clipSpec,
@@ -42,16 +44,18 @@ fun ShowLottieAnimation(
     )
 
     LaunchedEffect(key1 = progressShit) {
-        if (progressShit == 0f)
-            log("zero", true)
-        if (progressShit > 0.5)
-            onAnimationFinished.invoke(true)
-        if (progressShit > 0.99f)
-            isPlaying = false
+        if (shouldStopAnimation) {
+            if (progressShit == 0f)
+                log("zero", true)
+            if (progressShit > 0.5)
+                onAnimationFinished.invoke(true)
+            if (progressShit > 0.99f)
+                isPlaying = false
+        }
     }
     LottieAnimation(
         composition,
         progressShit,
-        modifier = Modifier.size((deviceHeightInDp + deviceWidthInDp) /4)
+        modifier = Modifier.size((deviceHeightInDp + deviceWidthInDp) / 4)
     )
 }
