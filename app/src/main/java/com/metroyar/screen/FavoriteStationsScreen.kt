@@ -3,8 +3,10 @@ package com.metroyar.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieClipSpec
@@ -86,6 +89,7 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                         onAnimationFinished = {},
                         shouldStopAnimation = false
                     )
+                    Text(text = "هنوز ایستگاهی نشان نکردید", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }
             } else
                 LazyColumn(modifier = Modifier.padding(padding)) {
@@ -106,14 +110,17 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                                     containerColor = Color.White,
                                 ),
                                 modifier = Modifier
-                                    .padding(8.dp).fillMaxWidth()
+                                    .padding(8.dp)
+                                    .fillMaxWidth()
                                     .weight(2f),
                                 onClick = { },
                             ) {
                                 Text(
                                     text = favoriteStationName,
                                     fontSize = 14.sp,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(8.dp)
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(8.dp)
                                 )
                             }
                             IconButton(

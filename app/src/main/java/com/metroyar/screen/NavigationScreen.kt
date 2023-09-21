@@ -3,7 +3,9 @@ package com.metroyar.screen
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -38,43 +40,44 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
     val focusRequesterDst = remember { FocusRequester() }
     val focusRequesterSrc = remember { FocusRequester() }
-
-    Scaffold(floatingActionButton = {
-        ElevatedButton(
-            colors = ButtonDefaults.elevatedButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-            ),
-            shape = FloatingActionButtonDefaults.largeShape,
-            modifier = Modifier.padding(bottom = 16.dp, end = 8.dp),
-            onClick = { isFindNearestButtonClicked = true },
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+    val state = rememberScrollState()
+    Scaffold(
+        floatingActionButton = {
+            ElevatedButton(
+                colors = ButtonDefaults.elevatedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                shape = FloatingActionButtonDefaults.largeShape,
+                modifier = Modifier.padding(bottom = 16.dp, end = 8.dp),
+                onClick = { isFindNearestButtonClicked = true },
             ) {
-                Text(
-                    text = "ایستگاه های نزدیک", color = textColor,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    painter = painterResource(id = R.drawable.train),
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(bottom = 1.dp),
-                    contentDescription = ""
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "ایستگاه های نزدیک", color = textColor,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        painter = painterResource(id = R.drawable.train),
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(bottom = 1.dp),
+                        contentDescription = ""
+                    )
+                }
             }
-        }
-    },
+        },
         floatingActionButtonPosition = FabPosition.End,
         content = { padding ->
             Column(
-                modifier = Modifier
+                modifier = Modifier.fillMaxSize()
+                    .verticalScroll(state = state)
                     .padding(padding)
-                    .background(MaterialTheme.colorScheme.onPrimary)
-                    .fillMaxSize(),
+                    .background(MaterialTheme.colorScheme.onPrimary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LaunchedEffect(srcInputText) {

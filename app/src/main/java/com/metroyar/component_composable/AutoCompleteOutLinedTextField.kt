@@ -34,8 +34,10 @@ import androidx.compose.ui.unit.toSize
 import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.ui.theme.hint
+import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
 import com.metroyar.ui.theme.turnedOff2
+import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.stationList
 import kotlinx.coroutines.launch
 
@@ -111,13 +113,16 @@ fun AutoCompleteOutLinedTextField(
             )
             AnimatedVisibility(visible = expanded) {
                 Card(
-                    modifier = Modifier
-                        .padding(horizontal = 5.dp),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
+                    modifier = Modifier.padding(horizontal = 5.dp),
+                    shape = RoundedCornerShape(
+                        bottomStart = 8.dp,
+                        bottomEnd = 8.dp
+                    )
+                )
+                {
                     LazyColumn(
                         modifier = Modifier
-                            .heightIn(max = 150.dp)
+                            .heightIn(max = deviceHeightInDp/4.5f)
                             .background(MaterialTheme.colorScheme.onSecondary)
                     ) {
                         val filteredList =
@@ -146,6 +151,11 @@ fun AutoCompleteOutLinedTextField(
                                     expanded = false
                                     focusManager.clearFocus()
                                 }
+                            )
+                            Divider(
+                                color = line,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                thickness = 0.18.dp
                             )
                         }
                     }
