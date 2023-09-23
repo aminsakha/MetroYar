@@ -51,7 +51,6 @@ class BestPathResult(
                 )
             }
         }
-        log("path", possiblePathsQueue.toMutableList().toString())
         return possiblePathsQueue
     }
 
@@ -60,11 +59,8 @@ class BestPathResult(
         currentLineOfStartStation = path.stationsOnPath[0].lineNumber
         currentPathTimeTravel = path.wholePathTime
         val stations = path.stationsOnPath.distinctBy { it.stationName }.toMutableList()
-        log("path is :", path.stationsOnPath.map { it.stationName }.toSet().toMutableList())
         val pathStationNamesResult = mutableSetOf<String>().toMutableList()
-        pathStationNamesResult.add("حرکت از ایستگاه ")
-        pathStationNamesResult[pathStationNamesResult.lastIndex] =
-            pathStationNamesResult.last() + stations[0].stationName
+        pathStationNamesResult.add(stations[0].stationName)
         pathStationNamesResult[pathStationNamesResult.lastIndex] =
             pathStationNamesResult.last() + " به سمت ${
                 detectWhereToGoFromStartStation(

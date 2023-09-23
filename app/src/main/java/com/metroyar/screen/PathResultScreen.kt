@@ -20,9 +20,11 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.metroyar.classes.UserFriendlyPathStyle
 import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.GlobalObjects.currentLineOfStartStation
+import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.getNextTrain
 import com.metroyar.utils.log
 import com.metroyar.utils.minuteToLocalTime
@@ -67,7 +69,6 @@ fun PathResultScreen(
                     log("uri", uri)
                 }
             }
-
             else -> {}
         }
     }
@@ -200,7 +201,7 @@ fun BestPathLayout(
             }
             Spacer(modifier = Modifier.heightIn(8.dp))
             LazyColumn {
-                itemsIndexed(GlobalObjects.resultList.value) { index, item ->
+                itemsIndexed(UserFriendlyPathStyle(resultList.value).getLastResult()) { index, item ->
                     Text(
                         item,
                         Modifier
@@ -208,8 +209,6 @@ fun BestPathLayout(
                             .fillMaxWidth(),
                         textAlign = TextAlign.End
                     )
-                    if (index < GlobalObjects.resultList.value.lastIndex)
-                        Divider(color = line, thickness = 1.dp)
                 }
             }
         }

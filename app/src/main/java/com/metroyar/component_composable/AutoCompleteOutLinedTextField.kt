@@ -59,7 +59,8 @@ fun AutoCompleteOutLinedTextField(
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
     Column(
-        modifier = Modifier.padding(horizontal = 24.dp)
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
             .fillMaxWidth()
             .focusRequester(focusRequester)
             .clickable { expanded = false }
@@ -95,7 +96,11 @@ fun AutoCompleteOutLinedTextField(
                     if (!expanded)
                         keyboardController?.hide()
                 },
-                textStyle = TextStyle( fontSize = 16.sp,textDirection = TextDirection.Content, color = textColor),
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    textDirection = TextDirection.Content,
+                    color = textColor
+                ),
                 singleLine = true,
                 trailingIcon = {
                     IconButton(onClick = {
@@ -122,7 +127,7 @@ fun AutoCompleteOutLinedTextField(
                 {
                     LazyColumn(
                         modifier = Modifier
-                            .heightIn(max = deviceHeightInDp/4.5f)
+                            .heightIn(max = deviceHeightInDp / 4.5f)
                             .background(MaterialTheme.colorScheme.onSecondary)
                     ) {
                         val filteredList =
@@ -133,7 +138,9 @@ fun AutoCompleteOutLinedTextField(
                             else {
                                 dropDownStationNamesList.filter {
                                     it.contains(inputValue)
-                                }.reversed()
+                                }.sortedWith(compareBy { element ->
+                                    dataBaseList.indexOf(element)
+                                }).reversed()
                             }
                         items(filteredList) { stationName ->
                             DropDownStationSuggestionItem(
