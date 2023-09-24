@@ -72,3 +72,12 @@ val turnedOff2 = Color(0xFF332e37)
 val goodWhite = Color(0xfff3f3f3)
 val textColor = Color(0xff281d07)
 val redd = Color(0xffFA8072)
+
+
+val lineOne = Color(0xffed1b24)
+val lineThree = Color(0xff00adef)
+val lineSix = Color(0xffef6ea7)
+val lineTwo = Color(0xff2b3b90)
+val lineFour = Color(0xffffdd19)
+val lineFive = Color(0xff009448)
+val lineSeven = Color(0xff7f3e98)

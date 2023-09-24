@@ -33,8 +33,10 @@ import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
+import java.text.NumberFormat
 import java.time.Duration
 import java.time.LocalTime
+import java.util.Locale
 import kotlin.math.roundToLong
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
@@ -354,9 +356,18 @@ fun getNextTrain(lineNumber: Int, currentTime: LocalTime): String? {
     ).toStringWithCustomFormat()
 }
 
-fun LocalTime.toStringWithCustomFormat() = "$minute : $hour"
-fun LocalTime.toMinutes(): Int {
-    return hour * 60 + minute
+fun LocalTime.toStringWithCustomFormat(): String {
+    val persianLocale = Locale("fa", "IR")
+    val numberFormat = NumberFormat.getInstance(persianLocale)
+    val persianMinute = numberFormat.format(minute)
+    val persianHour = numberFormat.format(hour)
+    return "$persianMinute : $persianHour"
+}
+
+fun LocalTime.toMinutes(): String {
+    val persianLocale = Locale("fa", "IR")
+    val numberFormat = NumberFormat.getInstance(persianLocale)
+    return numberFormat.format(hour * 60 + minute)
 }
 
 fun minuteToLocalTime(): LocalTime {

@@ -1,19 +1,25 @@
 package com.metroyar.classes
 
 import android.text.BidiFormatter
-import com.metroyar.utils.log
 import java.util.Locale
 
 class UserFriendlyPathStyle(private val pathResultList: List<String>) {
+    val result = mutableListOf<String>()
+    val expandableItems: MutableMap<String, MutableList<String>> =
+        mutableMapOf()
+
+    init {
+        generateLastResult()
+    }
 
     private fun processOnFirstElement(): String {
         val splitString = pathResultList.first().split("به سمت")
         val bidiFormatter = BidiFormatter.getInstance(Locale("fa"))
 
         val formattedString =
-            "شما اول باید وارد ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])} بشید و اون قطاری رو سوار شید که به سمت ${
+            " وارد ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])} بشید و به سمت ${
                 bidiFormatter.unicodeWrap(splitString[1])
-            }  حرکت میکنه "
+            }  حرکت کنید "
         return formattedString
     }
 
@@ -21,7 +27,7 @@ class UserFriendlyPathStyle(private val pathResultList: List<String>) {
         val bidiFormatter = BidiFormatter.getInstance(Locale("fa"))
 
         val formattedString =
-            "به ایستگاه ${bidiFormatter.unicodeWrap(pathResultList.last())}  که رسیدید دیگه میتونید از قطار پیاده شید و  تمام  ${
+            "به ایستگاه ${bidiFormatter.unicodeWrap(pathResultList.last())} که رسیدید از قطار پیاده شید ${
                 bidiFormatter.unicodeWrap(
                     "\uD83D\uDE03"
                 )
@@ -36,18 +42,14 @@ class UserFriendlyPathStyle(private val pathResultList: List<String>) {
         val bidiFormatter = BidiFormatter.getInstance(Locale("fa"))
 
         val formattedString =
-            "منتظر باشید تا به ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])}برسید ، بعدش خط عوض کنید و اون قطاری رو سوار شید که به سمت ${
+            "منتظر باشید تا به ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])}برسید، سپس به سمت ${
                 bidiFormatter.unicodeWrap(splitString[1])
-            }  حرکت میکنه "
+            } خط عوض کنید "
 
         return formattedString
     }
 
-    fun getLastResult(): List<String> {
-        val result = mutableListOf<String>()
-        val expandableItems: MutableMap<String, MutableList<String>> =
-            mutableMapOf()
-
+    fun generateLastResult(): List<String> {
         var i = -1
         while (i <= pathResultList.lastIndex) {
             try {

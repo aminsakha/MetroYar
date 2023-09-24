@@ -31,7 +31,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
 
         "میدان محمدیه" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "مهدیه" -> return "به سمت شهید دادمان"
+                "مهدیه" -> return "به سمت میدان کتاب"
                 "مولوی" -> return "به سمت بسیج"
                 "شوش" -> return "به سمت کهریزک"
                 "خیام" -> return "به سمت تجریش"
@@ -61,7 +61,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
                 "شادمان" -> return "به سمت تهران (صادقیه)"
                 "میدان حر" -> return "به سمت فرهنگسرا"
                 "رودکی" -> return "به سمت بسیج"
-                "توحید" -> return "به سمت شهید دادمان"
+                "توحید" -> return "به سمت میدان کتاب"
             }
         }
 
@@ -92,7 +92,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
 
         "مهدیه" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "هلال احمر" -> return "به سمت شهید دادمان"
+                "هلال احمر" -> return "به سمت میدان کتاب"
                 "میدان محمدیه" -> return "به سمت بسیج"
                 "راه آهن" -> return "به سمت آزادگان"
                 "منیریه" -> return "به سمت قائم"
@@ -110,7 +110,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
 
         "توحید" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "مدافعان سلامت" -> return "به سمت شهید دادمان"
+                "مدافعان سلامت" -> return "به سمت میدان کتاب"
                 "شهید نواب صفوی" -> return "به سمت بسیج"
                 "شادمان" -> return "به سمت علامه جعفری"
                 "میدان انقلاب اسلامی" -> return "به سمت شهید کلاهدوز"
@@ -129,7 +129,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
             when (findStationObjectFromItsId(nextId).stationName) {
                 "شهرک آزمایش" -> return "به سمت شهید ستاری"
                 "مدافعان سلامت" -> return "به سمت بسیج"
-                "بوستان گفتگو" -> return "به سمت شهید دادمان"
+                "بوستان گفتگو" -> return "به سمت میدان کتاب"
                 "کارگر" -> return "به سمت دولت آباد"
             }
         }

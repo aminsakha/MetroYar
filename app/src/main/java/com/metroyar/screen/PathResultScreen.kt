@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,14 +17,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.metroyar.R
 import com.metroyar.classes.UserFriendlyPathStyle
 import com.metroyar.component_composable.ArrivalsTime
+import com.metroyar.component_composable.ExpandableCard
 import com.metroyar.component_composable.SrcAndDstCard
+import com.metroyar.ui.theme.lineFive
+import com.metroyar.ui.theme.lineFour
+import com.metroyar.ui.theme.lineOne
+import com.metroyar.ui.theme.lineSeven
+import com.metroyar.ui.theme.lineSix
+import com.metroyar.ui.theme.lineThree
+import com.metroyar.ui.theme.lineTwo
+import com.metroyar.ui.theme.redd
+import com.metroyar.ui.theme.turnedOff2
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.getNextTrain
@@ -141,7 +155,7 @@ fun PathResultScreen(
                     }
                 ) {
                     Row(
-                        modifier=Modifier.padding(2.dp),
+                        modifier = Modifier.padding(2.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(text = "ارسال مسیر")
@@ -182,7 +196,7 @@ fun BestPathLayout(
                 SrcAndDstCard(src = startStation, dst = destinationStation)
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(12.dp))
             ArrivalsTime(
                 trainArrivalTime = " ساعت رسیدن مترو به مبدا : ${
                     getNextTrain(
@@ -192,17 +206,53 @@ fun BestPathLayout(
                 } ", pathTime = "زمان سفر : ${minuteToLocalTime().toMinutes()} دقیقه"
             )
 
-//            LazyColumn {
-//                items(UserFriendlyPathStyle(resultList.value).getLastResult()) { item ->
-//                    Text(
-//                        item,
-//                        Modifier
-//                            .padding(12.dp)
-//                            .fillMaxWidth(),
-//                        textAlign = TextAlign.End
-//                    )
-//                }
-//            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(horizontalAlignment = Alignment.End) {
+                itemsIndexed(UserFriendlyPathStyle(resultList.value).result) { index, item ->
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        log(
+                            "test",
+                            UserFriendlyPathStyle(resultList.value).expandableItems.getOrDefault(
+                                item,
+                                emptyList<String>()
+                            ).getOrElse(0, {})
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_circle_24),
+                            contentDescription = "",
+                            tint = if (index != UserFriendlyPathStyle(resultList.value).result.lastIndex) getLineColor(
+                                UserFriendlyPathStyle(resultList.value).expandableItems[item]!![0]
+                            ) else getLineColor(resultList.value.last())
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        ExpandableCard(
+                            title = item,
+                            userFriendlyPathStyle = UserFriendlyPathStyle(resultList.value)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         }
+    }
+}
+
+fun getLineColor(currStation: String): Color {
+    log("line", bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
+        .find { currStation.contains(it.stationName) }?.lineNumber)
+    return when (bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
+        .find { currStation.contains(it.stationName) }?.lineNumber) {
+        1 -> lineOne
+        2 -> lineTwo
+        3 -> lineThree
+        4 -> lineFour
+        5 -> lineFive
+        6 -> lineSix
+        7 -> lineSeven
+        else -> turnedOff2
     }
 }

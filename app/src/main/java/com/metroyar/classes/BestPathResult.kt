@@ -54,8 +54,6 @@ class BestPathResult(
 
     fun convertPathToUserUnderstandableForm(): MutableList<String> {
         bestCurrentPath = generatePossiblePaths().peek()!!
-//        currentLineOfStartStation = path.stationsOnPath[0].lineNumber
-//        currentPathTimeTravel = path.wholePathTime
         val stations = bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }.toMutableList()
         val pathStationNamesResult = mutableSetOf<String>().toMutableList()
         pathStationNamesResult.add(stations[0].stationName)

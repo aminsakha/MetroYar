@@ -53,7 +53,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 onClick = { isFindNearestButtonClicked = true },
             ) {
                 Row(
-                    modifier=Modifier.padding(1.5.dp),
+                    modifier=Modifier.padding(1.2.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
