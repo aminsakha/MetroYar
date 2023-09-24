@@ -214,13 +214,6 @@ fun BestPathLayout(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        log(
-                            "test",
-                            UserFriendlyPathStyle(resultList.value).expandableItems.getOrDefault(
-                                item,
-                                emptyList<String>()
-                            ).getOrElse(0, {})
-                        )
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_circle_24),
                             contentDescription = "",
@@ -242,8 +235,6 @@ fun BestPathLayout(
 }
 
 fun getLineColor(currStation: String): Color {
-    log("line", bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
-        .find { currStation.contains(it.stationName) }?.lineNumber)
     return when (bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
         .find { currStation.contains(it.stationName) }?.lineNumber) {
         1 -> lineOne

@@ -138,7 +138,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
             when (findStationObjectFromItsId(nextId).stationName) {
                 "میدان جهاد" -> return "به سمت قائم"
                 "بوستان لاله" -> return "به سمت شهید ستاری"
-                "تئاتر شهر" -> return "به سمت‌آزادگان"
+                "تئاتر شهر" -> return "به سمت آزادگان"
                 "شهید نجات اللهی (افتتاح نشده)" -> return "به سمت دولت آباد"
             }
         }
