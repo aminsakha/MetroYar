@@ -36,7 +36,7 @@ class UserFriendlyPathStyle(private val pathResultList: List<String>) {
         val bidiFormatter = BidiFormatter.getInstance(Locale("fa"))
 
         val formattedString =
-            "منتظر باشید تا به ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])}برسید و بعدش باید خط عوض کنید و اون قطاری رو سوار شید که به سمت ${
+            "منتظر باشید تا به ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])}برسید ، بعدش خط عوض کنید و اون قطاری رو سوار شید که به سمت ${
                 bidiFormatter.unicodeWrap(splitString[1])
             }  حرکت میکنه "
 
@@ -55,7 +55,6 @@ class UserFriendlyPathStyle(private val pathResultList: List<String>) {
                     for (expandableItem in expandableItems.keys) {
                         result.add(expandableItem)
                     }
-                    log("expandables", expandableItems.values)
                     result.add(processLastElement())
                     break
                 }
@@ -79,13 +78,11 @@ class UserFriendlyPathStyle(private val pathResultList: List<String>) {
                             break
                         }
                         i++
-                        log("bet", pathResultList[i])
                         expandableItems[key]?.add(pathResultList[i])
                     }
                 }
             } catch (e: Exception) {
             }
-
         }
         return result
     }

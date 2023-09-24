@@ -53,14 +53,14 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 onClick = { isFindNearestButtonClicked = true },
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    modifier=Modifier.padding(1.5.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = "ایستگاه های نزدیک", color = textColor,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         painter = painterResource(id = R.drawable.train),
                         modifier = Modifier

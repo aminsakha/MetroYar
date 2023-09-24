@@ -2,16 +2,14 @@ package com.metroyar.classes
 
 import android.content.Context
 import com.metroyar.R
-import com.metroyar.utils.GlobalObjects.metroGraph
-import com.metroyar.utils.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.model.Station
 import com.metroyar.utils.GlobalObjects.adjNodesLineNum
-import com.metroyar.utils.GlobalObjects.currentLineOfStartStation
-import com.metroyar.utils.GlobalObjects.currentPathTimeTravel
+import com.metroyar.utils.GlobalObjects.bestCurrentPath
+import com.metroyar.utils.GlobalObjects.metroGraph
+import com.metroyar.utils.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.utils.findStationObjectFromItsId
 import com.metroyar.utils.findStationObjectFromItsName
 import com.metroyar.utils.getDirectionFromInterchangeStations
-import com.metroyar.utils.log
 import java.util.PriorityQueue
 
 
@@ -55,10 +53,10 @@ class BestPathResult(
     }
 
     fun convertPathToUserUnderstandableForm(): MutableList<String> {
-        val path = generatePossiblePaths().peek()!!
-        currentLineOfStartStation = path.stationsOnPath[0].lineNumber
-        currentPathTimeTravel = path.wholePathTime
-        val stations = path.stationsOnPath.distinctBy { it.stationName }.toMutableList()
+        bestCurrentPath = generatePossiblePaths().peek()!!
+//        currentLineOfStartStation = path.stationsOnPath[0].lineNumber
+//        currentPathTimeTravel = path.wholePathTime
+        val stations = bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }.toMutableList()
         val pathStationNamesResult = mutableSetOf<String>().toMutableList()
         pathStationNamesResult.add(stations[0].stationName)
         pathStationNamesResult[pathStationNamesResult.lastIndex] =

@@ -6,8 +6,9 @@ import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -21,15 +22,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.metroyar.classes.UserFriendlyPathStyle
-import com.metroyar.ui.theme.line
-import com.metroyar.utils.GlobalObjects
-import com.metroyar.utils.GlobalObjects.currentLineOfStartStation
+import com.metroyar.component_composable.ArrivalsTime
+import com.metroyar.component_composable.SrcAndDstCard
+import com.metroyar.utils.GlobalObjects.bestCurrentPath
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.getNextTrain
 import com.metroyar.utils.log
 import com.metroyar.utils.minuteToLocalTime
 import com.metroyar.utils.saveBitmapAndGetUri
 import com.metroyar.utils.shareBitmap
+import com.metroyar.utils.toMinutes
 import com.metroyar.utils.toStringWithCustomFormat
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -69,6 +71,7 @@ fun PathResultScreen(
                     log("uri", uri)
                 }
             }
+
             else -> {}
         }
     }
@@ -122,7 +125,12 @@ fun PathResultScreen(
     },
         floatingActionButton = {
             if (visible)
-                ExtendedFloatingActionButton(
+                ElevatedButton(
+                    colors = ButtonDefaults.elevatedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    shape = FloatingActionButtonDefaults.largeShape,
                     onClick = {
                         showPermissionLayout = true
                         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
@@ -130,17 +138,26 @@ fun PathResultScreen(
                                 shouldCapture = true
                                 visible = false
                             }
-                    },
-                    icon = { Icon(Icons.Filled.Share, "") },
-                    text = { Text(text = "ارسال مسیر") },
-                )
+                    }
+                ) {
+                    Row(
+                        modifier=Modifier.padding(2.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "ارسال مسیر")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(Icons.Filled.Share, "")
+                    }
+                }
         },
         floatingActionButtonPosition = FabPosition.Center,
         content = { padding ->
             Column(
                 modifier = Modifier
+                    .fillMaxSize()
                     .padding(padding)
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(MaterialTheme.colorScheme.onPrimary),
+                horizontalAlignment = Alignment.End
             ) {
                 BestPathLayout(screenshotState, startStation, destinationStation)
                 uri?.let { shareBitmap(context, it) }
@@ -155,62 +172,37 @@ fun BestPathLayout(
     startStation: String,
     destinationStation: String
 ) {
-    ScreenshotBox(
-        modifier = Modifier.fillMaxSize(),
-        screenshotState = screenshotState
-    ) {
-        Column {
-            Spacer(Modifier.height(12.dp))
-            Card(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(start = 64.dp),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text(
-                    text = startStation.plus(
-                        " حرکت از ساعت ${
-                            getNextTrain(
-                                currentTime = LocalTime.now(),
-                                lineNumber = currentLineOfStartStation
-                            )
-                        } \n" +
-                                "زمان رسیدن : ${minuteToLocalTime().toStringWithCustomFormat()} "
-                    ),
-                    textAlign = TextAlign.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
-                Spacer(modifier = Modifier.heightIn(4.dp))
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(end = 24.dp)
-                )
-                Spacer(modifier = Modifier.heightIn(4.dp))
-                Text(
-                    text = destinationStation,
-                    textAlign = TextAlign.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
+    ScreenshotBox(screenshotState = screenshotState) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(end = 16.dp, top = 8.dp, start = 16.dp)
+        ) {
+            Spacer(Modifier.height(8.dp))
+            Box(modifier = Modifier.size(200.dp, 100.dp), contentAlignment = Alignment.CenterEnd) {
+                SrcAndDstCard(src = startStation, dst = destinationStation)
             }
-            Spacer(modifier = Modifier.heightIn(8.dp))
-            LazyColumn {
-                itemsIndexed(UserFriendlyPathStyle(resultList.value).getLastResult()) { index, item ->
-                    Text(
-                        item,
-                        Modifier
-                            .padding(12.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.End
+
+            Spacer(Modifier.height(8.dp))
+            ArrivalsTime(
+                trainArrivalTime = " ساعت رسیدن مترو به مبدا : ${
+                    getNextTrain(
+                        currentTime = LocalTime.now(),
+                        lineNumber = bestCurrentPath!!.stationsOnPath[0].lineNumber
                     )
-                }
-            }
+                } ", pathTime = "زمان سفر : ${minuteToLocalTime().toMinutes()} دقیقه"
+            )
+
+//            LazyColumn {
+//                items(UserFriendlyPathStyle(resultList.value).getLastResult()) { item ->
+//                    Text(
+//                        item,
+//                        Modifier
+//                            .padding(12.dp)
+//                            .fillMaxWidth(),
+//                        textAlign = TextAlign.End
+//                    )
+//                }
+//            }
         }
     }
 }
