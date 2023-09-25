@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
@@ -68,7 +70,7 @@ fun UserClosestStationsDialog(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(deviceHeightInDp.times(0.36f)),
+                    .height(deviceHeightInDp.times(0.4f)),
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 10.dp
@@ -151,12 +153,12 @@ fun SuggestionStationItemCard(
             defaultElevation = 10.dp
         ),
     ) {
+        val state = rememberScrollState()
         Column(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(2.dp).verticalScroll(state = state),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = stationName, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(5.dp))
             Row {
                 TextButton(
                     onClick = { onDstClicked.invoke(stationName) },
@@ -169,8 +171,6 @@ fun SuggestionStationItemCard(
                 ) {
                     Text("مبدا من باشه ",color = turnedOff2)
                 }
-
-
             }
         }
     }

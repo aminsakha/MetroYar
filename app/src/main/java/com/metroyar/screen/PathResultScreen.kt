@@ -221,7 +221,6 @@ fun BestPathLayout(
                             ShowLottieAnimation(
                                 animationRawId = R.raw.interchange,
                                 clipSpec = LottieClipSpec.Progress(0.0f, 1f),
-                                speed = 0.9f,
                                 animationSize = Dp(24f),
                                 onAnimationFinished = {},
                                 shouldStopAnimation = false

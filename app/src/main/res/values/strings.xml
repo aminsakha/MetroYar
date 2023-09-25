@@ -4,11 +4,11 @@
     <string name="same_input_output_message" translatable="false">" اشتباهی مبدا و مقصد رو یکی زدی "</string>
     <string name="ok_message" translatable="false">حله</string>
     <string name="enableLoc" translatable="false">دسترسی به موقعیت مکانی</string>
-    <string name="enableLocMessage" translatable="false">برای اینکه بهتون بگیم دقیقا چه ایستگاهایی نزدیکتونن باید این دسترسی رو داشته باشیم</string>
+    <string name="enableLocMessage" translatable="false">برای اینکه بهتون بگیم دقیقا چه ایستگاهایی نزدیکتونن باید دسترسی موقعیت مکانی رو داشته باشیم</string>
     <string name="enableLocMessageRash" translatable="false">اگر همچنان این دسترسی رو قطع کنید و بعدا نظرتون عوض شه بخواید از این قابلیت استفاده کنید باید دیگه برید از طریق تنطیمات دستگاه دسترسی به مکان رو بدید</string>
     <string name="confirmBtn" translatable="false">باشه</string>
-    <string name="netLostTitle" translatable="false">قطعی اینترنت</string>
-    <string name="internetLostMessage" translatable="false">اینترنت باید وصل باشه</string>
+    <string name="netLostTitle" translatable="false">عدم اتصال اینترنت</string>
+    <string name="internetLostMessage" translatable="false">برای استفاده از این قابلیت باید به اینترنت متصل باشد</string>
     <string name="chosseSrc" translatable="false">ایستگاه مبدا رو انتخاب کن</string>
     <string name="chooseDst" translatable="false">ایستگاه مقصد رو انتخاب کن</string>
     <string name="about_us" translatable="false">مترو یار، یار مترویی شما</string>

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
@@ -34,6 +35,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun InfoScreen(navigator: DestinationsNavigator) {
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -57,7 +59,9 @@ fun InfoScreen(navigator: DestinationsNavigator) {
                 infoItem = InfoItem(
                     title = "قابلیت های مترو یار",
                     icon = ImageVector.vectorResource(id = R.drawable.baseline_dashboard_24),
-                    onClickedItem = {})
+                    onClickedItem = {
+                        uriHandler.openUri("https://github.com/aminsakha/MetroYar")
+                    })
             )
             Divider(
                 color = line,
