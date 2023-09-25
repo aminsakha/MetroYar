@@ -23,6 +23,7 @@ import com.metroyar.component_composable.AutoCompleteOutLinedTextField
 import com.metroyar.component_composable.ShouldConfirmAlertDialog
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.ui.theme.textColor
+import com.metroyar.utils.BackPressAction
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.resultList
@@ -194,4 +195,5 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
             }
         }
     )
+    BackPressAction()
 }

@@ -42,7 +42,7 @@ class UserFriendlyPathStyle(private val pathResultList: List<String>) {
         val bidiFormatter = BidiFormatter.getInstance(Locale("fa"))
 
         val formattedString =
-            "منتظر باشید تا به ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])}برسید، سپس به سمت ${
+            " به ایستگاه ${bidiFormatter.unicodeWrap(splitString[0])}که رسیدید، به سمت ${
                 bidiFormatter.unicodeWrap(splitString[1])
             } خط عوض کنید "
 

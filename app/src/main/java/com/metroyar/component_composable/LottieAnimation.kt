@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCancellationBehavior
 import com.airbnb.lottie.compose.LottieClipSpec
@@ -27,6 +28,7 @@ fun ShowLottieAnimation(
     clipSpec: LottieClipSpec,
     iterations:Int=LottieConstants.IterateForever,
     onAnimationFinished: (Boolean) -> Unit,
+    animationSize: Dp=(deviceHeightInDp + deviceWidthInDp) / 4,
     shouldStopAnimation: Boolean = true
 ) {
     var isPlaying by remember {
@@ -56,6 +58,6 @@ fun ShowLottieAnimation(
     LottieAnimation(
         composition,
         progressShit,
-        modifier = Modifier.size((deviceHeightInDp + deviceWidthInDp) / 4)
+        modifier = Modifier.size(animationSize)
     )
 }

@@ -3,6 +3,7 @@ package com.metroyar.utils
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.location.LocationManager
 import android.net.*
 import android.os.Build
@@ -10,7 +11,10 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.google.android.gms.location.*
@@ -33,6 +37,7 @@ import com.metroyar.utils.GlobalObjects.TAG
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
 import com.metroyar.utils.GlobalObjects.metroGraph
 import com.metroyar.utils.GlobalObjects.stationList
+import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.time.Duration
 import java.time.LocalTime
@@ -374,4 +379,30 @@ fun minuteToLocalTime(): LocalTime {
     val hours = bestCurrentPath!!.wholePathTime.toInt() / 60
     val minutesLeft = bestCurrentPath!!.wholePathTime.toInt() % 60
     return LocalTime.of(hours, minutesLeft)
+}
+
+
+@Composable
+fun BackPressAction() {
+    var exit by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = exit) {
+        if (exit) {
+            delay(1000)
+            exit = false
+        }
+    }
+
+    BackHandler(enabled = true) {
+        if (exit) {
+            context.startActivity(Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_HOME)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            })
+        } else {
+            exit = true
+            Toast.makeText(context, "برای خروج دوباره کلیک کنید", Toast.LENGTH_SHORT).show()
+        }
+    }
 }

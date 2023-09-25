@@ -28,6 +28,7 @@ import com.metroyar.screen.destinations.AboutUsScreenDestination
 import com.metroyar.screen.destinations.FavoriteStationsScreenDestination
 import com.metroyar.screen.destinations.SettingScreenDestination
 import com.metroyar.ui.theme.line
+import com.metroyar.utils.BackPressAction
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
@@ -112,4 +113,5 @@ fun InfoScreen(navigator: DestinationsNavigator) {
             )
         }
     }
+    BackPressAction()
 }

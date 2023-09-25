@@ -42,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.metroyar.R
 import com.metroyar.classes.UserFriendlyPathStyle
 import com.metroyar.screen.getLineColor
@@ -198,6 +199,7 @@ fun ExpandableCard(
                         .fillMaxWidth()
                         .weight(8f),
                     text = title,
+                    fontSize = 14.sp,
                     textAlign = TextAlign.End,
                 )
                 IconButton(
@@ -230,6 +232,7 @@ fun ExpandableCard(
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = subStation,
+                            fontSize = 12.sp,
                             textAlign = TextAlign.End,
                         )
                         Spacer(modifier = Modifier.height(8.dp))

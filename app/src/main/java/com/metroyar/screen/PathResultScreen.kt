@@ -23,11 +23,14 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
 import com.metroyar.classes.UserFriendlyPathStyle
 import com.metroyar.component_composable.ArrivalsTime
 import com.metroyar.component_composable.ExpandableCard
+import com.metroyar.component_composable.ShowLottieAnimation
 import com.metroyar.component_composable.SrcAndDstCard
 import com.metroyar.ui.theme.lineFive
 import com.metroyar.ui.theme.lineFour
@@ -214,13 +217,23 @@ fun BestPathLayout(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_circle_24),
-                            contentDescription = "",
-                            tint = if (index != UserFriendlyPathStyle(resultList.value).result.lastIndex) getLineColor(
-                                UserFriendlyPathStyle(resultList.value).expandableItems[item]!![0]
-                            ) else getLineColor(resultList.value.last())
-                        )
+                        if (item.contains("خط"))
+                            ShowLottieAnimation(
+                                animationRawId = R.raw.interchange,
+                                clipSpec = LottieClipSpec.Progress(0.0f, 1f),
+                                speed = 0.9f,
+                                animationSize = Dp(24f),
+                                onAnimationFinished = {},
+                                shouldStopAnimation = false
+                            )
+                        else
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_circle_24),
+                                contentDescription = "",
+                                tint = if (index != UserFriendlyPathStyle(resultList.value).result.lastIndex) getLineColor(
+                                    UserFriendlyPathStyle(resultList.value).expandableItems[item]!![0]
+                                ) else getLineColor(resultList.value.last())
+                            )
                         Spacer(modifier = Modifier.width(12.dp))
                         ExpandableCard(
                             title = item,
