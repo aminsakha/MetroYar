@@ -44,7 +44,7 @@ fun DropDownStationSuggestionItem(
     Row(modifier = Modifier
         .fillMaxWidth()
         .clickable { onItemSelected(itemName) }
-        .padding(10.dp),
+        .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center) {
         IconButton(

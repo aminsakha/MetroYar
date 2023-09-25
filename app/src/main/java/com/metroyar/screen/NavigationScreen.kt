@@ -87,7 +87,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         focusRequesterDst.requestFocus()
                 }
 
-                Spacer(modifier = Modifier.height(deviceHeightInDp / 7))
+                Spacer(modifier = Modifier.height(deviceHeightInDp / 8f))
 
                 AutoCompleteOutLinedTextField(
                     label = stringResource(R.string.chosseSrc),

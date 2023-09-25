@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -177,11 +178,11 @@ fun ExpandableCard(
             .fillMaxWidth()
             .animateContentSize(
                 animationSpec = tween(
-                    durationMillis = 250,
+                    durationMillis = 150,
                     easing = LinearOutSlowInEasing
                 )
             ),
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(12.dp),
         onClick = {
             expandedState = !expandedState
         }
@@ -204,14 +205,14 @@ fun ExpandableCard(
                 )
                 IconButton(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(0.9f)
                         .alpha(if (title != userFriendlyPathStyle.result.last()) 0.8f else 0f)
                         .rotate(rotationState),
                     onClick = {
                         expandedState = !expandedState
                     }) {
                     Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
+                        imageVector = Icons.Default.KeyboardArrowDown,
                         tint = textColor,
                         contentDescription = "Drop-Down Arrow"
                     )
@@ -232,7 +233,7 @@ fun ExpandableCard(
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = subStation,
-                            fontSize = 12.sp,
+                            fontSize = 13.sp,
                             textAlign = TextAlign.End,
                         )
                         Spacer(modifier = Modifier.height(8.dp))

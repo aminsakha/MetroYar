@@ -1,6 +1,9 @@
 package com.metroyar.component_composable
 
 
+import android.content.Intent
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,6 +11,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,11 +26,16 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.nativeKeyCode
+import androidx.compose.ui.input.key.onInterceptKeyBeforeSoftKeyboard
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
@@ -70,6 +80,15 @@ fun AutoCompleteOutLinedTextField(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
+//                    .onInterceptKeyBeforeSoftKeyboard { event ->
+//                        if (event.key.nativeKeyCode == android.view.KeyEvent.KEYCODE_BACK) {
+//                            focusManager.clearFocus()
+//                            keyboardController?.hide()
+//                            expanded = false
+//                            true
+//                        } else {
+//                            false
+//                        } }
                     .onFocusChanged { focusState ->
                         if (focusState.isFocused && inputValue.isEmpty()) {
                             expanded = true
@@ -77,6 +96,14 @@ fun AutoCompleteOutLinedTextField(
                     }
                     .focusRequester(focusRequester)
                     .onGloballyPositioned { textFieldSize = it.size.toSize() },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        expanded = !expanded
+                        focusManager.clearFocus()
+                    }
+                ),
                 label = {
                     Text(
                         label,
@@ -127,7 +154,7 @@ fun AutoCompleteOutLinedTextField(
                 {
                     LazyColumn(
                         modifier = Modifier
-                            .heightIn(max = deviceHeightInDp / 4.5f)
+                            .heightIn(max = deviceHeightInDp / 6.5f)
                             .background(MaterialTheme.colorScheme.onSecondary)
                     ) {
                         val filteredList =

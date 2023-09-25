@@ -158,8 +158,9 @@ fun PathResultScreen(
                     }
                 ) {
                     Row(
-                        modifier = Modifier.padding(2.dp),
-                        horizontalArrangement = Arrangement.Center
+                        modifier = Modifier.padding(1.1.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "ارسال مسیر")
                         Spacer(modifier = Modifier.width(8.dp))
@@ -209,7 +210,7 @@ fun BestPathLayout(
                 } ", pathTime = "زمان سفر : ${minuteToLocalTime().toMinutes()} دقیقه"
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             LazyColumn(horizontalAlignment = Alignment.End) {
                 itemsIndexed(UserFriendlyPathStyle(resultList.value).result) { index, item ->
@@ -239,7 +240,7 @@ fun BestPathLayout(
                             userFriendlyPathStyle = UserFriendlyPathStyle(resultList.value)
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
                 }
             }
         }
