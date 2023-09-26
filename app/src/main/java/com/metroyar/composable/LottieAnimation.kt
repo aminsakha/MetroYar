@@ -1,4 +1,4 @@
-package com.metroyar.component_composable
+package com.metroyar.composable
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable

@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.BestPathResult
-import com.metroyar.component_composable.AutoCompleteOutLinedTextField
-import com.metroyar.component_composable.ShouldConfirmAlertDialog
+import com.metroyar.composable.AutoCompleteOutLinedTextField
+import com.metroyar.composable.ShouldConfirmAlertDialog
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.BackPressAction
@@ -155,7 +155,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                                     context,
                                     srcInputText,
                                     dstInputText
-                                ).convertPathToUserUnderstandableForm()
+                                ).convertPathToReadableForm()
                                 navigator.navigate(
                                     PathResultScreenDestination(
                                         startStation = startStation,

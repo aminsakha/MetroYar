@@ -20,10 +20,10 @@ import com.airbnb.lottie.compose.LottieClipSpec
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.metroyar.R
-import com.metroyar.component_composable.*
+import com.metroyar.composable.*
 import com.metroyar.model.Station
 import com.metroyar.network.MetroYarNeshanApiService
-import com.metroyar.component_composable.EnableLocationDialog
+import com.metroyar.composable.EnableLocationDialog
 import com.metroyar.model.GPSCoordinate
 import com.metroyar.model.line.LineFIve
 import com.metroyar.model.line.LineFour

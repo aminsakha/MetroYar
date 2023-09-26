@@ -1,25 +1,25 @@
-package com.metroyar.component_composable
+package com.metroyar.composable
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,7 +27,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,18 +39,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.R
-import com.metroyar.classes.UserFriendlyPathStyle
+import com.metroyar.classes.GuidPathStyle
 import com.metroyar.screen.getLineColor
 import com.metroyar.ui.theme.line
-import com.metroyar.ui.theme.redd
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects
-import com.metroyar.utils.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,47 +57,44 @@ fun SrcAndDstCard(src: String, dst: String) {
         enabled = false,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Row(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-
-            ) {
+            Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = src,
                     color = textColor,
-                    modifier = Modifier.weight(1f),
                     textAlign = TextAlign.End
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+                Divider(
+                    color = line,
+                    modifier = Modifier.fillMaxWidth(0.6f),
+                    thickness = 0.9.dp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = dst,
+                    textAlign = TextAlign.End,
+                    color = textColor
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(horizontalAlignment = Alignment.End) {
                 Icon(
                     painter = painterResource(id = R.drawable.start_station),
                     contentDescription = "",
                     tint = getLineColor(src),
                     modifier = Modifier.padding(end = 4.dp)
                 )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Divider(
-                color = line,
-                modifier = Modifier.padding(horizontal = 32.dp),
-                thickness = 0.9.dp
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = dst,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.End,
-                    color = textColor
+                Icon(
+                    painter = painterResource(id = R.drawable.three_dot),
+                    contentDescription = "",
+                    modifier = Modifier.padding(end = 4.dp)
                 )
-                Spacer(modifier = Modifier.width(12.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.distance),
                     contentDescription = "",
@@ -129,7 +122,6 @@ fun ArrivalsTime(pathTime: String, trainArrivalTime: String) {
                 modifier = Modifier.padding(top = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
-
             ) {
                 Text(
                     text = pathTime,
@@ -137,12 +129,11 @@ fun ArrivalsTime(pathTime: String, trainArrivalTime: String) {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
-
             }
             Spacer(modifier = Modifier.height(16.dp))
             Divider(
                 color = line,
-                modifier = Modifier.padding(horizontal = 32.dp),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 thickness = 0.9.dp
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -166,7 +157,7 @@ fun ArrivalsTime(pathTime: String, trainArrivalTime: String) {
 @Composable
 fun ExpandableCard(
     title: String,
-    userFriendlyPathStyle: UserFriendlyPathStyle,
+    guidPathStyle: GuidPathStyle,
 ) {
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -206,7 +197,7 @@ fun ExpandableCard(
                 IconButton(
                     modifier = Modifier
                         .weight(0.9f)
-                        .alpha(if (title != userFriendlyPathStyle.result.last()) 0.8f else 0f)
+                        .alpha(if (title != guidPathStyle.guidPathStyleStringList.last()) 0.8f else 0f)
                         .rotate(rotationState),
                     onClick = {
                         expandedState = !expandedState
@@ -226,7 +217,7 @@ fun ExpandableCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     items(
-                        userFriendlyPathStyle.expandableItems.getOrDefault(
+                        guidPathStyle.mapOfGuidPathToItsChildren.getOrDefault(
                             title, emptyList()
                         ).toList()
                     ) { subStation ->

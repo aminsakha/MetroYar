@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.metroyar.R
 import com.metroyar.db.RealmObject
 import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.screen.NavGraphs
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val config =
-            YandexMetricaConfig.newConfigBuilder("c94e3b07-3e3f-499d-9100-f8db6012f0f5").build()
+            YandexMetricaConfig.newConfigBuilder(getString(R.string.yandex_api_key)).build()
         YandexMetrica.activate(applicationContext, config)
         YandexMetrica.enableActivityAutoTracking(applicationContext as Application)
         setContent {
@@ -35,7 +36,6 @@ class MainActivity : ComponentActivity() {
                 deviceHeightInDp = configuration.screenHeightDp.dp
                 realmRepo.initRealmObject(RealmObject.realm)
                 initiateStationsAndAdjNodesLineNum(LocalContext.current)
-                log("sattions", GlobalObjects.stationList)
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }

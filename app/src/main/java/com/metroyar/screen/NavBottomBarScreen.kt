@@ -1,11 +1,9 @@
 package com.metroyar.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -43,13 +41,10 @@ import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
-import com.metroyar.ui.theme.hint
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
-import com.metroyar.ui.theme.turnedOff
 import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.GlobalObjects.stack
-import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.metroyar.utils.vibratePhone
 import com.ramcosta.composedestinations.annotation.Destination

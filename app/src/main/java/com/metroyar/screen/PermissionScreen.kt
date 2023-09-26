@@ -4,8 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.metroyar.component_composable.ShouldConfirmAlertDialog
-import com.metroyar.utils.log
+import com.metroyar.composable.ShouldConfirmAlertDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)

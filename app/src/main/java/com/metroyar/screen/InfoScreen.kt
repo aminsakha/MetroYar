@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +22,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
-import com.metroyar.component_composable.InfoCardItem
+import com.metroyar.composable.InfoCardItem
 import com.metroyar.model.InfoItem
 import com.metroyar.screen.destinations.AboutUsScreenDestination
 import com.metroyar.screen.destinations.FavoriteStationsScreenDestination

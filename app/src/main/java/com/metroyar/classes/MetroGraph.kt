@@ -1,7 +1,6 @@
 package com.metroyar.classes
 
 import com.metroyar.utils.GlobalObjects.adjNodesLineNum
-import com.metroyar.utils.log
 import java.util.PriorityQueue
 
 class MetroGraph(numberOfStationsInGraph: Int) {
@@ -62,7 +61,6 @@ class MetroGraph(numberOfStationsInGraph: Int) {
             // Build the path
             return generateSequence(dst) { previous[it] }.toList().reversed()
         } catch (e: Exception) {
-            log("err", e.message)
             return emptyList()
         }
     }

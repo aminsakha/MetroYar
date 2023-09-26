@@ -12,6 +12,7 @@
     <string name="chosseSrc" translatable="false">ایستگاه مبدا رو انتخاب کن</string>
     <string name="chooseDst" translatable="false">ایستگاه مقصد رو انتخاب کن</string>
     <string name="about_us" translatable="false">مترو یار، یار مترویی شما</string>
+    <string name="yandex_api_key">c94e3b07-3e3f-499d-9100-f8db6012f0f5</string>
 
     <string-array name="stationsOnLine1">
         <item>تجریش</item>
