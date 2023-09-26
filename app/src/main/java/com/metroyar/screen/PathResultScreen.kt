@@ -37,6 +37,8 @@ import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
 import com.metroyar.ui.theme.zahrasBlack
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
+import com.metroyar.utils.GlobalObjects.deviceHeightInDp
+import com.metroyar.utils.GlobalObjects.deviceWidthInDp
 import com.metroyar.utils.GlobalObjects.resultList
 import com.metroyar.utils.getNextTrain
 import com.metroyar.utils.log
@@ -171,7 +173,7 @@ fun PathResultScreen(
                     .background(MaterialTheme.colorScheme.onPrimary),
                 horizontalAlignment = Alignment.End
             ) {
-                BestPathLayout(screenshotState, startStation, destinationStation)
+                BestPathLayout(screenshotState, startStation, destinationStation, navigator = navigator)
                 uri?.let { shareBitmap(context, it) }
             }
         }
@@ -182,7 +184,7 @@ fun PathResultScreen(
 fun BestPathLayout(
     screenshotState: ScreenshotState,
     startStation: String,
-    destinationStation: String
+    destinationStation: String,navigator: DestinationsNavigator
 ) {
     ScreenshotBox(screenshotState = screenshotState) {
         Column(
@@ -190,8 +192,13 @@ fun BestPathLayout(
             modifier = Modifier.padding(end = 16.dp, top = 8.dp, start = 16.dp)
         ) {
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier.size(200.dp, 100.dp), contentAlignment = Alignment.CenterEnd) {
-                SrcAndDstCard(src = startStation, dst = destinationStation)
+            Box(
+                modifier = Modifier.size(
+                    width = deviceWidthInDp / 1.6f,
+                    height = deviceHeightInDp / 8
+                ), contentAlignment = Alignment.CenterEnd
+            ) {
+                SrcAndDstCard(context = LocalContext.current, navigator = navigator,src = startStation, dst = destinationStation)
             }
 
             Spacer(Modifier.height(12.dp))
@@ -214,7 +221,7 @@ fun BestPathLayout(
                     ) {
                         if (item.contains("خط"))
                             Icon(
-                                painter = painterResource(id = R.drawable.baseline_multiple_stop_24),
+                                painter = painterResource(id = R.drawable.shuffle),
                                 contentDescription = "",
                             )
                         else

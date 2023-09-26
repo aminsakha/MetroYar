@@ -1,5 +1,6 @@
 package com.metroyar.composable
 
+import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -43,15 +44,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.R
+import com.metroyar.classes.BestPathResult
 import com.metroyar.classes.GuidPathStyle
+import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.screen.getLineColor
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.GlobalObjects.resultList
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SrcAndDstCard(src: String, dst: String) {
+fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: String, dst: String) {
     OutlinedCard(
         onClick = {},
         enabled = false,
@@ -63,6 +68,32 @@ fun SrcAndDstCard(src: String, dst: String) {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
+            Column(horizontalAlignment = Alignment.End) {
+                Spacer(modifier = Modifier.height(8.dp))
+                IconButton(onClick = {
+                    resultList.value = BestPathResult(
+                        context,
+                        dst,
+                        src
+                    ).convertPathToReadableForm()
+                    navigator.popBackStack()
+                    navigator.navigate(
+                        PathResultScreenDestination(
+                            dst, src
+                        )
+                    )
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_multiple_stop_24),
+                        contentDescription = "",
+                        tint = textColor,
+                        modifier = Modifier
+                            .rotate(90f)
+                            .size(26.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(12.dp))
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = src,
@@ -83,7 +114,7 @@ fun SrcAndDstCard(src: String, dst: String) {
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Column(horizontalAlignment = Alignment.End) {
+            Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom) {
                 Icon(
                     painter = painterResource(id = R.drawable.start_station),
                     contentDescription = "",
@@ -102,6 +133,9 @@ fun SrcAndDstCard(src: String, dst: String) {
                     modifier = Modifier.padding(end = 4.dp)
                 )
             }
+
+            // Spacer(modifier = Modifier.width(16.dp))
+
         }
     }
 }
