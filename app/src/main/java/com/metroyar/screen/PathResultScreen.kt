@@ -19,14 +19,12 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
 import com.metroyar.classes.GuidPathStyle
 import com.metroyar.composable.ArrivalsTime
 import com.metroyar.composable.ExpandableCard
-import com.metroyar.composable.ShowLottieAnimation
+import com.metroyar.composable.PermissionDialog
 import com.metroyar.composable.SrcAndDstCard
 import com.metroyar.ui.theme.lineFive
 import com.metroyar.ui.theme.lineFour
@@ -39,10 +37,10 @@ import com.metroyar.ui.theme.zahrasBlack
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
 import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.deviceWidthInDp
-import com.metroyar.utils.GlobalObjects.resultList
-import com.metroyar.utils.getNextTrain
+import com.metroyar.utils.GlobalObjects.readableFormResultList
+import com.metroyar.utils.getNextTrainArrivalTime
 import com.metroyar.utils.log
-import com.metroyar.utils.minuteToLocalTime
+import com.metroyar.utils.getWholeTravelTime
 import com.metroyar.utils.saveBitmapAndGetUri
 import com.metroyar.utils.shareBitmap
 import com.metroyar.utils.toMinutes
@@ -102,7 +100,7 @@ fun PathResultScreen(
 
     if (showPermissionLayout) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
-            PermissionScreen(
+            PermissionDialog(
                 visible = shouldShowPermission,
                 onDismissRequest = { shouldShowPermission = false },
                 onPermissionGranted = {
@@ -173,7 +171,12 @@ fun PathResultScreen(
                     .background(MaterialTheme.colorScheme.onPrimary),
                 horizontalAlignment = Alignment.End
             ) {
-                BestPathLayout(screenshotState, startStation, destinationStation, navigator = navigator)
+                BestPathLayout(
+                    screenshotState,
+                    startStation,
+                    destinationStation,
+                    navigator = navigator
+                )
                 uri?.let { shareBitmap(context, it) }
             }
         }
@@ -184,7 +187,7 @@ fun PathResultScreen(
 fun BestPathLayout(
     screenshotState: ScreenshotState,
     startStation: String,
-    destinationStation: String,navigator: DestinationsNavigator
+    destinationStation: String, navigator: DestinationsNavigator
 ) {
     ScreenshotBox(screenshotState = screenshotState) {
         Column(
@@ -198,23 +201,30 @@ fun BestPathLayout(
                     height = deviceHeightInDp / 8
                 ), contentAlignment = Alignment.CenterEnd
             ) {
-                SrcAndDstCard(context = LocalContext.current, navigator = navigator,src = startStation, dst = destinationStation)
+                SrcAndDstCard(
+                    context = LocalContext.current,
+                    navigator = navigator,
+                    src = startStation,
+                    dst = destinationStation
+                )
             }
 
             Spacer(Modifier.height(12.dp))
             ArrivalsTime(
                 trainArrivalTime = " ساعت رسیدن مترو به مبدا : ${
-                    getNextTrain(
+                    getNextTrainArrivalTime(
                         currentTime = LocalTime.now(),
                         lineNumber = bestCurrentPath!!.stationsOnPath[0].lineNumber
                     )
-                } ", pathTime = "زمان سفر : ${minuteToLocalTime().toMinutes()} دقیقه"
+                } ", pathTime = "زمان سفر : ${getWholeTravelTime().toMinutes()} دقیقه"
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            val guidPathStyleInstance = GuidPathStyle(readableFormResultList)
+
             LazyColumn(horizontalAlignment = Alignment.End) {
-                itemsIndexed(GuidPathStyle(resultList.value).guidPathStyleStringList) { index, item ->
+                itemsIndexed(guidPathStyleInstance.guidPathStyleStringList) { index, item ->
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -228,14 +238,14 @@ fun BestPathLayout(
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_circle_24),
                                 contentDescription = "",
-                                tint = if (index != GuidPathStyle(resultList.value).guidPathStyleStringList.lastIndex) getLineColor(
-                                    GuidPathStyle(resultList.value).mapOfGuidPathToItsChildren[item]!![0]
-                                ) else getLineColor(resultList.value.last())
+                                tint = if (index != guidPathStyleInstance.guidPathStyleStringList.lastIndex) getLineColor(
+                                    guidPathStyleInstance.mapOfGuidPathToItsChildren[item]!![0]
+                                ) else getLineColor(readableFormResultList.last())
                             )
                         Spacer(modifier = Modifier.width(12.dp))
                         ExpandableCard(
                             title = item,
-                            guidPathStyle = GuidPathStyle(resultList.value)
+                            guidPathStyle = GuidPathStyle(readableFormResultList)
                         )
                     }
                     Spacer(modifier = Modifier.height(18.dp))

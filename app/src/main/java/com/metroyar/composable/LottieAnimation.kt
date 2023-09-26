@@ -47,8 +47,6 @@ fun ShowLottieAnimation(
 
     LaunchedEffect(key1 = progressShit) {
         if (shouldStopAnimation) {
-            if (progressShit == 0f)
-                log("zero", true)
             if (progressShit > 0.5)
                 onAnimationFinished.invoke(true)
             if (progressShit > 0.99f)

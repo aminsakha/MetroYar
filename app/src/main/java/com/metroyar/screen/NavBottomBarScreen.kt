@@ -5,30 +5,12 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -41,10 +23,12 @@ import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
+import com.metroyar.model.BottomNavItem
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.GlobalObjects.stack
+import com.metroyar.utils.nonRipple
 import com.metroyar.utils.playSound
 import com.metroyar.utils.vibratePhone
 import com.ramcosta.composedestinations.annotation.Destination
@@ -58,9 +42,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
-    var test0 by remember { mutableStateOf(lastMenuItemIndex == 0) }
-    var test1 by remember { mutableStateOf(lastMenuItemIndex == 1) }
-    var test2 by remember { mutableStateOf(lastMenuItemIndex == 2) }
+    var showShowInfoScreen by remember { mutableStateOf(lastMenuItemIndex == 0) }
+    var showShowNavigationScreen by remember { mutableStateOf(lastMenuItemIndex == 1) }
+    var showShowMapScreen by remember { mutableStateOf(lastMenuItemIndex == 2) }
     var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
     val bottomBarItems = remember { BottomNavItem.values() }
 
@@ -109,9 +93,9 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                     .nonRipple {
                                         if (stack.isNotEmpty())
                                             when (stack.pop()) {
-                                                0 -> test0 = false
-                                                1 -> test1 = false
-                                                2 -> test2 = false
+                                                0 -> showShowInfoScreen = false
+                                                1 -> showShowNavigationScreen = false
+                                                2 -> showShowMapScreen = false
                                                 else -> {}
                                             }
                                         if (realmRepo.getShouldPlaySound())
@@ -122,9 +106,9 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                         selectedMenuIndex = it.ordinal
                                         stack.push(selectedMenuIndex)
                                         when (selectedMenuIndex) {
-                                            0 -> test0 = true
-                                            1 -> test1 = true
-                                            2 -> test2 = true
+                                            0 -> showShowInfoScreen = true
+                                            1 -> showShowNavigationScreen = true
+                                            2 -> showShowMapScreen = true
                                         }
                                         lastMenuItemIndex = selectedMenuIndex
                                         selectedScreenTopBarTitle = it.title
@@ -153,21 +137,21 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                     .padding(padding)
             ) {
                 AnimatedVisibility(
-                    visible = test0,
+                    visible = showShowInfoScreen,
                     enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     InfoScreen(navigator)
                 }
                 AnimatedVisibility(
-                    visible = test1,
+                    visible = showShowNavigationScreen,
                     enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     NavigationScreen(context = LocalContext.current, navigator = navigator)
                 }
                 AnimatedVisibility(
-                    visible = test2,
+                    visible = showShowMapScreen,
                     enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
@@ -176,20 +160,4 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
             }
         }
     )
-}
-
-enum class BottomNavItem(val icon: Int, val title: String) {
-    Account(icon = R.drawable.baseline_feed_24, title = "اطلاعات"),
-    Navigation(icon = R.drawable.baseline_near_me_24, title = "مسیریابی بین دو ایستگاه مترو"),
-    MetroMap(icon = R.drawable.baseline_map_24, title = "بروزترین نسخه نقشه مترو")
-}
-
-fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
-    clickable(
-        indication = null,
-        interactionSource = remember {
-            MutableInteractionSource()
-        }) {
-        onclick()
-    }
 }

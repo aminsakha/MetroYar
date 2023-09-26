@@ -1,6 +1,5 @@
 package com.metroyar.utils
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.Dp
 import com.metroyar.classes.MetroGraph
 import com.metroyar.classes.Path
@@ -8,10 +7,10 @@ import com.metroyar.model.Station
 import java.util.Stack
 
 object GlobalObjects {
-    var bestCurrentPath:Path?=null
-    var deviceWidthInDp=Dp(30f)
-    var deviceHeightInDp=Dp(30f)
-    val stack:Stack<Int> = Stack<Int>().apply { push(1) }
+    var bestCurrentPath: Path? = null
+    var deviceWidthInDp = Dp(30f)
+    var deviceHeightInDp = Dp(30f)
+    val stack: Stack<Int> = Stack<Int>().apply { push(1) }
     const val TAG = "testMetroYar"
     val adjNodesLineNum = mutableMapOf<Pair<Int, Int>, Int>()
     val stationList = mutableListOf<Station>()
@@ -19,7 +18,7 @@ object GlobalObjects {
     var startStation = ""
     var destStation = ""
     var lastMenuItemIndex = 1
-    var resultList = mutableStateOf(listOf<String>())
+    var readableFormResultList = listOf<String>()
     val tripleOfLinesAndTheirStartAndEndStations =
         mutableListOf<Triple<Int, String, String>>().apply {
             add(Triple(1, "تجریش", "کهریزک"))
