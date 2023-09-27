@@ -209,7 +209,7 @@ fun BestPathLayout(
                 )
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))
             ArrivalsTime(
                 trainArrivalTime = " ساعت رسیدن مترو به مبدا : ${
                     getNextTrainArrivalTime(

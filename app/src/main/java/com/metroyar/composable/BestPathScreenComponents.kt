@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -46,6 +47,7 @@ import com.metroyar.classes.BestPathResult
 import com.metroyar.classes.GuidPathStyle
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.screen.getLineColor
+import com.metroyar.ui.theme.hint
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects
@@ -66,9 +68,11 @@ fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: Strin
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            Column(horizontalAlignment = Alignment.End) {
-                Spacer(modifier = Modifier.height(8.dp))
-                IconButton(onClick = {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(modifier = Modifier.padding(vertical = 6.dp), onClick = {
                     readableFormResultList = BestPathResult(
                         context,
                         dst,
@@ -91,27 +95,27 @@ fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: Strin
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = src,
                     color = textColor,
                     textAlign = TextAlign.End
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Divider(
                     color = line,
                     modifier = Modifier.fillMaxWidth(0.6f),
                     thickness = 0.9.dp
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = dst,
                     textAlign = TextAlign.End,
                     color = textColor
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(18.dp))
             Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom) {
                 Icon(
                     painter = painterResource(id = R.drawable.start_station),
@@ -248,11 +252,27 @@ fun ExpandableCard(
                         .heightIn(max = GlobalObjects.deviceHeightInDp / 3f),
                     horizontalAlignment = Alignment.End
                 ) {
-                    items(
+                    itemsIndexed(
                         guidPathStyle.mapOfGuidPathToItsChildren.getOrDefault(
                             title, emptyList()
                         ).toList()
-                    ) { subStation ->
+                    ) { index, subStation ->
+                        if (index == 0) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                color = hint,
+                                text = "ایستگاه های عبوری در این مرحله",
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.End,
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Divider(
+                                color = line,
+                                modifier = Modifier.fillMaxWidth(0.5f),
+                                thickness = 0.9.dp
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = subStation,

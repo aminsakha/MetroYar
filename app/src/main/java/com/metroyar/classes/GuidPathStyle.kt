@@ -50,8 +50,7 @@ class GuidPathStyle(private val readablePathFormStringList: List<String>) {
                 }
                 i++
                 if (readablePathFormStringList[i].contains("به سمت")) {
-                    val children =
-                        mutableListOf<String>().apply { add(readablePathFormStringList[i].split("به سمت")[0]) }
+                    val children = mutableListOf<String>()
                     var key: String
                     if (i == 0) {
                         key = processOnFirstElement()
