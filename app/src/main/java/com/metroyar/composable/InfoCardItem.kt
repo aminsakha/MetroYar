@@ -1,5 +1,6 @@
 package com.metroyar.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -19,7 +20,7 @@ import com.metroyar.ui.theme.textColor
 @Composable
 fun InfoCardItem(modifier: Modifier = Modifier, infoItem: InfoItem) {
         Row(
-            modifier = modifier
+            modifier = modifier.background(MaterialTheme.colorScheme.onTertiary)
                 .fillMaxWidth().clickable { infoItem.onClickedItem() }
                 .padding(16.dp),
             horizontalArrangement = Arrangement.End
