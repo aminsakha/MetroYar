@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -51,6 +53,8 @@ import com.metroyar.ui.theme.hint
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.GlobalObjects.deviceHeightInDp
+import com.metroyar.utils.GlobalObjects.deviceWidthInDp
 import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -60,13 +64,12 @@ fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: Strin
     OutlinedCard(
         onClick = {},
         enabled = false,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.wrapContentSize()
     ) {
         Row(
             modifier = Modifier
                 .padding(4.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
+            ,horizontalArrangement = Arrangement.End,
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,

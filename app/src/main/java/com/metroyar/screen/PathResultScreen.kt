@@ -195,19 +195,13 @@ fun BestPathLayout(
             modifier = Modifier.padding(end = 16.dp, top = 8.dp, start = 16.dp)
         ) {
             Spacer(Modifier.height(8.dp))
-            Box(
-                modifier = Modifier.size(
-                    width = deviceWidthInDp / 1.6f,
-                    height = deviceHeightInDp / 8
-                ), contentAlignment = Alignment.CenterEnd
-            ) {
-                SrcAndDstCard(
-                    context = LocalContext.current,
-                    navigator = navigator,
-                    src = startStation,
-                    dst = destinationStation
-                )
-            }
+
+            SrcAndDstCard(
+                context = LocalContext.current,
+                navigator = navigator,
+                src = startStation,
+                dst = destinationStation
+            )
 
             Spacer(Modifier.height(8.dp))
             ArrivalsTime(
