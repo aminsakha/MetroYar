@@ -15,14 +15,14 @@ class GuidPathStyle(private val readablePathFormStringList: List<String>) {
     private fun processOnFirstElement(): String {
         val splitString = readablePathFormStringList.first().split("به سمت")
         val persianFormatter = BidiFormatter.getInstance(Locale("fa"))
-        return " وارد ایستگاه ${persianFormatter.unicodeWrap(splitString[0])} بشید و به سمت ${
+        return " وارد ایستگاه ${persianFormatter.unicodeWrap(splitString[0])}بشید و به سمت${
             persianFormatter.unicodeWrap(splitString[1])
-        }  حرکت کنید "
+        } حرکت کنید "
     }
 
     private fun processLastElement(): String {
         val persianFormatter = BidiFormatter.getInstance(Locale("fa"))
-        return "به ایستگاه ${persianFormatter.unicodeWrap(readablePathFormStringList.last())} که رسیدید از قطار پیاده شید ${
+        return "به ایستگاه ${persianFormatter.unicodeWrap(readablePathFormStringList.last())} که رسیدید از قطار پیاده شید ${
             persianFormatter.unicodeWrap(
                 "\uD83D\uDE03"
             )
@@ -32,7 +32,7 @@ class GuidPathStyle(private val readablePathFormStringList: List<String>) {
     private fun processOnInterchangeStation(input: String): String {
         val splitString = input.split("به سمت")
         val persianFormatter = BidiFormatter.getInstance(Locale("fa"))
-        return " به ایستگاه ${persianFormatter.unicodeWrap(splitString[0])}که رسیدید، به سمت ${
+        return " به ایستگاه ${persianFormatter.unicodeWrap(splitString[0])}که رسیدید، به سمت${
             persianFormatter.unicodeWrap(splitString[1])
         } خط عوض کنید "
     }

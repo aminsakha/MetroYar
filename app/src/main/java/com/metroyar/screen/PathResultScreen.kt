@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.GuidPathStyle
 import com.metroyar.composable.ArrivalsTime
-import com.metroyar.composable.ExpandableCard
+import com.metroyar.composable.ExpandableCardForGuidPathStyle
 import com.metroyar.composable.PermissionDialog
 import com.metroyar.composable.SrcAndDstCard
 import com.metroyar.ui.theme.lineFive
@@ -35,8 +35,6 @@ import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
 import com.metroyar.ui.theme.zahrasBlack
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
-import com.metroyar.utils.GlobalObjects.deviceHeightInDp
-import com.metroyar.utils.GlobalObjects.deviceWidthInDp
 import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.metroyar.utils.getNextTrainArrivalTime
 import com.metroyar.utils.log
@@ -237,7 +235,7 @@ fun BestPathLayout(
                                 ) else getLineColor(readableFormResultList.last())
                             )
                         Spacer(modifier = Modifier.width(12.dp))
-                        ExpandableCard(
+                        ExpandableCardForGuidPathStyle(
                             title = item,
                             guidPathStyle = GuidPathStyle(readableFormResultList)
                         )

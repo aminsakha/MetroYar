@@ -49,6 +49,7 @@ import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
+import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
@@ -122,6 +123,10 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         startStation = srcInputText
                     },
                     onTrashIconClick = {
+                        playSound(
+                            context = context,
+                            soundResourceId = R.raw.remove_sound_effect,
+                        )
                         srcInputText = ""
                         startStation = ""
                     }
@@ -142,6 +147,10 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         destStation = dstInputText
                     },
                     onTrashIconClick = {
+                        playSound(
+                            context = context,
+                            soundResourceId = R.raw.remove_sound_effect,
+                        )
                         dstInputText = ""
                         destStation = ""
                     }

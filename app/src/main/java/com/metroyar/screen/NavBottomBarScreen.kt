@@ -101,7 +101,8 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                         if (realmRepo.getShouldPlaySound())
                                             playSound(
                                                 context = context,
-                                                soundResourceId = R.raw.sound
+                                                soundResourceId = R.raw.menu_sound,
+                                                volumeRange = 0.10f
                                             )
                                         selectedMenuIndex = it.ordinal
                                         stack.push(selectedMenuIndex)

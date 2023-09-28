@@ -16,9 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -53,9 +51,8 @@ import com.metroyar.ui.theme.hint
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects
-import com.metroyar.utils.GlobalObjects.deviceHeightInDp
-import com.metroyar.utils.GlobalObjects.deviceWidthInDp
 import com.metroyar.utils.GlobalObjects.readableFormResultList
+import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +78,11 @@ fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: Strin
                         dst,
                         src
                     ).convertPathToReadableForm()
+                    playSound(
+                        context = context,
+                        soundResourceId = R.raw.change_src_dst,
+                        volumeRange = 0.10f
+                    )
                     navigator.popBackStack()
                     navigator.navigate(
                         PathResultScreenDestination(
@@ -124,7 +126,7 @@ fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: Strin
                     painter = painterResource(id = R.drawable.start_station),
                     contentDescription = "",
                     tint = getLineColor(src),
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp).size(23.dp)
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.three_dot),
@@ -194,7 +196,7 @@ fun ArrivalsTime(pathTime: String, trainArrivalTime: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard(
+fun ExpandableCardForGuidPathStyle(
     title: String,
     guidPathStyle: GuidPathStyle,
 ) {
