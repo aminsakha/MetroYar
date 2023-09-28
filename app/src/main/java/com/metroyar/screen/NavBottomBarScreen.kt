@@ -142,7 +142,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                     enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
-                    InfoScreen(navigator)
+                    InfoScreen(navigator = navigator, context = context)
                 }
                 AnimatedVisibility(
                     visible = showShowNavigationScreen,

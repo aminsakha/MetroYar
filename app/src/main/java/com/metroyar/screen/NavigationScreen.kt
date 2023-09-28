@@ -83,7 +83,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
-                        painter = painterResource(id = R.drawable.train),
+                        painter = painterResource(id = R.drawable.train_landing_page),
                         modifier = Modifier
                             .size(24.dp)
                             .padding(bottom = 1.dp),

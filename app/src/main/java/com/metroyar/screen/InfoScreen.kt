@@ -1,5 +1,6 @@
 package com.metroyar.screen
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.*
@@ -28,8 +29,7 @@ import com.metroyar.utils.BackPressAction
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-fun InfoScreen(navigator: DestinationsNavigator) {
-    val context = LocalContext.current
+fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
     val uriHandler = LocalUriHandler.current
     Card(
         colors = CardDefaults.cardColors(
@@ -50,66 +50,66 @@ fun InfoScreen(navigator: DestinationsNavigator) {
                 modifier = Modifier.padding(horizontal = 26.dp),
                 thickness = 0.18.dp
             )
-            InfoCardItem(
-                infoItem = InfoItem(
-                    title = "قابلیت های مترو یار",
-                    icon = ImageVector.vectorResource(id = R.drawable.baseline_dashboard_24),
-                    onClickedItem = {
-                        uriHandler.openUri("https://github.com/aminsakha/MetroYar")
-                    })
-            )
-            Divider(
-                color = line,
-                modifier = Modifier.padding(horizontal = 26.dp),
-                thickness = 0.18.dp
-            )
-            InfoCardItem(
-                infoItem = InfoItem(
-                    title = "تنظیمات",
-                    icon = Icons.Filled.Settings,
-                    onClickedItem = { navigator.navigate(SettingScreenDestination()) })
-            )
-            Divider(
-                color = line,
-                modifier = Modifier.padding(horizontal = 26.dp),
-                thickness = 0.18.dp
-            )
-            InfoCardItem(
-                infoItem = InfoItem(
-                    title = "درباره ما",
-                    icon = Icons.Filled.Info,
-                    onClickedItem = {
-                        navigator.navigate(AboutUsScreenDestination())
-                    })
-            )
-            Divider(
-                color = line,
-                modifier = Modifier.padding(horizontal = 26.dp),
-                thickness = 0.18.dp
-            )
-            InfoCardItem(
-                infoItem = InfoItem(
-                    title = "گزارش خطا",
-                    icon = Icons.Filled.Warning,
-                    onClickedItem = {
-                        val intent = Intent(Intent.ACTION_SENDTO).apply {
-                            data = Uri.parse("mailto:metroyarsupprt@gmail.com")
-                        }
-                        context.startActivity(intent)
-                    })
-            )
-            Divider(
-                color = line,
-                modifier = Modifier.padding(horizontal = 26.dp),
-                thickness = 0.18.dp
-            )
-            InfoCardItem(
-                infoItem = InfoItem(
-                    title = "نسخه ",
-                    endText = "1.0.0",
-                    icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
-                    onClickedItem = {})
-            )
+//            InfoCardItem(
+//                infoItem = InfoItem(
+//                    title = "قابلیت های مترو یار",
+//                    icon = ImageVector.vectorResource(id = R.drawable.baseline_dashboard_24),
+//                    onClickedItem = {
+//                        uriHandler.openUri("https://github.com/aminsakha/MetroYar")
+//                    })
+//            )
+//            Divider(
+//                color = line,
+//                modifier = Modifier.padding(horizontal = 26.dp),
+//                thickness = 0.18.dp
+//            )
+//            InfoCardItem(
+//                infoItem = InfoItem(
+//                    title = "تنظیمات",
+//                    icon = Icons.Filled.Settings,
+//                    onClickedItem = { navigator.navigate(SettingScreenDestination()) })
+//            )
+//            Divider(
+//                color = line,
+//                modifier = Modifier.padding(horizontal = 26.dp),
+//                thickness = 0.18.dp
+//            )
+//            InfoCardItem(
+//                infoItem = InfoItem(
+//                    title = "درباره ما",
+//                    icon = Icons.Filled.Info,
+//                    onClickedItem = {
+//                        navigator.navigate(AboutUsScreenDestination())
+//                    })
+//            )
+//            Divider(
+//                color = line,
+//                modifier = Modifier.padding(horizontal = 26.dp),
+//                thickness = 0.18.dp
+//            )
+//            InfoCardItem(
+//                infoItem = InfoItem(
+//                    title = "گزارش خطا",
+//                    icon = Icons.Filled.Warning,
+//                    onClickedItem = {
+//                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+//                            data = Uri.parse("mailto:metroyarsupprt@gmail.com")
+//                        }
+//                        context.startActivity(intent)
+//                    })
+//            )
+//            Divider(
+//                color = line,
+//                modifier = Modifier.padding(horizontal = 26.dp),
+//                thickness = 0.18.dp
+//            )
+//            InfoCardItem(
+//                infoItem = InfoItem(
+//                    title = "نسخه ",
+//                    endText = "1.0.0",
+//                    icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
+//                    onClickedItem = {})
+//            )
         }
     }
     BackPressAction()
