@@ -1,25 +1,25 @@
-package com.metroyar.component_composable
+package com.metroyar.composable
 
+import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -40,68 +40,100 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.R
-import com.metroyar.classes.UserFriendlyPathStyle
+import com.metroyar.classes.BestPathResult
+import com.metroyar.classes.GuidPathStyle
+import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.screen.getLineColor
+import com.metroyar.ui.theme.hint
 import com.metroyar.ui.theme.line
-import com.metroyar.ui.theme.redd
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects
-import com.metroyar.utils.log
+import com.metroyar.utils.GlobalObjects.readableFormResultList
+import com.metroyar.utils.playSound
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SrcAndDstCard(src: String, dst: String) {
+fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: String, dst: String) {
     OutlinedCard(
         onClick = {},
         enabled = false,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.wrapContentSize()
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Row(
+            modifier = Modifier
+                .padding(4.dp)
+            ,horizontalArrangement = Arrangement.End,
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                IconButton(modifier = Modifier.padding(vertical = 6.dp), onClick = {
+                    readableFormResultList = BestPathResult(
+                        context,
+                        dst,
+                        src
+                    ).convertPathToReadableForm()
+                    playSound(
+                        context = context,
+                        soundResourceId = R.raw.change_src_dst,
+                        volumeRange = 0.10f
+                    )
+                    navigator.popBackStack()
+                    navigator.navigate(
+                        PathResultScreenDestination(
+                            dst, src
+                        )
+                    )
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_multiple_stop_24),
+                        contentDescription = "",
+                        tint = textColor,
+                        modifier = Modifier
+                            .rotate(90f)
+                            .size(26.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = src,
                     color = textColor,
-                    modifier = Modifier.weight(1f),
                     textAlign = TextAlign.End
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+                Divider(
+                    color = line,
+                    modifier = Modifier.fillMaxWidth(0.6f),
+                    thickness = 0.9.dp
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = dst,
+                    textAlign = TextAlign.End,
+                    color = textColor
+                )
+            }
+            Spacer(modifier = Modifier.width(18.dp))
+            Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.Bottom) {
                 Icon(
                     painter = painterResource(id = R.drawable.start_station),
                     contentDescription = "",
                     tint = getLineColor(src),
+                    modifier = Modifier.padding(end = 4.dp).size(23.dp)
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.three_dot),
+                    contentDescription = "",
                     modifier = Modifier.padding(end = 4.dp)
                 )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Divider(
-                color = line,
-                modifier = Modifier.padding(horizontal = 32.dp),
-                thickness = 0.9.dp
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = dst,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.End,
-                    color = textColor
-                )
-                Spacer(modifier = Modifier.width(12.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.distance),
                     contentDescription = "",
@@ -109,6 +141,9 @@ fun SrcAndDstCard(src: String, dst: String) {
                     modifier = Modifier.padding(end = 4.dp)
                 )
             }
+
+            // Spacer(modifier = Modifier.width(16.dp))
+
         }
     }
 }
@@ -129,7 +164,6 @@ fun ArrivalsTime(pathTime: String, trainArrivalTime: String) {
                 modifier = Modifier.padding(top = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
-
             ) {
                 Text(
                     text = pathTime,
@@ -137,12 +171,11 @@ fun ArrivalsTime(pathTime: String, trainArrivalTime: String) {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
-
             }
             Spacer(modifier = Modifier.height(16.dp))
             Divider(
                 color = line,
-                modifier = Modifier.padding(horizontal = 32.dp),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 thickness = 0.9.dp
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -164,9 +197,9 @@ fun ArrivalsTime(pathTime: String, trainArrivalTime: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard(
+fun ExpandableCardForGuidPathStyle(
     title: String,
-    userFriendlyPathStyle: UserFriendlyPathStyle,
+    guidPathStyle: GuidPathStyle,
 ) {
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -206,7 +239,7 @@ fun ExpandableCard(
                 IconButton(
                     modifier = Modifier
                         .weight(0.9f)
-                        .alpha(if (title != userFriendlyPathStyle.result.last()) 0.8f else 0f)
+                        .alpha(if (title != guidPathStyle.guidPathStyleStringList.last()) 0.8f else 0f)
                         .rotate(rotationState),
                     onClick = {
                         expandedState = !expandedState
@@ -225,11 +258,28 @@ fun ExpandableCard(
                         .heightIn(max = GlobalObjects.deviceHeightInDp / 3f),
                     horizontalAlignment = Alignment.End
                 ) {
-                    items(
-                        userFriendlyPathStyle.expandableItems.getOrDefault(
+                    itemsIndexed(
+                        guidPathStyle.mapOfGuidPathToItsChildren.getOrDefault(
                             title, emptyList()
                         ).toList()
-                    ) { subStation ->
+                    ) { index, subStation ->
+                        if (index == 0) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                color = hint,
+                                style = MaterialTheme.typography.displayMedium,
+                                text = "ایستگاه های عبوری در این مرحله",
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.End,
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Divider(
+                                color = line,
+                                modifier = Modifier.fillMaxWidth(0.5f),
+                                thickness = 0.9.dp
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = subStation,

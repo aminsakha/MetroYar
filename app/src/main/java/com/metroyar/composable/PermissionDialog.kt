@@ -1,26 +1,25 @@
-package com.metroyar.screen
+package com.metroyar.composable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.metroyar.component_composable.ShouldConfirmAlertDialog
-import com.metroyar.utils.log
+import com.metroyar.composable.ShouldConfirmAlertDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionScreen(
+fun PermissionDialog(
     onPermissionGranted: @Composable () -> Unit, visible: Boolean, onDismissRequest: () -> Unit,
     permissionList: List<String>, title: String, bodyMessage: String, confirmBtnText: String, shouldShowRational:(Boolean)->Unit
 ) {
-    val locationPermissionsState = rememberMultiplePermissionsState(permissionList)
+    val permissionsState = rememberMultiplePermissionsState(permissionList)
     val coroutineScope = rememberCoroutineScope()
-    if (locationPermissionsState.shouldShowRationale)
+    if (permissionsState.shouldShowRationale)
         shouldShowRational.invoke(true)
     else
         shouldShowRational.invoke(false)
-    if (locationPermissionsState.allPermissionsGranted)
+    if (permissionsState.allPermissionsGranted)
         onPermissionGranted()
     else {
         if (visible)
@@ -28,7 +27,7 @@ fun PermissionScreen(
                 onDismissRequest = { onDismissRequest() },
                 onConfirm = {
                     coroutineScope.launch {
-                        locationPermissionsState.launchMultiplePermissionRequest()
+                        permissionsState.launchMultiplePermissionRequest()
                     }
                 },
                 title = title,

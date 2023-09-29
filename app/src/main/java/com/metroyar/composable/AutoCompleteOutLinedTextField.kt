@@ -1,9 +1,6 @@
-package com.metroyar.component_composable
+package com.metroyar.composable
 
 
-import android.content.Intent
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,25 +8,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.nativeKeyCode
-import androidx.compose.ui.input.key.onInterceptKeyBeforeSoftKeyboard
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -43,10 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
-import com.metroyar.ui.theme.hint
-import com.metroyar.ui.theme.line
-import com.metroyar.ui.theme.textColor
-import com.metroyar.ui.theme.turnedOff2
+import com.metroyar.ui.theme.*
 import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.stationList
 import kotlinx.coroutines.launch
@@ -61,7 +43,7 @@ fun AutoCompleteOutLinedTextField(
     label: String,
     focusRequester: FocusRequester,
 ) {
-    val dataBaseList = realmRepo.getListOfFavoriteStations()
+    val dataBaseFavoriteStations = realmRepo.getListOfFavoriteStations()
     val dropDownStationNamesList =
         stationList.map { it.stationName }.toSet().sorted()
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
@@ -80,15 +62,6 @@ fun AutoCompleteOutLinedTextField(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .onInterceptKeyBeforeSoftKeyboard { event ->
-//                        if (event.key.nativeKeyCode == android.view.KeyEvent.KEYCODE_BACK) {
-//                            focusManager.clearFocus()
-//                            keyboardController?.hide()
-//                            expanded = false
-//                            true
-//                        } else {
-//                            false
-//                        } }
                     .onFocusChanged { focusState ->
                         if (focusState.isFocused && inputValue.isEmpty()) {
                             expanded = true
@@ -117,8 +90,7 @@ fun AutoCompleteOutLinedTextField(
                 onValueChange = {
                     onInputValueChange.invoke(it)
                     expanded = dropDownStationNamesList.binarySearch(it) < 0
-
-                    if (inputValue.isEmpty() && dataBaseList.isNotEmpty())
+                    if (inputValue.isEmpty() && dataBaseFavoriteStations.isNotEmpty())
                         expanded = true
                     if (!expanded)
                         keyboardController?.hide()
@@ -129,7 +101,7 @@ fun AutoCompleteOutLinedTextField(
                     color = textColor
                 ),
                 singleLine = true,
-                trailingIcon = {
+                leadingIcon = {
                     IconButton(onClick = {
                         expanded = !expanded
                         onTrashIconClick.invoke("")
@@ -158,25 +130,25 @@ fun AutoCompleteOutLinedTextField(
                             .background(MaterialTheme.colorScheme.onSecondary)
                     ) {
                         val filteredList =
-                            if (inputValue.isEmpty() && dataBaseList.isNotEmpty())
+                            if (inputValue.isEmpty() && dataBaseFavoriteStations.isNotEmpty())
                                 dropDownStationNamesList.sortedWith(compareBy { element ->
-                                    dataBaseList.indexOf(element)
+                                    dataBaseFavoriteStations.indexOf(element)
                                 }).reversed()
                             else {
                                 dropDownStationNamesList.filter {
                                     it.contains(inputValue)
                                 }.sortedWith(compareBy { element ->
-                                    dataBaseList.indexOf(element)
+                                    dataBaseFavoriteStations.indexOf(element)
                                 }).reversed()
                             }
                         items(filteredList) { stationName ->
-                            DropDownStationSuggestionItem(
+                            DropDownStationItem(
                                 onStarSelected = {
                                     coroutineScope.launch {
                                         if (it)
                                             realmRepo.deleteStation(stationName)
                                         else
-                                            realmRepo.insertStation(stationName = stationName)
+                                            realmRepo.insertStation(station = stationName)
                                     }
                                 },
                                 itemName = stationName,

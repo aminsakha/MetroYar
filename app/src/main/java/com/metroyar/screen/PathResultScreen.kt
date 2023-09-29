@@ -6,10 +6,7 @@ import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -22,16 +19,13 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
-import com.metroyar.classes.UserFriendlyPathStyle
-import com.metroyar.component_composable.ArrivalsTime
-import com.metroyar.component_composable.ExpandableCard
-import com.metroyar.component_composable.ShowLottieAnimation
-import com.metroyar.component_composable.SrcAndDstCard
+import com.metroyar.classes.GuidPathStyle
+import com.metroyar.composable.ArrivalsTime
+import com.metroyar.composable.ExpandableCardForGuidPathStyle
+import com.metroyar.composable.PermissionDialog
+import com.metroyar.composable.SrcAndDstCard
 import com.metroyar.ui.theme.lineFive
 import com.metroyar.ui.theme.lineFour
 import com.metroyar.ui.theme.lineOne
@@ -39,17 +33,15 @@ import com.metroyar.ui.theme.lineSeven
 import com.metroyar.ui.theme.lineSix
 import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
-import com.metroyar.ui.theme.redd
-import com.metroyar.ui.theme.turnedOff2
+import com.metroyar.ui.theme.zahrasBlack
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
-import com.metroyar.utils.GlobalObjects.resultList
-import com.metroyar.utils.getNextTrain
+import com.metroyar.utils.GlobalObjects.readableFormResultList
+import com.metroyar.utils.getNextTrainArrivalTime
 import com.metroyar.utils.log
-import com.metroyar.utils.minuteToLocalTime
+import com.metroyar.utils.getWholeTravelTime
 import com.metroyar.utils.saveBitmapAndGetUri
 import com.metroyar.utils.shareBitmap
 import com.metroyar.utils.toMinutes
-import com.metroyar.utils.toStringWithCustomFormat
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smarttoolfactory.screenshot.*
@@ -106,7 +98,7 @@ fun PathResultScreen(
 
     if (showPermissionLayout) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
-            PermissionScreen(
+            PermissionDialog(
                 visible = shouldShowPermission,
                 onDismissRequest = { shouldShowPermission = false },
                 onPermissionGranted = {
@@ -177,7 +169,12 @@ fun PathResultScreen(
                     .background(MaterialTheme.colorScheme.onPrimary),
                 horizontalAlignment = Alignment.End
             ) {
-                BestPathLayout(screenshotState, startStation, destinationStation)
+                BestPathLayout(
+                    screenshotState,
+                    startStation,
+                    destinationStation,
+                    navigator = navigator
+                )
                 uri?.let { shareBitmap(context, it) }
             }
         }
@@ -188,7 +185,7 @@ fun PathResultScreen(
 fun BestPathLayout(
     screenshotState: ScreenshotState,
     startStation: String,
-    destinationStation: String
+    destinationStation: String, navigator: DestinationsNavigator
 ) {
     ScreenshotBox(screenshotState = screenshotState) {
         Column(
@@ -196,48 +193,51 @@ fun BestPathLayout(
             modifier = Modifier.padding(end = 16.dp, top = 8.dp, start = 16.dp)
         ) {
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier.size(200.dp, 100.dp), contentAlignment = Alignment.CenterEnd) {
-                SrcAndDstCard(src = startStation, dst = destinationStation)
-            }
 
-            Spacer(Modifier.height(12.dp))
+            SrcAndDstCard(
+                context = LocalContext.current,
+                navigator = navigator,
+                src = startStation,
+                dst = destinationStation
+            )
+
+            Spacer(Modifier.height(8.dp))
             ArrivalsTime(
                 trainArrivalTime = " ساعت رسیدن مترو به مبدا : ${
-                    getNextTrain(
+                    getNextTrainArrivalTime(
                         currentTime = LocalTime.now(),
                         lineNumber = bestCurrentPath!!.stationsOnPath[0].lineNumber
                     )
-                } ", pathTime = "زمان سفر : ${minuteToLocalTime().toMinutes()} دقیقه"
+                } ", pathTime = "زمان سفر : ${getWholeTravelTime().toMinutes()} دقیقه"
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            val guidPathStyleInstance = GuidPathStyle(readableFormResultList)
+
             LazyColumn(horizontalAlignment = Alignment.End) {
-                itemsIndexed(UserFriendlyPathStyle(resultList.value).result) { index, item ->
+                itemsIndexed(guidPathStyleInstance.guidPathStyleStringList) { index, item ->
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (item.contains("خط"))
-                            ShowLottieAnimation(
-                                animationRawId = R.raw.interchange,
-                                clipSpec = LottieClipSpec.Progress(0.0f, 1f),
-                                animationSize = Dp(24f),
-                                onAnimationFinished = {},
-                                shouldStopAnimation = false
+                            Icon(
+                                painter = painterResource(id = R.drawable.shuffle),
+                                contentDescription = "",
                             )
                         else
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_circle_24),
                                 contentDescription = "",
-                                tint = if (index != UserFriendlyPathStyle(resultList.value).result.lastIndex) getLineColor(
-                                    UserFriendlyPathStyle(resultList.value).expandableItems[item]!![0]
-                                ) else getLineColor(resultList.value.last())
+                                tint = if (index != guidPathStyleInstance.guidPathStyleStringList.lastIndex) getLineColor(
+                                    guidPathStyleInstance.mapOfGuidPathToItsChildren[item]!![0]
+                                ) else getLineColor(readableFormResultList.last())
                             )
                         Spacer(modifier = Modifier.width(12.dp))
-                        ExpandableCard(
+                        ExpandableCardForGuidPathStyle(
                             title = item,
-                            userFriendlyPathStyle = UserFriendlyPathStyle(resultList.value)
+                            guidPathStyle = GuidPathStyle(readableFormResultList)
                         )
                     }
                     Spacer(modifier = Modifier.height(18.dp))
@@ -257,6 +257,6 @@ fun getLineColor(currStation: String): Color {
         5 -> lineFive
         6 -> lineSix
         7 -> lineSeven
-        else -> turnedOff2
+        else -> zahrasBlack
     }
 }

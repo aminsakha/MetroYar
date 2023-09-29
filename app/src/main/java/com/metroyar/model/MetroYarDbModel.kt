@@ -7,7 +7,7 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 
 
-open class MetroYarDb : RealmObject {
+open class MetroYarDbModel : RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
     var shouldPlaySound: Boolean = true

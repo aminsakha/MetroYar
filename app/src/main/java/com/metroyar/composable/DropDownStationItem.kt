@@ -1,4 +1,4 @@
-package com.metroyar.component_composable
+package com.metroyar.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,19 +24,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.R
 import com.metroyar.db.RealmObject.realmRepo
-import com.metroyar.ui.theme.line
 import com.metroyar.utils.GlobalObjects
 
 @Composable
-fun DropDownStationSuggestionItem(
+fun DropDownStationItem(
     itemName: String,
     onItemSelected: (String) -> Unit,
     onStarSelected: (Boolean) -> Unit,
 ) {
-    var isStarred by remember {
+    var isBookMarked by remember {
         mutableStateOf(false)
     }
-    isStarred = realmRepo.getListOfFavoriteStations().contains(itemName)
+    isBookMarked = realmRepo.getListOfFavoriteStations().contains(itemName)
 
     Row(modifier = Modifier
         .fillMaxWidth()
@@ -50,16 +46,16 @@ fun DropDownStationSuggestionItem(
         IconButton(
             modifier = Modifier.size((GlobalObjects.deviceWidthInDp + GlobalObjects.deviceHeightInDp) / 25),
             onClick = {
-                onStarSelected.invoke(isStarred)
-                isStarred = !isStarred
+                onStarSelected.invoke(isBookMarked)
+                isBookMarked = !isBookMarked
             }) {
             Icon(
-                imageVector = if (isStarred) ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24_filled)
+                imageVector = if (isBookMarked) ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24_filled)
                 else ImageVector.vectorResource(id = R.drawable.baseline_bookmark_border_24_out_lined),
                 contentDescription = "Star",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
+                    .padding(horizontal = 10.dp)
             )
         }
         Text(

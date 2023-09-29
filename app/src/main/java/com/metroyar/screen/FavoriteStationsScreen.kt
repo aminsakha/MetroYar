@@ -1,19 +1,16 @@
 package com.metroyar.screen
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CardDefaults
@@ -36,18 +33,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
-import com.metroyar.component_composable.ShowLottieAnimation
+import com.metroyar.composable.ShowLottieAnimation
 import com.metroyar.db.RealmObject
 import com.metroyar.screen.destinations.NavigationBottomDestination
 import com.metroyar.ui.theme.line
+import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -56,6 +54,7 @@ import kotlinx.coroutines.launch
 @Destination
 @Composable
 fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
+    val context= LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     Scaffold(topBar = {
         CenterAlignedTopAppBar(
@@ -102,6 +101,30 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            IconButton(
+                                modifier = Modifier.weight(0.8f),
+                                onClick = {
+                                    playSound(
+                                        context = context,
+                                        soundResourceId = R.raw.remove_sound_effect,
+                                    )
+                                    coroutineScope.launch {
+                                        RealmObject.realmRepo.deleteStation(
+                                            favoriteStationName
+                                        )
+                                        dbList =
+                                            RealmObject.realmRepo.getListOfFavoriteStations()
+                                                .filter { it != "" }
+                                    }
+                                },
+                            ) {
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.icons8_trash_128),
+                                    contentDescription = "",
+                                    modifier=Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
 
                             ElevatedCard(
                                 shape = RoundedCornerShape(8.dp),
@@ -125,26 +148,6 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                                         .padding(8.dp)
                                 )
                             }
-                            IconButton(
-                                modifier = Modifier.weight(1f),
-                                onClick = {
-                                    coroutineScope.launch {
-                                        RealmObject.realmRepo.deleteStation(
-                                            favoriteStationName
-                                        )
-                                        dbList =
-                                            RealmObject.realmRepo.getListOfFavoriteStations()
-                                                .filter { it != "" }
-                                    }
-                                },
-                            ) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.icons8_trash_128),
-                                    contentDescription = "",
-                                    tint = MaterialTheme.colorScheme.error
-                                )
-                            }
-
                         }
                         Divider(
                             color = line,
