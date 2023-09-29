@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.metroyar.db.* {*;}
+-keep class com.metroyar.R
+-keep class com.metroyar.network.* {*;}
+-keep class com.metroyar.model.MetroYarDbModel {*;}
+-keep class com.metroyar.model.NeshanSearchPlaceResponseModel {*;}

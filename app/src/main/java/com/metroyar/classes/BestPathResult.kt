@@ -10,7 +10,6 @@ import com.metroyar.utils.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.utils.findStationObjectFromItsId
 import com.metroyar.utils.findStationObjectFromItsName
 import com.metroyar.utils.getDirectionFromInterchangeStations
-import com.metroyar.utils.log
 import java.util.PriorityQueue
 
 
@@ -29,7 +28,6 @@ class BestPathResult(
                 else -> pathA.stationsBetweenScore - pathB.stationsBetweenScore
             }
         }
-
         val startIsIntersection = intersectionNames.contains(startStationName)
         val destIsIntersection = intersectionNames.contains(destStationName)
 
@@ -53,7 +51,7 @@ class BestPathResult(
         return possiblePathsQueue
     }
 
-    fun convertPathToUserUnderstandableForm(): MutableList<String> {
+    fun convertPathToReadableForm(): MutableList<String> {
         bestCurrentPath = generatePossiblePaths().peek()!!
         val stations = bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }.toMutableList()
         val pathStationNamesResult = mutableSetOf<String>().toMutableList()
@@ -66,7 +64,6 @@ class BestPathResult(
             }"
 
         stations.removeFirst()
-        log("after remove",pathStationNamesResult)
         for (stationIndex in stations.indices) {
             try {
                 pathStationNamesResult.add(stations[stationIndex].stationName)
@@ -87,7 +84,6 @@ class BestPathResult(
             } catch (_: Exception) {
             }
         }
-        log("befor return",pathStationNamesResult)
         return pathStationNamesResult.toMutableList()
     }
 

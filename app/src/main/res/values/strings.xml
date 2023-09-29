@@ -11,7 +11,10 @@
     <string name="internetLostMessage" translatable="false">برای استفاده از این قابلیت باید به اینترنت متصل باشد</string>
     <string name="chosseSrc" translatable="false">ایستگاه مبدا رو انتخاب کن</string>
     <string name="chooseDst" translatable="false">ایستگاه مقصد رو انتخاب کن</string>
-    <string name="about_us" translatable="false">مترو یار، یار مترویی شما</string>
+    <string name="about_us" translatable="false">•	مسیریابی بین دو ایستگاه مترو
+ مترو یار با دریافت ایستگاه مبدا و ایستگاه مقصد از سمت کاربر بهترین مسیر ممکن رو با درنظر گرفتن اینکه مسیر پیشنهادی دارای کمترین تعویض خط و کوتاه ترین زمان رسیدن باشد  را به کاربر نشان خواهد داد .
+</string>
+    <string name="yandex_api_key" translatable="false">c94e3b07-3e3f-499d-9100-f8db6012f0f5</string>
 
     <string-array name="stationsOnLine1">
         <item>تجریش</item>
@@ -87,7 +90,7 @@
         <item>تئاتر شهر</item>
         <item>منیریه</item>
         <item>مهدیه</item>
-        <item>راه آهن</item>
+        <item>راه آهن</item>
         <item>جوادیه</item>
         <item>زمزم</item>
         <item>شهرک شریعتی</item>
@@ -131,11 +134,6 @@
         <item>شهید سپهبد قاسم سلیمانی(هشتگرد)</item>
     </string-array>
     <string-array name="stationsOnLine6">
-        <item>کوهسار</item>
-        <item>شهدای کن</item>
-        <item>شهران</item>
-        <item>شهر زیبا</item>
-        <item>آیت الله کاشانی</item>
         <item>شهید ستاری</item>
         <item>شهید اشرفی اصفهانی</item>
         <item>یادگار امام</item>
@@ -145,11 +143,11 @@
         <item>کارگر</item>
         <item>بوستان لاله</item>
         <item>میدان حضرت ولی‌عصر</item>
-        <item>شهید نجات اللهی (افتتاح نشده)</item>
+        <item>شهید نجات اللهی</item>
         <item>شهدای هفتم تیر</item>
         <item>امام حسین</item>
         <item>میدان شهدا</item>
-        <item>امیرکبیر</item>
+        <item>امیر کبیر</item>
         <item>شهید رضایی</item>
         <item>بعثت</item>
         <item>کیان شهر</item>

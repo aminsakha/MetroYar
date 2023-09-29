@@ -2,14 +2,34 @@ package com.metroyar.screen
 
 import android.content.Context
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -19,17 +39,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.BestPathResult
-import com.metroyar.component_composable.AutoCompleteOutLinedTextField
-import com.metroyar.component_composable.ShouldConfirmAlertDialog
+import com.metroyar.composable.AutoCompleteOutLinedTextField
+import com.metroyar.composable.ShouldConfirmAlertDialog
 import com.metroyar.screen.destinations.PathResultScreenDestination
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.BackPressAction
 import com.metroyar.utils.GlobalObjects.destStation
 import com.metroyar.utils.GlobalObjects.deviceHeightInDp
-import com.metroyar.utils.GlobalObjects.resultList
+import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.utils.SuggestionStationsLayout
+import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
@@ -54,7 +74,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 onClick = { isFindNearestButtonClicked = true },
             ) {
                 Row(
-                    modifier=Modifier.padding(1.2.dp),
+                    modifier = Modifier.padding(1.2.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
@@ -63,7 +83,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
-                        painter = painterResource(id = R.drawable.train),
+                        painter = painterResource(id = R.drawable.train_landing_page),
                         modifier = Modifier
                             .size(24.dp)
                             .padding(bottom = 1.dp),
@@ -75,7 +95,8 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         floatingActionButtonPosition = FabPosition.End,
         content = { padding ->
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .verticalScroll(state = state)
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.onPrimary),
@@ -101,7 +122,14 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         srcInputText = it
                         startStation = srcInputText
                     },
-                    onTrashIconClick = { srcInputText = "" }
+                    onTrashIconClick = {
+                        playSound(
+                            context = context,
+                            soundResourceId = R.raw.remove_sound_effect,
+                        )
+                        srcInputText = ""
+                        startStation = ""
+                    }
                 )
 
                 Spacer(Modifier.height(deviceHeightInDp / 24))
@@ -118,11 +146,18 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         dstInputText = it
                         destStation = dstInputText
                     },
-                    onTrashIconClick = { dstInputText = "" }
+                    onTrashIconClick = {
+                        playSound(
+                            context = context,
+                            soundResourceId = R.raw.remove_sound_effect,
+                        )
+                        dstInputText = ""
+                        destStation = ""
+                    }
                 )
 
                 if (isFindNearestButtonClicked) {
-                    SuggestionStationsLayout(
+                    ClosestStationsDialogScreen(
                         onDisMiss = { isFindNearestButtonClicked = it },
                         context = context,
                         onSrcClicked = {
@@ -146,16 +181,16 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     ),
                     onClick = {
                         if (srcInputText == dstInputText && (srcInputText.isNotEmpty() && dstInputText.isNotEmpty())) {
-                            alertMessageText = " اشتباهی مبدا و مقصد رو یکی زدی "
+                            alertMessageText = " اشتباهی مبدا و مقصد رو یکی زدید "
                             showDialog = true
                         } else {
                             if (stationList.map { it.stationName }
                                     .containsAll(Pair(srcInputText, dstInputText).toList())) {
-                                resultList.value = BestPathResult(
+                                readableFormResultList = BestPathResult(
                                     context,
                                     srcInputText,
                                     dstInputText
-                                ).convertPathToUserUnderstandableForm()
+                                ).convertPathToReadableForm()
                                 navigator.navigate(
                                     PathResultScreenDestination(
                                         startStation = startStation,
@@ -163,7 +198,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                                     )
                                 )
                             } else {
-                                alertMessageText = " مبدا و مقصد رو درست بزن لطفا "
+                                alertMessageText = " مبدا و مقصد رو درست وارد کنید "
                                 showDialog = true
                             }
                         }
@@ -178,7 +213,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         Text(
                             "بهترین مسیرو پیدا کن",
                             color = textColor,
-                            fontWeight = FontWeight.Bold
+                            style = MaterialTheme.typography.displayMedium
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(Icons.Filled.Search, "")

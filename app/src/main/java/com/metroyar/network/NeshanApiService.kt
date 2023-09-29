@@ -29,8 +29,8 @@ val client: OkHttpClient.Builder =
     OkHttpClient.Builder().protocols(listOf(Protocol.HTTP_1_1)).connectionPool(
         ConnectionPool(0, 5, TimeUnit.MINUTES)
     )
-        .connectTimeout(15, TimeUnit.SECONDS) // connect timeout
-        .writeTimeout(15, TimeUnit.SECONDS) // write timeout
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .addInterceptor(loggingInterceptor)
 

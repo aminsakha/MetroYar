@@ -7,14 +7,14 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
-fun  playSound(context: Context, soundResourceId:Int) {
+fun playSound(context: Context, soundResourceId: Int,volumeRange:Float=1f) {
     val player = ExoPlayer.Builder(context).build()
     val uri = Uri.parse("android.resource://${context.packageName}/$soundResourceId")
     val mediaItem = MediaItem.fromUri(uri)
     player.apply {
         setMediaItem(mediaItem)
         prepare()
-        volume = 0.10f
+        volume = volumeRange
         play()
     }
     player.addListener(object : Player.Listener {

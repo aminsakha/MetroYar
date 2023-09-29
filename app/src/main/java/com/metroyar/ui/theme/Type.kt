@@ -10,9 +10,13 @@ private val myCustomFontFamily = FontFamily(
     Font(R.font.iran_mobile)
 )
 
+private val myCustomFontFamilyBold = FontFamily(
+    Font(R.font.iran_medium)
+)
+
 val Typography = Typography(
     displayLarge = TextStyle(fontFamily = myCustomFontFamily),
-    displayMedium = TextStyle(fontFamily = myCustomFontFamily),
+    displayMedium = TextStyle(fontFamily = myCustomFontFamilyBold),
     displaySmall = TextStyle(fontFamily = myCustomFontFamily),
     headlineLarge = TextStyle(fontFamily = myCustomFontFamily),
     headlineMedium = TextStyle(fontFamily = myCustomFontFamily),

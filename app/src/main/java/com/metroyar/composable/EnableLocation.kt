@@ -1,4 +1,4 @@
-package com.metroyar.component_composable
+package com.metroyar.composable
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
@@ -9,12 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResponse
-import com.google.android.gms.location.Priority
-import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 
 @Composable
@@ -33,7 +28,7 @@ fun EnableLocationDialog(onValueChange: (Boolean) -> Unit) {
         onDisabled = { intentSenderRequest ->
             settingResultRequest.launch(intentSenderRequest)
         },
-        onEnabled = { /* This will call when setting is already enabled */ }
+        onEnabled = { onValueChange.invoke(true) }
     )
 }
 
