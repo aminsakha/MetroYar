@@ -1,5 +1,6 @@
 package com.metroyar.screen
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,7 @@ import com.metroyar.composable.ShowLottieAnimation
 import com.metroyar.db.RealmObject
 import com.metroyar.screen.destinations.NavigationBottomDestination
 import com.metroyar.ui.theme.line
+import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -51,6 +54,7 @@ import kotlinx.coroutines.launch
 @Destination
 @Composable
 fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
+    val context= LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     Scaffold(topBar = {
         CenterAlignedTopAppBar(
@@ -100,6 +104,10 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                             IconButton(
                                 modifier = Modifier.weight(0.8f),
                                 onClick = {
+                                    playSound(
+                                        context = context,
+                                        soundResourceId = R.raw.remove_sound_effect,
+                                    )
                                     coroutineScope.launch {
                                         RealmObject.realmRepo.deleteStation(
                                             favoriteStationName

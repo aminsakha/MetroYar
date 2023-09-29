@@ -11,11 +11,9 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
@@ -30,10 +28,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
-    val uriHandler = LocalUriHandler.current
     Card(
         colors = CardDefaults.cardColors(
-           containerColor  = MaterialTheme.colorScheme.onPrimary,
+            containerColor = MaterialTheme.colorScheme.onPrimary,
         ),
         modifier = Modifier.fillMaxSize(),
         shape = RectangleShape
@@ -41,22 +38,9 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
         Column {
             InfoCardItem(
                 infoItem = InfoItem(
-                    title = "ایستگاه های نشان شده من",
+                    title = "ایستگاه های نشان شده من",
                     icon = ImageVector.vectorResource(id = R.drawable.baseline_bookmark_24_filled),
                     onClickedItem = { navigator.navigate(FavoriteStationsScreenDestination()) })
-            )
-            Divider(
-                color = line,
-                modifier = Modifier.padding(horizontal = 26.dp),
-                thickness = 0.18.dp
-            )
-            InfoCardItem(
-                infoItem = InfoItem(
-                    title = "قابلیت های مترو یار",
-                    icon = ImageVector.vectorResource(id = R.drawable.baseline_dashboard_24),
-                    onClickedItem = {
-                        uriHandler.openUri("https://github.com/aminsakha/MetroYar")
-                    })
             )
             Divider(
                 color = line,
@@ -106,7 +90,7 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             InfoCardItem(
                 infoItem = InfoItem(
                     title = "نسخه ",
-                    endText = "1.0.0",
+                    endText = "1.0.0-beta1",
                     icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
                     onClickedItem = {})
             )

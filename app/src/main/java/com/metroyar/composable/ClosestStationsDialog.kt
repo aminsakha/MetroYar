@@ -53,9 +53,8 @@ fun UserClosestStationsDialog(
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "ایستگاه های نزدیک من",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        text = "ایستگاه های نزدیک من",
+                        style = MaterialTheme.typography.displayMedium,
                         color= textColor,
                     )
                     Spacer(modifier = Modifier.height(4.dp))

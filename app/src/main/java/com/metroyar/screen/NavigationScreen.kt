@@ -213,7 +213,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         Text(
                             "بهترین مسیرو پیدا کن",
                             color = textColor,
-                            fontWeight = FontWeight.Bold
+                            style = MaterialTheme.typography.displayMedium
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(Icons.Filled.Search, "")

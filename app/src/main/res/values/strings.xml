@@ -11,7 +11,9 @@
     <string name="internetLostMessage" translatable="false">برای استفاده از این قابلیت باید به اینترنت متصل باشد</string>
     <string name="chosseSrc" translatable="false">ایستگاه مبدا رو انتخاب کن</string>
     <string name="chooseDst" translatable="false">ایستگاه مقصد رو انتخاب کن</string>
-    <string name="about_us" translatable="false">مترو یار، یار مترویی شما</string>
+    <string name="about_us" translatable="false">•	مسیریابی بین دو ایستگاه مترو
+ مترو یار با دریافت ایستگاه مبدا و ایستگاه مقصد از سمت کاربر بهترین مسیر ممکن رو با درنظر گرفتن اینکه مسیر پیشنهادی دارای کمترین تعویض خط و کوتاه ترین زمان رسیدن باشد  را به کاربر نشان خواهد داد .
+</string>
     <string name="yandex_api_key" translatable="false">c94e3b07-3e3f-499d-9100-f8db6012f0f5</string>
 
     <string-array name="stationsOnLine1">
