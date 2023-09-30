@@ -23,7 +23,7 @@ suspend fun getClosestStationsFromApi(
     location: GPSCoordinate,
     onPairChange: (Pair<String, String>) -> Unit
 ) {
-    //try {
+    try {
         val response =
             MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
                 latitude = location.y,
@@ -36,8 +36,8 @@ suspend fun getClosestStationsFromApi(
             filteredList.getOrNull(1)?.title ?: ""
         )
         onPairChange.invoke(pair)
-//    } catch (_: Exception) {
-//    }
+    } catch (_: Exception) {
+    }
 }
 
 fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String, String> {

@@ -1,6 +1,5 @@
 package com.metroyar.model
 
-import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
 

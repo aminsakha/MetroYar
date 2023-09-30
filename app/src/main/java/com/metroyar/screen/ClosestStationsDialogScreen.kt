@@ -2,11 +2,19 @@ package com.metroyar.screen
 
 import android.Manifest
 import android.content.Context
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
-import com.metroyar.composable.*
+import com.metroyar.composable.EnableLocationDialog
+import com.metroyar.composable.PermissionDialog
+import com.metroyar.composable.ShouldConfirmAlertDialog
+import com.metroyar.composable.UserClosestStationsDialog
 import com.metroyar.model.GPSCoordinate
 import com.metroyar.utils.*
 
