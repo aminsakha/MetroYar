@@ -3,6 +3,7 @@ package com.metroyar.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
+import androidx.annotation.Keep
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -17,11 +18,12 @@ fun checkGpsStatus(context: Context): Boolean {
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
 
+
 suspend fun getClosestStationsFromApi(
     location: GPSCoordinate,
     onPairChange: (Pair<String, String>) -> Unit
 ) {
-    try {
+    //try {
         val response =
             MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
                 latitude = location.y,
@@ -34,8 +36,8 @@ suspend fun getClosestStationsFromApi(
             filteredList.getOrNull(1)?.title ?: ""
         )
         onPairChange.invoke(pair)
-    } catch (_: Exception) {
-    }
+//    } catch (_: Exception) {
+//    }
 }
 
 fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String, String> {
