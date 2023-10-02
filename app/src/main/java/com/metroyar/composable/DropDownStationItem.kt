@@ -40,11 +40,11 @@ fun DropDownStationItem(
     Row(modifier = Modifier
         .fillMaxWidth()
         .clickable { onItemSelected(itemName) }
-        .padding(8.dp),
+        .padding(1.5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center) {
         IconButton(
-            modifier = Modifier.size((GlobalObjects.deviceWidthInDp + GlobalObjects.deviceHeightInDp) / 25),
+            modifier = Modifier.size((GlobalObjects.deviceWidthInDp + GlobalObjects.deviceHeightInDp) / 22),
             onClick = {
                 onStarSelected.invoke(isBookMarked)
                 isBookMarked = !isBookMarked
@@ -55,7 +55,7 @@ fun DropDownStationItem(
                 contentDescription = "Star",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = 8.dp)
             )
         }
         Text(
@@ -63,7 +63,7 @@ fun DropDownStationItem(
             fontSize = 16.sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 4.dp),
+                .padding(end = 8.dp),
             textAlign = TextAlign.End
         )
     }

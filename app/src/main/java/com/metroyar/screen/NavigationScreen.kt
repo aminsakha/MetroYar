@@ -70,7 +70,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 shape = FloatingActionButtonDefaults.largeShape,
-                modifier = Modifier.padding(bottom = 16.dp, end = 8.dp),
+                modifier = Modifier.padding(bottom = 20.dp, end = 8.dp),
                 onClick = { isFindNearestButtonClicked = true },
             ) {
                 Row(
@@ -108,7 +108,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         focusRequesterDst.requestFocus()
                 }
 
-                Spacer(modifier = Modifier.height(deviceHeightInDp / 8f))
+                Spacer(modifier = Modifier.height(deviceHeightInDp / 10f))
 
                 AutoCompleteOutLinedTextField(
                     label = stringResource(R.string.chosseSrc),
