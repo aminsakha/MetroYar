@@ -59,6 +59,7 @@ import com.metroyar.ui.theme.lineSix
 import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
 import com.metroyar.ui.theme.zahrasBlack
+import com.metroyar.utils.CircleWithText
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
 import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.metroyar.utils.getNextTrainArrivalTime
@@ -77,7 +78,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.time.LocalTime
+import java.util.Locale
 
 @Destination
 @OptIn(ExperimentalMaterial3Api::class)
@@ -256,12 +259,9 @@ fun BestPathLayout(
                                 contentDescription = "",
                             )
                         else
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_circle_24),
-                                contentDescription = "",
-                                tint = if (index != guidPathStyleInstance.guidPathStyleStringList.lastIndex) getLineColor(
-                                    guidPathStyleInstance.mapOfGuidPathToItsChildren[item]!![0]
-                                ) else getLineColor(readableFormResultList.last())
+                            CircleWithText(
+                                getLineNumberInPersian(currStation = item),
+                                getLineColor(item)
                             )
                         Spacer(modifier = Modifier.width(12.dp))
                         ExpandableCardForGuidPathStyle(
@@ -288,4 +288,11 @@ fun getLineColor(currStation: String): Color {
         7 -> lineSeven
         else -> zahrasBlack
     }
+}
+
+fun getLineNumberInPersian(currStation: String): String {
+    val persianLocale = Locale("fa", "IR")
+    val numberFormat = NumberFormat.getInstance(persianLocale)
+    return numberFormat.format((bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
+        .find { currStation.contains(it.stationName) }?.lineNumber))
 }

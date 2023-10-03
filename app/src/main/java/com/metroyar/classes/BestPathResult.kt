@@ -66,7 +66,7 @@ class BestPathResult(
                 )
             }
         }
-        return if (possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime - possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime > 7)
+        return if ((possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime - possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime) > 7)
             possiblePathsQueueBasedOnStationsBetween
         else
             possiblePathsQueueBasedOnInterchanges

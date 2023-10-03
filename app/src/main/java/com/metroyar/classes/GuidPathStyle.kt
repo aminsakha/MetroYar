@@ -22,11 +22,7 @@ class GuidPathStyle(private val readablePathFormStringList: List<String>) {
 
     private fun processLastElement(): String {
         val persianFormatter = BidiFormatter.getInstance(Locale("fa"))
-        return "به ایستگاه ${persianFormatter.unicodeWrap(readablePathFormStringList.last())} که رسیدید از قطار پیاده شید ${
-            persianFormatter.unicodeWrap(
-                "\uD83D\uDE03"
-            )
-        } "
+        return "به ایستگاه ${persianFormatter.unicodeWrap(readablePathFormStringList.last())} که رسیدید از قطار پیاده شید  "
     }
 
     private fun processOnInterchangeStation(input: String): String {
@@ -63,7 +59,11 @@ class GuidPathStyle(private val readablePathFormStringList: List<String>) {
 
                     while (i + 1 < readablePathFormStringList.size) {
                         if (readablePathFormStringList[i + 1].contains("به سمت")) {
-                            mapOfGuidPathToItsChildren[key]?.add(readablePathFormStringList[i + 1].split("به سمت")[0])
+                            mapOfGuidPathToItsChildren[key]?.add(
+                                readablePathFormStringList[i + 1].split(
+                                    "به سمت"
+                                )[0]
+                            )
                             break
                         }
                         i++
