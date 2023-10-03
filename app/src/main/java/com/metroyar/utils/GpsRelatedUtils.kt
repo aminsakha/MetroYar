@@ -52,8 +52,6 @@ fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String,
                 it.dropLast(1).replace("ی", "ي") + it.last()
             )
         }
-    log("a2", matchingNamesWithNewChar)
-    log("a1", matchingNames)
     var generatedPair = Pair(matchingNames.getOrNull(0) ?: "", matchingNames.getOrNull(1) ?: "")
     if (generatedPair.second.isEmpty()) {
         generatedPair = generatedPair.copy(

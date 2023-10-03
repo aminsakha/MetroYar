@@ -14,12 +14,19 @@ class MetroGraph(numberOfStationsInGraph: Int) {
 
     private data class Node(val id: Int, val distance: Int, val interchanges: Int)
 
-    fun findPath(src: Int, dst: Int): List<Int> {
+    fun findPath(src: Int, dst: Int, basedOnInterchange: Boolean): List<Int> {
         try {
-            val queue = PriorityQueue<Node> { nodeA, nodeB ->
-                if (nodeA.interchanges != nodeB.interchanges) nodeA.interchanges - nodeB.interchanges
-                else nodeA.distance - nodeB.distance
-            }
+            val queue: PriorityQueue<Node> = if (basedOnInterchange)
+                PriorityQueue<Node> { nodeA, nodeB ->
+                    if (nodeA.interchanges != nodeB.interchanges) nodeA.interchanges - nodeB.interchanges
+                    else nodeA.distance - nodeB.distance
+                }
+            else
+                PriorityQueue<Node> { nodeA, nodeB ->
+                    if (nodeA.distance != nodeB.distance) nodeA.distance - nodeB.distance
+                    else nodeA.interchanges - nodeB.interchanges
+                }
+
             val previous = HashMap<Int, Int>()
             val visited = HashSet<Int>()
             val interchanges = HashMap<Int, Int>()
