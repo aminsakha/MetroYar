@@ -48,14 +48,17 @@ fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String,
 
     val matchingNamesWithNewChar = GlobalObjects.stationList.map { it.stationName }
         .filter {
-            pair.first.contains(it.replace("ی", "ي")) || pair.second.contains(it.replace("ی", "ي"))
+            pair.first.contains(it.dropLast(1).replace("ی", "ي") + it.last()) || pair.second.contains(
+                it.dropLast(1).replace("ی", "ي") + it.last()
+            )
         }
+    log("a2", matchingNamesWithNewChar)
+    log("a1", matchingNames)
     var generatedPair = Pair(matchingNames.getOrNull(0) ?: "", matchingNames.getOrNull(1) ?: "")
     if (generatedPair.second.isEmpty()) {
         generatedPair = generatedPair.copy(
             second =
-            (matchingNamesWithNewChar.getOrNull(0) ?: "").takeIf { it != generatedPair.first }
-                .toString()
+            (matchingNamesWithNewChar.getOrNull(0) ?: "")
         )
     }
     return generatedPair
