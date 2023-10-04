@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -149,18 +150,19 @@ fun Modifier.nonRipple(onclick: () -> Unit): Modifier = composed {
 fun CircleWithText(text: String, color: Color) {
     Box(
         modifier = Modifier
-            .size(26.dp)
-            .background(Color.White, CircleShape)
-            .border(3.5.dp, color = color, CircleShape),
+            .size(32.dp)
+            .background(Color.White, RoundedCornerShape(10.dp))
+            .border(2.5.dp, color = color, RoundedCornerShape(10.dp)),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = text,
-            fontSize = 12.sp,
+            text = " خط $text",
+            fontSize = 9.sp,
             fontFamily = FontFamily(Font(R.font.iran_medium)),
             color = textColor,
+            maxLines=1,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 3.dp)
+            modifier = Modifier.padding( 1.2.dp)
         )
     }
 }

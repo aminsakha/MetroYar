@@ -22,13 +22,13 @@ class GuidPathStyle(private val readablePathFormStringList: List<String>) {
 
     private fun processLastElement(): String {
         val persianFormatter = BidiFormatter.getInstance(Locale("fa"))
-        return "به ایستگاه ${persianFormatter.unicodeWrap(readablePathFormStringList.last())} که رسیدید از قطار پیاده شید  "
+        return " ایستگاه ${persianFormatter.unicodeWrap(readablePathFormStringList.last())} از قطار پیاده بشید  "
     }
 
     private fun processOnInterchangeStation(input: String): String {
         val splitString = input.split("به سمت")
         val persianFormatter = BidiFormatter.getInstance(Locale("fa"))
-        return " به ایستگاه ${persianFormatter.unicodeWrap(splitString[0])}که رسیدید، به سمت${
+        return "در ایستگاه ${persianFormatter.unicodeWrap(splitString[0])}، به سمت${
             persianFormatter.unicodeWrap(splitString[1])
         } خط عوض کنید "
     }

@@ -252,12 +252,15 @@ fun BestPathLayout(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (item.contains("خط"))
+                        if (item.contains("خط")){
                             Icon(
                                 painter = painterResource(id = R.drawable.swap),
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier.size(28.dp),
                                 contentDescription = "",
                             )
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
+
                         else
                             CircleWithText(
                                 getLineNumberInPersian(currStation = item),

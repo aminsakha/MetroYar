@@ -90,51 +90,65 @@ fun AboutUsScreen(navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    modifier=Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     textAlign = TextAlign.End,
                     fontSize = 16.sp,
-                    text = "اپلیکیشن مترو یار با هدف تسهیل رفت آمد هم وطنان عزیزمان در متروی تهران و حومه راه اندازی شده است ${persianFormatter.unicodeWrap(".")} ",
+                    text = "اپلیکیشن مترو یار با هدف تسهیل رفت آمد هم وطنان عزیزمون در متروی تهران و حومه راه اندازی شده ${
+                        persianFormatter.unicodeWrap(
+                            "."
+                        )
+                    } ",
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    fontSize = 16.sp,
-                    modifier=Modifier.padding(horizontal = 8.dp),
+                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.displayMedium,
+                    modifier = Modifier.padding(horizontal = 6.dp),
                     textAlign = TextAlign.End,
-                    text = "در ادامه به قابلیت های کلیدی این برنامه اشاره خواهد شد ${persianFormatter.unicodeWrap(":")} ",
+                    text = " قابلیت های کلیدی مترو یار ",
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                titleAndDsc(title = " مسیریابی بین دو ایستگاه مترو  • \t ", dsc = "مترو یار با دریافت ایستگاه مبدا و ایستگاه مقصد از سمت کاربر بهترین مسیر ممکن رو با درنظر گرفتن اینکه مسیر پیشنهادی دارای کمترین تعویض خط و کوتاه ترین زمان رسیدن باشد را به کاربر نشان خواهد داد")
+                Spacer(modifier = Modifier.height(12.dp))
+                titleAndDsc(
+                    title = " مسیریابی بین دو ایستگاه مترو  • \t ",
+                    dsc = "مترو یار با دریافت ایستگاه مبدا و ایستگاه مقصد از سمت کاربر بهترین مسیر ممکن رو با درنظر گرفتن اینکه مسیر پیشنهادی دارای کمترین تعویض خط و کوتاه ترین زمان رسیدن باشه برای کاربر درنظر میگیره"
+                )
                 Spacer(modifier = Modifier.height(6.dp))
                 titleAndDsc(
                     title = "اطلاعات زمانی مهم  • \t",
-                    dsc = "مترو یار پس از نشان دادن بهترین مسیر به کاربر همچنین کل زمانی که شما در مترو خواهید بود تا به مقصد خود برسید را محاسبه خواهد کرد و در کنار زمان رسیدن متروی بعدی در مبدا به شما نشان خواهد داد  "
+                    dsc = "مترو یار بعد از نشون دادن بهترین مسیر به کاربر همچنین کل زمانی که شما در مترو خواهید بود تا به مقصد خود برسید رو محاسبه میکنه و در کنار زمان رسیدن متروی بعدی در مبدا به شما نشون میده "
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 titleAndDsc(
                     title = "نشان کردن ایستگاه ها  • \t",
-                    dsc = "با نشان کردن هر ایستگاه میتوانید در دفعات بعدی ای که برای مسیریابی به مترویار مراجعه میکنید ، قادر خواهید بود آن ایستگاه ها را در صدر منویی که برای شما باز میشود تا ایستگاه خود را برای مبدا یا مقصد انتخاب کنید مشاهده کنید"
+                    dsc = "با نشان کردن هر ایستگاه میتونید در دفعات بعدی ای که برای مسیریابی به مترویار مراجعه میکنید ، اون ایستگاه ها رو در صدر منویی که برای شما باز میشه تا ایستگاهتون رو برای مبدا یا مقصد انتخاب کنید ببینید"
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 titleAndDsc(
                     title = "یافتن ایستگاه های نزدیک  • \t",
-                    dsc = "از طریق این قابلیت شما قادر خواهید بود که ایستگاه های نزدیک خودتان را در هرجایی از تهران و یا حومه تهران که هستید مشاهده کنید و آن را به عنوان مبدا یا مقصد خود جهت مسیریابی انتخاب کنید"
+                    dsc = "از طریق این قابلیت شما میتونید ایستگاه های نزدیک خودتون رو در هرجایی از تهران و یا حومه تهران که هستید مشاهده کنید و اون رو به عنوان مبدا یا مقصد خود جهت مسیریابی انتخاب کنید"
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 titleAndDsc(
                     title = "بروز ترین نسخه نقشه مترو  • \t",
-                    dsc = "مترویار این تضمین را میدهد که با بروزرسانی های متعدد همواره در منوی خود بروزترین نسخه نقشه مترو تهران و حومه را در اختیار هم وطنان عزیزمان قرار بدهد"
+                    dsc = "مترویار این تضمین رو به شما میده که با بروزرسانی های متعدد همیشه تو منوی خودش بروزترین نسخه نقشه مترو تهران و حومه رو در اختیار هم وطنان عزیزمون قرار بده"
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 titleAndDsc(
                     title = "اشتراک گذاری مسیر  • \t",
-                    dsc = "در صفحه ای که نتیجه مسیریابی خود را مشاهده میکنید قابلیتی برای اشتراک گذاری مسیر از طریق شبکه های اجتماعی و هر برنامه ای که قابلیت اشتراک گذاری فایل دارد تعبیه شده است تا در یک عکس تروتمیز بتوانید مسیر را به اشتراک بگذارید"
+                    dsc = "در صفحه ای که نتیجه مسیریابی خودتون رو میبینید قابلیتی برای اشتراک گذاری مسیر از طریق شبکه های اجتماعی و هر برنامه ای که قابلیت اشتراک گذاری فایل داره تعبیه شده تا تو یک عکس تروتمیز بتونید مسیر رو به اشتراک بگذارید"
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    modifier=Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     textAlign = TextAlign.End,
                     fontSize = 16.sp,
-                    text = "در آخر، خوشحال میشیم نظراتتون رو جهت بهبود هرچه بهتر اپلیکیشن و رفع مشکلات احتمالی از طریق بخش گزارش خطا با ما به اشتراک بگذارید ${persianFormatter.unicodeWrap(".")} ",
+                    text = "در آخر، خوشحال میشیم نظراتتون رو جهت بهبود هرچه بهتر اپلیکیشن و رفع مشکلات احتمالی از طریق بخش گزارش خطا با ما به اشتراک بذارید ${
+                        persianFormatter.unicodeWrap(
+                            "."
+                        )
+                    } ",
                 )
+                Spacer(modifier = Modifier.height(6.dp))
             }
         }
     )
@@ -142,7 +156,18 @@ fun AboutUsScreen(navigator: DestinationsNavigator) {
 
 @Composable
 private fun titleAndDsc(title: String, dsc: String) {
-        Text(modifier = Modifier.padding(horizontal = 4.dp),text = title, fontSize = 17.sp, style = MaterialTheme.typography.displayMedium, textAlign = TextAlign.End)
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(modifier = Modifier.padding(horizontal = 8.dp),text = dsc, fontSize = 16.sp, textAlign = TextAlign.End)
+    Text(
+        modifier = Modifier.padding(horizontal = 4.dp),
+        text = title,
+        fontSize = 17.sp,
+        style = MaterialTheme.typography.displayMedium,
+        textAlign = TextAlign.End
+    )
+    Spacer(modifier = Modifier.height(2.dp))
+    Text(
+        modifier = Modifier.padding(horizontal = 8.dp),
+        text = dsc,
+        fontSize = 16.sp,
+        textAlign = TextAlign.End
+    )
 }
