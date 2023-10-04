@@ -122,6 +122,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
                 "ورزشگاه آزادی" -> return "به سمت شهید سپهبد قاسم سلیمانی(هشتگرد)"
                 "تهران (صادقیه)" -> return "به سمت تهران (صادقیه)"
                 "شهرک اکباتان" -> return "به سمت شهید کلاهدوز"
+                "علامه جعفری" -> return "به سمت علامه جعفری"
             }
         }
 
