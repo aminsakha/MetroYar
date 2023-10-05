@@ -25,10 +25,10 @@
         <item>میرداماد</item>
         <item>شهید حقانی</item>
         <item>شهید همت</item>
-        <item>مصلی امام خمینی</item>
+        <item>مصلی</item>
         <item>شهید بهشتی</item>
         <item>شهید مفتح</item>
-        <item>شهدای هفتم تیر</item>
+        <item>هفت تیر</item>
         <item>طالقانی</item>
         <item>دروازه دولت</item>
         <item>سعدی</item>
@@ -44,12 +44,12 @@
         <item>شهر ری</item>
         <item>پالایشگاه</item>
         <item>شاهد - باقرشهر</item>
-        <item>حرم مطهر امام خمینی</item>
+        <item>حرم مطهر</item>
         <item>کهریزک</item>
     </string-array>
     <string-array name="stationsOnLine2">
         <item>فرهنگسرا</item>
-        <item>تهران پارس</item>
+        <item>تهرانپارس</item>
         <item>شهید باقری</item>
         <item>دانشگاه علم و صنعت</item>
         <item>سرسبز</item>
@@ -77,16 +77,16 @@
         <item>اقدسیه</item>
         <item>نوبنیاد</item>
         <item>حسین آباد</item>
-        <item>میدان هروی</item>
+        <item>هروی</item>
         <item>شهید زین الدین</item>
-        <item>خواجه عبدالله انصاری</item>
+        <item>خواجه عبدالله</item>
         <item>شهید صیاد شیرازی</item>
         <item>شهید قدوسی</item>
         <item>سهروردی</item>
         <item>شهید بهشتی</item>
         <item>میرزای شیرازی</item>
         <item>میدان جهاد</item>
-        <item>میدان حضرت ولی‌عصر</item>
+        <item>میدان ولیعصر</item>
         <item>تئاتر شهر</item>
         <item>منیریه</item>
         <item>مهدیه</item>
@@ -109,7 +109,7 @@
         <item>دروازه دولت</item>
         <item>فردوسی</item>
         <item>تئاتر شهر</item>
-        <item>میدان انقلاب اسلامی</item>
+        <item>میدان انقلاب</item>
         <item>توحید</item>
         <item>شادمان</item>
         <item>دکتر حبیب الله</item>
@@ -126,13 +126,13 @@
         <item>ورزشگاه آزادی</item>
         <item>چیتگر</item>
         <item>ایران خودرو</item>
-        <item>ورد آورد</item>
+        <item>وردآورد</item>
         <item>گرم دره</item>
         <item>اتمسفر</item>
         <item>کرج</item>
         <item>محمد شهر</item>
         <item>گلشهر</item>
-        <item>شهید سپهبد قاسم سلیمانی(هشتگرد)</item>
+        <item>شهید قاسم سلیمانی</item>
     </string-array>
     <string-array name="stationsOnLine6">
         <item>شهید ستاری</item>
@@ -143,9 +143,9 @@
         <item>دانشگاه تربیت مدرس</item>
         <item>کارگر</item>
         <item>بوستان لاله</item>
-        <item>میدان حضرت ولی‌عصر</item>
+        <item>میدان ولیعصر</item>
         <item>شهید نجات اللهی</item>
-        <item>شهدای هفتم تیر</item>
+        <item>هفت تیر</item>
         <item>امام حسین</item>
         <item>میدان شهدا</item>
         <item>امیر کبیر</item>
@@ -156,9 +156,9 @@
     </string-array>
     <string-array name="stationsOnLine7">
         <item>میدان کتاب</item>
-        <item>شهید دادمان</item>
+        <item>دادمان</item>
         <item>میدان صنعت</item>
-        <item>برج میلاد تهران</item>
+        <item>برج میلاد</item>
         <item>بوستان گفتگو</item>
         <item>دانشگاه تربیت مدرس</item>
         <item>مدافعان سلامت</item>
@@ -197,14 +197,14 @@
         <item>شهید نواب صفوی</item>
         <item>شادمان</item>
         <item>تهران (صادقیه)</item>
-        <item>میدان حضرت ولی‌عصر</item>
+        <item>میدان ولیعصر</item>
         <item>تئاتر شهر</item>
         <item>مهدیه</item>
         <item>شادمان</item>
         <item>میدان شهدا</item>
         <item>توحید</item>
         <item>ارم سبز</item>
-        <item>شهدای هفتم تیر</item>
+        <item>هفت تیر</item>
         <item>دانشگاه تربیت مدرس</item>
     </string-array>
 
