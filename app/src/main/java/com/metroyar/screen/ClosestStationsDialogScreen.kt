@@ -110,7 +110,7 @@ fun ClosestStationsDialogScreen(
     }
 
     if (closestStationsPair.first != "empty") {
-        log("my pair", closestStationsPair)
         clipSpec = LottieClipSpec.Progress(0.0f, 1f)
+        log("res from Neshan", closestStationsPair)
     }
 }

@@ -30,23 +30,32 @@ suspend fun getClosestStationsFromApi(
                 longitude = location.x,
                 term = "ایستگاه مترو"
             )
-        val filteredList = response.items.filter { it.type == "subway_station" }
+        val filteredList =
+            response.items.filter { it.type == "subway_station" }.distinctBy { it.title }
         val pair = Pair(
             filteredList.getOrNull(0)?.title ?: "",
             filteredList.getOrNull(1)?.title ?: ""
         )
         onPairChange.invoke(pair)
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 }
 
 fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String, String> {
-    val matchingNames = GlobalObjects.stationList.map { it.stationName }
-        .filter {
-            pair.first.contains(it) || pair.second.contains(it)
+    val matchingNames = mutableSetOf<String>()
+    GlobalObjects.stationList.map { it.stationName }.forEach { stationName ->
+        if (pair.first.contains(stationName) || pair.second.contains(stationName) ||
+            pair.first.contains(stationName.dropLast(1).replace("ی", "ي") + stationName.last()) ||
+            pair.second.contains(stationName.dropLast(1).replace("ی", "ي") + stationName.last()) ||
+            pair.first.contains(stationName.replace("ی", "ي")) ||
+            pair.second.contains(stationName.replace("ی", "ي"))
+        ) {
+            matchingNames.add(stationName)
         }
-
-    return Pair(matchingNames.getOrNull(0) ?: "", matchingNames.getOrNull(1) ?: "")
+    }
+    log("A2", matchingNames)
+    return Pair(matchingNames.elementAtOrNull(0) ?: "", matchingNames.elementAtOrNull(1) ?: "")
 }
 
 @SuppressLint("MissingPermission")

@@ -7,7 +7,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
                 "سهروردی" -> return "به سمت قائم"
                 "شهید مفتح" -> return "به سمت کهریزک"
                 "میرزای شیرازی" -> return "به سمت آزادگان"
-                "مصلی امام خمینی" -> return "به سمت تجریش"
+                "مصلی" -> return "به سمت تجریش"
             }
         }
 
@@ -43,7 +43,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
                 "میدان شهدا" -> return "به سمت دولت آباد"
                 "دروازه شمیران" -> return "به سمت تهران (صادقیه)"
                 "شهید مدنی" -> return "به سمت فرهنگسرا"
-                "شهدای هفتم تیر" -> return "به سمت شهید ستاری"
+                "هفت تیر" -> return "به سمت شهید ستاری"
             }
         }
 
@@ -76,7 +76,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
 
         "تهران (صادقیه)" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "ارم سبز" -> return "به سمت شهید سپهبد قاسم سلیمانی(هشتگرد)"
+                "ارم سبز" -> return "شهید قاسم سلیمانی"
                 "طرشت" -> return "به سمت فرهنگسرا"
             }
         }
@@ -84,9 +84,9 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
         "تئاتر شهر" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
                 "منیریه" -> return "به سمت آزادگان"
-                "میدان انقلاب اسلامی" -> return "به سمت علامه جعفری"
+                "میدان انقلاب" -> return "به سمت علامه جعفری"
                 "فردوسی" -> return "به سمت شهید کلاهدوز"
-                "میدان حضرت ولی‌عصر" -> return "به سمت قائم"
+                "میدان ولیعصر" -> return "به سمت قائم"
             }
         }
 
@@ -94,14 +94,14 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
             when (findStationObjectFromItsId(nextId).stationName) {
                 "هلال احمر" -> return "به سمت میدان کتاب"
                 "میدان محمدیه" -> return "به سمت بسیج"
-                "راه آهن" -> return "به سمت آزادگان"
+                "راه آهن" -> return "به سمت آزادگان"
                 "منیریه" -> return "به سمت قائم"
             }
         }
 
         "میدان شهدا" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "امیر کبیر" -> return "به سمت دولت آباد"
+                "امیر کبیر" -> return "به سمت دولت آباد"
                 "امام حسین" -> return "به سمت شهید ستاری"
                 "دروازه شمیران" -> return "به سمت علامه جعفری"
                 "ابن سینا" -> return "به سمت شهید کلاهدوز"
@@ -113,15 +113,16 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
                 "مدافعان سلامت" -> return "به سمت میدان کتاب"
                 "شهید نواب صفوی" -> return "به سمت بسیج"
                 "شادمان" -> return "به سمت علامه جعفری"
-                "میدان انقلاب اسلامی" -> return "به سمت شهید کلاهدوز"
+                "میدان انقلاب" -> return "به سمت شهید کلاهدوز"
             }
         }
 
         "ارم سبز" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "ورزشگاه آزادی" -> return "به سمت شهید سپهبد قاسم سلیمانی(هشتگرد)"
+                "ورزشگاه آزادی" -> return "شهید قاسم سلیمانی"
                 "تهران (صادقیه)" -> return "به سمت تهران (صادقیه)"
                 "شهرک اکباتان" -> return "به سمت شهید کلاهدوز"
+                "علامه جعفری" -> return "به سمت علامه جعفری"
             }
         }
 
@@ -134,7 +135,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
             }
         }
 
-        "میدان حضرت ولی‌عصر" -> {
+        "میدان ولیعصر" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
                 "میدان جهاد" -> return "به سمت قائم"
                 "بوستان لاله" -> return "به سمت شهید ستاری"
@@ -143,7 +144,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
             }
         }
 
-        "شهدای هفتم تیر" -> {
+        "هفت تیر" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
                 "طالقانی" -> return "به سمت کهریزک"
                 "امام حسین" -> return "به سمت دولت آباد"
@@ -155,7 +156,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
         "شاهد - باقرشهر" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
                 "نمایشگاه شهر آفتاب" -> return "به سمت فرودگاه امام خمینی"
-                "حرم مطهر امام خمینی" -> return "به سمت کهریزک"
+                "حرم مطهر" -> return "به سمت کهریزک"
                 "پالایشگاه" -> return "به سمت تجریش"
             }
         }

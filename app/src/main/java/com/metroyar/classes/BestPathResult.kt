@@ -22,12 +22,20 @@ class BestPathResult(
         context.resources.getStringArray(R.array.interchangeStations).toMutableList()
 
     private fun generatePossiblePaths(): PriorityQueue<Path> {
-        val possiblePathsQueue = PriorityQueue<Path> { pathA, pathB ->
+        val possiblePathsQueueBasedOnInterchanges = PriorityQueue<Path> { pathA, pathB ->
             when {
                 pathA.interchangesScore != pathB.interchangesScore -> pathA.interchangesScore - pathB.interchangesScore
                 else -> pathA.stationsBetweenScore - pathB.stationsBetweenScore
             }
         }
+
+        val possiblePathsQueueBasedOnStationsBetween = PriorityQueue<Path> { pathA, pathB ->
+            when {
+                pathA.stationsBetweenScore != pathB.stationsBetweenScore -> pathA.stationsBetweenScore - pathB.stationsBetweenScore
+                else -> pathA.interchangesScore - pathB.interchangesScore
+            }
+        }
+
         val startIsIntersection = intersectionNames.contains(startStationName)
         val destIsIntersection = intersectionNames.contains(destStationName)
 
@@ -38,22 +46,36 @@ class BestPathResult(
 
         for (startIndex in startIndices) {
             for (destIndex in destIndices) {
-                possiblePathsQueue.add(
+                possiblePathsQueueBasedOnInterchanges.add(
                     Path(
-                        metroGraph.findPath(
-                            findStationObjectFromItsName(startStationName)[startIndex].id,
+                        stationsOnPath = metroGraph.findPath(
+                            basedOnInterchange = true, src =
+                            findStationObjectFromItsName(startStationName)[startIndex].id, dst =
+                            findStationObjectFromItsName(destStationName)[destIndex].id
+                        ).map { findStationObjectFromItsId(it) }.toMutableList()
+                    )
+                )
+                possiblePathsQueueBasedOnStationsBetween.add(
+                    Path(
+                        stationsOnPath = metroGraph.findPath(
+                            basedOnInterchange = false, src =
+                            findStationObjectFromItsName(startStationName)[startIndex].id, dst =
                             findStationObjectFromItsName(destStationName)[destIndex].id
                         ).map { findStationObjectFromItsId(it) }.toMutableList()
                     )
                 )
             }
         }
-        return possiblePathsQueue
+        return if ((possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime - possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime) > 7)
+            possiblePathsQueueBasedOnStationsBetween
+        else
+            possiblePathsQueueBasedOnInterchanges
     }
 
     fun convertPathToReadableForm(): MutableList<String> {
         bestCurrentPath = generatePossiblePaths().peek()!!
-        val stations = bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }.toMutableList()
+        val stations =
+            bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }.toMutableList()
         val pathStationNamesResult = mutableSetOf<String>().toMutableList()
         pathStationNamesResult.add(stations[0].stationName)
         pathStationNamesResult[pathStationNamesResult.lastIndex] =
