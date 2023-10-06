@@ -94,7 +94,7 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             InfoCardItem(
                 infoItem = InfoItem(
                     title = "نسخه ",
-                    endText = "1.0.0-beta",
+                    endText = "1.0.0",
                     icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
                     onClickedItem = {})
             )

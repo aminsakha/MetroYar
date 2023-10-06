@@ -160,9 +160,9 @@ fun CircleWithText(text: String, color: Color) {
             fontSize = 9.sp,
             fontFamily = FontFamily(Font(R.font.iran_medium)),
             color = textColor,
-            maxLines=1,
+            maxLines = 1,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding( 1.2.dp)
+            modifier = Modifier.padding(1.dp)
         )
     }
 }

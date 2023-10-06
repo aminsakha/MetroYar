@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 
 
 class MainActivity : ComponentActivity() {
-    var keepSplashOpened = true
+    private var keepSplashOpened = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val config =
@@ -33,12 +33,10 @@ class MainActivity : ComponentActivity() {
         YandexMetrica.activate(applicationContext, config)
         YandexMetrica.enableActivityAutoTracking(applicationContext as Application)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             installSplashScreen().setKeepOnScreenCondition { keepSplashOpened }
-        } else {
+        else
             installSplashScreen()
-        }
-
 
         setContent {
             MetroYarTheme {
