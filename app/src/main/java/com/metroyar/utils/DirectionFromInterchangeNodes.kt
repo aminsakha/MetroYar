@@ -76,7 +76,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
 
         "تهران (صادقیه)" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "ارم سبز" -> return "شهید قاسم سلیمانی"
+                "ارم سبز" -> return "به سمت شهید قاسم سلیمانی"
                 "طرشت" -> return "به سمت فرهنگسرا"
             }
         }
@@ -119,7 +119,7 @@ fun getDirectionFromInterchangeStations(currId: Int, nextId: Int): String {
 
         "ارم سبز" -> {
             when (findStationObjectFromItsId(nextId).stationName) {
-                "ورزشگاه آزادی" -> return "شهید قاسم سلیمانی"
+                "ورزشگاه آزادی" -> return "به سمت شهید قاسم سلیمانی"
                 "تهران (صادقیه)" -> return "به سمت تهران (صادقیه)"
                 "شهرک اکباتان" -> return "به سمت شهید کلاهدوز"
                 "علامه جعفری" -> return "به سمت علامه جعفری"
