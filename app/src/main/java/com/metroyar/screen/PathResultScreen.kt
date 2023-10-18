@@ -280,8 +280,8 @@ fun BestPathLayout(
 }
 
 fun getLineColor(currStation: String): Color {
-    return when (bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
-        .find { currStation.contains(it.stationName) }?.lineNumber) {
+    return when (bestCurrentPath?.stationsOnPath?.distinctBy { it.stationName }
+        ?.find { currStation.contains(it.stationName) }?.lineNumber) {
         1 -> lineOne
         2 -> lineTwo
         3 -> lineThree
@@ -292,6 +292,7 @@ fun getLineColor(currStation: String): Color {
         else -> zahrasBlack
     }
 }
+
 
 fun getLineNumberInPersian(currStation: String): String {
     val persianLocale = Locale("fa", "IR")
