@@ -12,7 +12,12 @@ fun LocalTime.toStringWithCustomFormat(): String {
     val numberFormat = NumberFormat.getInstance(persianLocale)
     val persianMinute = numberFormat.format(minute)
     val persianHour = numberFormat.format(hour)
-    return "$persianMinute : $persianHour"
+    return "${
+        if (minute < 10) persianMinute.padStart(
+            2,
+            numberFormat.format(0)[0]
+        ) else persianMinute
+    } : $persianHour"
 }
 
 fun LocalTime.toMinutes(): String {

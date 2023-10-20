@@ -58,6 +58,7 @@ import com.metroyar.ui.theme.lineSeven
 import com.metroyar.ui.theme.lineSix
 import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
+import com.metroyar.ui.theme.textColor
 import com.metroyar.ui.theme.zahrasBlack
 import com.metroyar.utils.CircleWithText
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
@@ -185,7 +186,10 @@ fun PathResultScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "ارسال مسیر")
+                        Text(
+                            text = "ارسال مسیر", color = textColor,
+                            style = MaterialTheme.typography.displayMedium
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(Icons.Filled.Share, "")
                     }
@@ -219,7 +223,6 @@ fun BestPathLayout(
     destinationStation: String, navigator: DestinationsNavigator
 ) {
     ScreenshotBox(screenshotState = screenshotState) {
-        log("tets",startStation)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(end = 16.dp, top = 8.dp, start = 16.dp)
