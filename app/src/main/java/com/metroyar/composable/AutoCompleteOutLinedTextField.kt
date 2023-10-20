@@ -157,9 +157,12 @@ fun AutoCompleteOutLinedTextField(
                             else {
                                 dropDownStationNamesList.filter {
                                     it.contains(inputValue)
-                                }.sortedWith(compareBy { element ->
-                                    dataBaseFavoriteStations.indexOf(element)
-                                }).reversed()
+                                }.sortedWith(compareByDescending<String> {
+                                    it.startsWith(
+                                        inputValue
+                                    )
+                                }
+                                    .thenBy { dataBaseFavoriteStations.indexOf(it) })
                             }
                         items(filteredList) { stationName ->
                             DropDownStationItem(
