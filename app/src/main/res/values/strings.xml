@@ -135,6 +135,9 @@
         <item>شهید قاسم سلیمانی</item>
     </string-array>
     <string-array name="stationsOnLine6">
+        <item>کوهسار</item>
+        <item>شهران</item>
+        <item>شهر زیبا</item>
         <item>شهید ستاری</item>
         <item>شهید اشرفی اصفهانی</item>
         <item>یادگار امام</item>

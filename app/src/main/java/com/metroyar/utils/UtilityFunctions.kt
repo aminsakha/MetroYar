@@ -92,24 +92,18 @@ fun checkInternetConnection(context: Context, onStatChange: (Boolean) -> Unit) {
 }
 
 fun vibratePhone(context: Context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val vibratorManager =
-            context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-        val vibrator = vibratorManager.defaultVibrator
-        vibrator.vibrate(
-            VibrationEffect.createOneShot(
-                20,
-                VibrationEffect.EFFECT_TICK
+    val vibrator = context.getSystemService(Vibrator::class.java)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    20,
+                    VibrationEffect.EFFECT_TICK
+                )
             )
-        )
-    } else {
-        val vibrator =
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        @Suppress("DEPRECATION")
-        vibrator.vibrate(20)
+        }
     }
 }
-
 
 @Composable
 fun BackPressAction() {

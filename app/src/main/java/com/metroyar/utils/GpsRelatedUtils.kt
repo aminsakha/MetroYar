@@ -3,7 +3,6 @@ package com.metroyar.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
-import androidx.annotation.Keep
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -18,7 +17,6 @@ fun checkGpsStatus(context: Context): Boolean {
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 }
 
-
 suspend fun getClosestStationsFromApi(
     location: GPSCoordinate,
     onPairChange: (Pair<String, String>) -> Unit
@@ -32,9 +30,12 @@ suspend fun getClosestStationsFromApi(
             )
         val filteredList =
             response.items.filter { it.type == "subway_station" }.distinctBy { it.title }
+                .map { element -> convertNeshanStationNameToMyFormat(element.title) }
+                .filter { it.isNotEmpty() }
+
         val pair = Pair(
-            filteredList.getOrNull(0)?.title ?: "",
-            filteredList.getOrNull(1)?.title ?: ""
+            filteredList.getOrNull(0) ?: "",
+            filteredList.getOrNull(1) ?: ""
         )
         onPairChange.invoke(pair)
     } catch (e: Exception) {
@@ -42,20 +43,20 @@ suspend fun getClosestStationsFromApi(
     }
 }
 
-fun convertNeshanStationNameToMyFormat(pair: Pair<String, String>): Pair<String, String> {
-    val matchingNames = mutableSetOf<String>()
+fun convertNeshanStationNameToMyFormat(neshanStation: String): String {
     GlobalObjects.stationList.map { it.stationName }.forEach { stationName ->
-        if (pair.first.contains(stationName) || pair.second.contains(stationName) ||
-            pair.first.contains(stationName.dropLast(1).replace("ی", "ي") + stationName.last()) ||
-            pair.second.contains(stationName.dropLast(1).replace("ی", "ي") + stationName.last()) ||
-            pair.first.contains(stationName.replace("ی", "ي")) ||
-            pair.second.contains(stationName.replace("ی", "ي"))
+        if (neshanStation == "ایستگاه مترو دکترشریعتی")
+            return "دکتر شریعتی"
+        if (neshanStation.contains(stationName) ||
+            neshanStation.contains(
+                stationName.dropLast(1).replace("ی", "ي") + stationName.last()
+            ) ||
+            neshanStation.contains(stationName.replace("ی", "ي"))
         ) {
-            matchingNames.add(stationName)
+            return stationName
         }
     }
-    log("A2", matchingNames)
-    return Pair(matchingNames.elementAtOrNull(0) ?: "", matchingNames.elementAtOrNull(1) ?: "")
+    return ""
 }
 
 @SuppressLint("MissingPermission")

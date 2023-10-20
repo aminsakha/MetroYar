@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.BestPathResult
+import com.metroyar.classes.GuidPathStyle
 import com.metroyar.composable.AutoCompleteOutLinedTextField
 import com.metroyar.composable.ShouldConfirmAlertDialog
 import com.metroyar.screen.destinations.PathResultScreenDestination
@@ -49,6 +50,7 @@ import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
+import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -74,8 +76,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 onClick = { isFindNearestButtonClicked = true },
             ) {
                 Row(
-                    verticalAlignment=Alignment.CenterVertically,
-                    //modifier = Modifier.padding(1.2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(

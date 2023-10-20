@@ -58,6 +58,7 @@ import com.metroyar.ui.theme.lineSeven
 import com.metroyar.ui.theme.lineSix
 import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
+import com.metroyar.ui.theme.textColor
 import com.metroyar.ui.theme.zahrasBlack
 import com.metroyar.utils.CircleWithText
 import com.metroyar.utils.GlobalObjects.bestCurrentPath
@@ -185,7 +186,10 @@ fun PathResultScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "ارسال مسیر")
+                        Text(
+                            text = "ارسال مسیر", color = textColor,
+                            style = MaterialTheme.typography.displayMedium
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(Icons.Filled.Share, "")
                     }
@@ -252,19 +256,17 @@ fun BestPathLayout(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (item.contains("خط")){
+                        if (item.contains("خط")) {
                             Icon(
                                 painter = painterResource(id = R.drawable.swap),
                                 modifier = Modifier.size(28.dp),
                                 contentDescription = "",
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                        }
-
-                        else
+                        } else
                             CircleWithText(
-                                getLineNumberInPersian(currStation = item),
-                                getLineColor(item)
+                                getLineNumberInPersian(currStation = item) ?: "0",
+                                getLineColor(item) ?: zahrasBlack
                             )
                         Spacer(modifier = Modifier.width(12.dp))
                         ExpandableCardForGuidPathStyle(
@@ -279,24 +281,34 @@ fun BestPathLayout(
     }
 }
 
-fun getLineColor(currStation: String): Color {
-    return when (bestCurrentPath?.stationsOnPath?.distinctBy { it.stationName }
-        ?.find { currStation.contains(it.stationName) }?.lineNumber) {
-        1 -> lineOne
-        2 -> lineTwo
-        3 -> lineThree
-        4 -> lineFour
-        5 -> lineFive
-        6 -> lineSix
-        7 -> lineSeven
-        else -> zahrasBlack
+fun getLineColor(currStation: String): Color? {
+    bestCurrentPath?.stationsOnPath?.distinctBy { it.stationName }
+        ?.find { currStation.contains(it.stationName) }?.lineNumber ?: return zahrasBlack
+    return try {
+        when (bestCurrentPath?.stationsOnPath?.distinctBy { it.stationName }
+            ?.find { currStation.contains(it.stationName) }?.lineNumber) {
+            1 -> lineOne
+            2 -> lineTwo
+            3 -> lineThree
+            4 -> lineFour
+            5 -> lineFive
+            6 -> lineSix
+            7 -> lineSeven
+            else -> zahrasBlack
+        }
+    } catch (e: NullPointerException) {
+        zahrasBlack
     }
 }
 
 
-fun getLineNumberInPersian(currStation: String): String {
+fun getLineNumberInPersian(currStation: String): String? {
     val persianLocale = Locale("fa", "IR")
     val numberFormat = NumberFormat.getInstance(persianLocale)
-    return numberFormat.format((bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
-        .find { currStation.contains(it.stationName) }?.lineNumber))
+    return try {
+        numberFormat.format((bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
+            .find { currStation.contains(it.stationName) }?.lineNumber))
+    } catch (e: NullPointerException) {
+        "0"
+    }
 }

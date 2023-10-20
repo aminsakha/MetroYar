@@ -41,7 +41,7 @@ fun ClosestStationsDialogScreen(
             showSuggestionDialog = false
             onDisMiss.invoke(false)
         },
-        pairOfClosestStations = convertNeshanStationNameToMyFormat(closestStationsPair),
+        pairOfClosestStations = closestStationsPair,
         visible = showSuggestionDialog,
         srcOnclick = {
             showSuggestionDialog = false

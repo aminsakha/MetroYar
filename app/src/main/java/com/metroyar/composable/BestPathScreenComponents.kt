@@ -51,6 +51,7 @@ import com.metroyar.screen.getLineColor
 import com.metroyar.ui.theme.hint
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
+import com.metroyar.ui.theme.zahrasBlack
 import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.metroyar.utils.playSound
@@ -126,7 +127,7 @@ fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: Strin
                 Icon(
                     painter = painterResource(id = R.drawable.start_station),
                     contentDescription = "",
-                    tint = getLineColor(src),
+                    tint = getLineColor(src)?: zahrasBlack,
                     modifier = Modifier.padding(end = 4.dp).size(23.dp)
                 )
                 Icon(
@@ -137,13 +138,10 @@ fun SrcAndDstCard(context: Context, navigator: DestinationsNavigator, src: Strin
                 Icon(
                     painter = painterResource(id = R.drawable.distance),
                     contentDescription = "",
-                    tint = getLineColor(dst),
+                    tint = getLineColor(dst)?: zahrasBlack,
                     modifier = Modifier.padding(end = 4.dp)
                 )
             }
-
-            // Spacer(modifier = Modifier.width(16.dp))
-
         }
     }
 }
