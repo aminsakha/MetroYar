@@ -1,5 +1,6 @@
 package com.metroyar.screen
 
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -52,14 +53,15 @@ fun SettingScreen(navigator: DestinationsNavigator) {
                             RealmObject.realmRepo.changeShouldPlaySound(it)
                         }
                     })
-                SettingItem(
-                    title = " ویبره بین صفحات منو",
-                    initialValue = RealmObject.realmRepo.getShouldVibrate(),
-                    onSwitchClicked = {
-                        coroutine.launch {
-                            RealmObject.realmRepo.changeShouldVibrate(it)
-                        }
-                    })
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    SettingItem(
+                        title = " ویبره بین صفحات منو",
+                        initialValue = RealmObject.realmRepo.getShouldVibrate(),
+                        onSwitchClicked = {
+                            coroutine.launch {
+                                RealmObject.realmRepo.changeShouldVibrate(it)
+                            }
+                        })
             }
         }
     )
