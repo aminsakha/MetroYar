@@ -17,7 +17,9 @@ import com.metroyar.screen.NavGraphs
 import com.metroyar.ui.theme.MetroYarTheme
 import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.deviceWidthInDp
+import com.metroyar.utils.GlobalObjects.stationList
 import com.metroyar.utils.initiateStationsAndAdjNodesLineNum
+import com.metroyar.utils.log
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig

@@ -219,6 +219,7 @@ fun BestPathLayout(
     destinationStation: String, navigator: DestinationsNavigator
 ) {
     ScreenshotBox(screenshotState = screenshotState) {
+        log("tets",startStation)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(end = 16.dp, top = 8.dp, start = 16.dp)
@@ -252,19 +253,17 @@ fun BestPathLayout(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (item.contains("خط")){
+                        if (item.contains("خط")) {
                             Icon(
                                 painter = painterResource(id = R.drawable.swap),
                                 modifier = Modifier.size(28.dp),
                                 contentDescription = "",
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                        }
-
-                        else
+                        } else
                             CircleWithText(
-                                getLineNumberInPersian(currStation = item),
-                                getLineColor(item)
+                                getLineNumberInPersian(currStation = item) ?: "0",
+                                getLineColor(item) ?: zahrasBlack
                             )
                         Spacer(modifier = Modifier.width(12.dp))
                         ExpandableCardForGuidPathStyle(
@@ -279,24 +278,34 @@ fun BestPathLayout(
     }
 }
 
-fun getLineColor(currStation: String): Color {
-    return when (bestCurrentPath?.stationsOnPath?.distinctBy { it.stationName }
-        ?.find { currStation.contains(it.stationName) }?.lineNumber) {
-        1 -> lineOne
-        2 -> lineTwo
-        3 -> lineThree
-        4 -> lineFour
-        5 -> lineFive
-        6 -> lineSix
-        7 -> lineSeven
-        else -> zahrasBlack
+fun getLineColor(currStation: String): Color? {
+    bestCurrentPath?.stationsOnPath?.distinctBy { it.stationName }
+        ?.find { currStation.contains(it.stationName) }?.lineNumber ?: return zahrasBlack
+    return try {
+        when (bestCurrentPath?.stationsOnPath?.distinctBy { it.stationName }
+            ?.find { currStation.contains(it.stationName) }?.lineNumber) {
+            1 -> lineOne
+            2 -> lineTwo
+            3 -> lineThree
+            4 -> lineFour
+            5 -> lineFive
+            6 -> lineSix
+            7 -> lineSeven
+            else -> zahrasBlack
+        }
+    } catch (e: NullPointerException) {
+        zahrasBlack
     }
 }
 
 
-fun getLineNumberInPersian(currStation: String): String {
+fun getLineNumberInPersian(currStation: String): String? {
     val persianLocale = Locale("fa", "IR")
     val numberFormat = NumberFormat.getInstance(persianLocale)
-    return numberFormat.format((bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
-        .find { currStation.contains(it.stationName) }?.lineNumber))
+    return try {
+        numberFormat.format((bestCurrentPath!!.stationsOnPath.distinctBy { it.stationName }
+            .find { currStation.contains(it.stationName) }?.lineNumber))
+    } catch (e: NullPointerException) {
+        "0"
+    }
 }
