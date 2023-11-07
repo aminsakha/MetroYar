@@ -243,7 +243,7 @@ fun BestPathLayout(
                         currentTime = LocalTime.now(),
                         lineNumber = bestCurrentPath!!.stationsOnPath[0].lineNumber
                     )
-                } ", pathTime = "زمان سفر : ${getWholeTravelTime().toMinutes()} دقیقه"
+                } ", pathTime = "زمان سفر : حدود ${getWholeTravelTime().toMinutes()} دقیقه"
             )
 
             Spacer(modifier = Modifier.height(24.dp))

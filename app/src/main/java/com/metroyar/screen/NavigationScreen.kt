@@ -2,6 +2,7 @@ package com.metroyar.screen
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +62,8 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var dstInputText by remember { mutableStateOf(destStation) }
     var alertMessageText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    var expandSrc by remember { mutableStateOf(true) }
+    var expandDst by remember { mutableStateOf(true) }
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
     val focusRequesterDst = remember { FocusRequester() }
     val focusRequesterSrc = remember { FocusRequester() }
@@ -99,6 +103,14 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            if (expandDst)
+                                expandDst = false
+                            if (expandSrc)
+                                expandSrc = false
+                        })
+                    }
                     .verticalScroll(state = state)
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.onPrimary),
@@ -113,12 +125,14 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.height(deviceHeightInDp / 10f))
 
                 AutoCompleteOutLinedTextField(
+                    secondCheckExpand = expandSrc,
                     label = stringResource(R.string.chosseSrc),
                     focusRequester = focusRequesterSrc,
                     inputValue = srcInputText,
                     onInputValueChange = {
                         srcInputText = it
                         startStation = srcInputText
+                        expandSrc = true
                     },
                     onItemSelectedChange = {
                         srcInputText = it
@@ -137,10 +151,12 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                 Spacer(Modifier.height(deviceHeightInDp / 24))
 
                 AutoCompleteOutLinedTextField(
+                    secondCheckExpand = expandDst,
                     label = stringResource(R.string.chooseDst),
                     focusRequester = focusRequesterDst,
                     inputValue = dstInputText,
                     onInputValueChange = {
+                        expandDst = true
                         dstInputText = it
                         destStation = dstInputText
                     },

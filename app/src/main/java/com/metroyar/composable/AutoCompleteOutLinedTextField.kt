@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AutoCompleteOutLinedTextField(
     inputValue: String,
+    secondCheckExpand: Boolean,
     onInputValueChange: (String) -> Unit,
     onItemSelectedChange: (String) -> Unit,
     onTrashIconClick: (String) -> Unit,
@@ -135,7 +136,7 @@ fun AutoCompleteOutLinedTextField(
                     }
                 }
             )
-            AnimatedVisibility(visible = expanded) {
+            AnimatedVisibility(visible = expanded && secondCheckExpand) {
                 Card(
                     modifier = Modifier.padding(horizontal = 5.dp),
                     shape = RoundedCornerShape(
