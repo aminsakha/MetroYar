@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AutoCompleteOutLinedTextField(
     inputValue: String,
+    hasFoc: (Boolean) -> Unit,
     secondCheckExpand: Boolean,
     onInputValueChange: (String) -> Unit,
     onItemSelectedChange: (String) -> Unit,
@@ -65,7 +66,7 @@ fun AutoCompleteOutLinedTextField(
 ) {
     val dataBaseFavoriteStations = realmRepo.getListOfFavoriteStations()
     val dropDownStationNamesList =
-        stationList.map { it.stationName }.toSet().sorted()
+        stationList.map { it.stationName }.toSet().shuffled()
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -83,6 +84,8 @@ fun AutoCompleteOutLinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
+                        if (focusState.isFocused)
+                            hasFoc.invoke(true)
                         if (focusState.isFocused && inputValue.isEmpty()) {
                             expanded = true
                         }
@@ -147,7 +150,7 @@ fun AutoCompleteOutLinedTextField(
                 {
                     LazyColumn(
                         modifier = Modifier
-                            .heightIn(max = deviceHeightInDp / 6.2f)
+                            .heightIn(max = deviceHeightInDp / 5.5f)
                             .background(MaterialTheme.colorScheme.onSecondary)
                     ) {
                         val filteredList =

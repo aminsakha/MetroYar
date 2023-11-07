@@ -65,6 +65,12 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var expandSrc by remember { mutableStateOf(true) }
     var expandDst by remember { mutableStateOf(true) }
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
+    var focOnSrc by remember {
+        mutableStateOf(false)
+    }
+    var focOnDst by remember {
+        mutableStateOf(false)
+    }
     val focusRequesterDst = remember { FocusRequester() }
     val focusRequesterSrc = remember { FocusRequester() }
     val state = rememberScrollState()
@@ -116,13 +122,21 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     .background(MaterialTheme.colorScheme.onPrimary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                LaunchedEffect(key1 = focOnSrc, key2 = expandSrc) {
+                    if (expandDst && expandSrc)
+                        expandDst = false
+                }
+                LaunchedEffect(key1 = focOnDst, key2 = expandDst) {
+                    if (expandDst && expandSrc)
+                        expandSrc = false
+                }
                 LaunchedEffect(srcInputText) {
                     if (stationList.map { it.stationName }
                             .contains(srcInputText) && dstInputText.isEmpty())
                         focusRequesterDst.requestFocus()
                 }
 
-                Spacer(modifier = Modifier.height(deviceHeightInDp / 10f))
+                Spacer(modifier = Modifier.height(deviceHeightInDp / 8f))
 
                 AutoCompleteOutLinedTextField(
                     secondCheckExpand = expandSrc,
@@ -134,7 +148,17 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         startStation = srcInputText
                         expandSrc = true
                     },
+                    hasFoc = {
+                        focOnSrc = it
+                        if (focOnSrc) {
+                            expandSrc = true
+                            focOnDst = false
+                        }
+
+
+                    },
                     onItemSelectedChange = {
+                        expandSrc = false
                         srcInputText = it
                         startStation = srcInputText
                     },
@@ -145,6 +169,8 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         )
                         srcInputText = ""
                         startStation = ""
+                        expandSrc = true
+                        focOnDst = false
                     }
                 )
 
@@ -160,7 +186,16 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         dstInputText = it
                         destStation = dstInputText
                     },
+                    hasFoc = {
+                        focOnDst = it
+                        if (focOnDst) {
+                            expandDst = true
+                            focOnSrc = false
+                        }
+
+                    },
                     onItemSelectedChange = {
+                        expandDst = false
                         dstInputText = it
                         destStation = dstInputText
                     },
@@ -171,6 +206,8 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         )
                         dstInputText = ""
                         destStation = ""
+                        expandDst = true
+                        focOnSrc = false
                     }
                 )
 
