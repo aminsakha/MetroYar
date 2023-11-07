@@ -32,9 +32,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +58,7 @@ import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var srcInputText by remember { mutableStateOf(startStation) }
@@ -106,11 +109,13 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         },
         floatingActionButtonPosition = FabPosition.End,
         content = { padding ->
+            val keyboardController = LocalSoftwareKeyboardController.current
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .pointerInput(Unit) {
                         detectTapGestures(onTap = {
+                            keyboardController?.hide()
                             if (expandDst)
                                 expandDst = false
                             if (expandSrc)
@@ -122,18 +127,30 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     .background(MaterialTheme.colorScheme.onPrimary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 LaunchedEffect(key1 = focOnSrc, key2 = expandSrc) {
                     if (expandDst && expandSrc)
+                        expandDst = false
+                    if (focOnSrc && expandDst)
                         expandDst = false
                 }
                 LaunchedEffect(key1 = focOnDst, key2 = expandDst) {
                     if (expandDst && expandSrc)
+                        expandSrc = false
+                    if (focOnDst && expandSrc)
                         expandSrc = false
                 }
                 LaunchedEffect(srcInputText) {
                     if (stationList.map { it.stationName }
                             .contains(srcInputText) && dstInputText.isEmpty())
                         focusRequesterDst.requestFocus()
+                }
+                LaunchedEffect(dstInputText) {
+                    if (stationList.map { it.stationName }
+                            .contains(dstInputText)) {
+                        expandDst = false
+                        keyboardController?.hide()
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(deviceHeightInDp / 8f))
