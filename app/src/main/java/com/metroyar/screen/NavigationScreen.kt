@@ -2,6 +2,7 @@ package com.metroyar.screen
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,8 +32,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,13 +58,22 @@ import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
     var srcInputText by remember { mutableStateOf(startStation) }
     var dstInputText by remember { mutableStateOf(destStation) }
     var alertMessageText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    var expandSrc by remember { mutableStateOf(true) }
+    var expandDst by remember { mutableStateOf(true) }
     var isFindNearestButtonClicked by remember { mutableStateOf(false) }
+    var focOnSrc by remember {
+        mutableStateOf(false)
+    }
+    var focOnDst by remember {
+        mutableStateOf(false)
+    }
     val focusRequesterDst = remember { FocusRequester() }
     val focusRequesterSrc = remember { FocusRequester() }
     val state = rememberScrollState()
@@ -96,31 +109,73 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
         },
         floatingActionButtonPosition = FabPosition.End,
         content = { padding ->
+            val keyboardController = LocalSoftwareKeyboardController.current
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            keyboardController?.hide()
+                            if (expandDst)
+                                expandDst = false
+                            if (expandSrc)
+                                expandSrc = false
+                        })
+                    }
                     .verticalScroll(state = state)
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.onPrimary),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                LaunchedEffect(key1 = focOnSrc, key2 = expandSrc) {
+                    if (expandDst && expandSrc)
+                        expandDst = false
+                    if (focOnSrc && expandDst)
+                        expandDst = false
+                }
+                LaunchedEffect(key1 = focOnDst, key2 = expandDst) {
+                    if (expandDst && expandSrc)
+                        expandSrc = false
+                    if (focOnDst && expandSrc)
+                        expandSrc = false
+                }
                 LaunchedEffect(srcInputText) {
                     if (stationList.map { it.stationName }
                             .contains(srcInputText) && dstInputText.isEmpty())
                         focusRequesterDst.requestFocus()
                 }
+                LaunchedEffect(dstInputText) {
+                    if (stationList.map { it.stationName }
+                            .contains(dstInputText)) {
+                        expandDst = false
+                        keyboardController?.hide()
+                    }
+                }
 
-                Spacer(modifier = Modifier.height(deviceHeightInDp / 10f))
+                Spacer(modifier = Modifier.height(deviceHeightInDp / 9f))
 
                 AutoCompleteOutLinedTextField(
+                    secondCheckExpand = expandSrc,
                     label = stringResource(R.string.chosseSrc),
                     focusRequester = focusRequesterSrc,
                     inputValue = srcInputText,
                     onInputValueChange = {
                         srcInputText = it
                         startStation = srcInputText
+                        expandSrc = true
+                    },
+                    hasFoc = {
+                        focOnSrc = it
+                        if (focOnSrc) {
+                            expandSrc = true
+                            focOnDst = false
+                        }
+
+
                     },
                     onItemSelectedChange = {
+                        expandSrc = false
                         srcInputText = it
                         startStation = srcInputText
                     },
@@ -131,20 +186,33 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         )
                         srcInputText = ""
                         startStation = ""
+                        expandSrc = true
+                        focOnDst = false
                     }
                 )
 
                 Spacer(Modifier.height(deviceHeightInDp / 24))
 
                 AutoCompleteOutLinedTextField(
+                    secondCheckExpand = expandDst,
                     label = stringResource(R.string.chooseDst),
                     focusRequester = focusRequesterDst,
                     inputValue = dstInputText,
                     onInputValueChange = {
+                        expandDst = true
                         dstInputText = it
                         destStation = dstInputText
                     },
+                    hasFoc = {
+                        focOnDst = it
+                        if (focOnDst) {
+                            expandDst = true
+                            focOnSrc = false
+                        }
+
+                    },
                     onItemSelectedChange = {
+                        expandDst = false
                         dstInputText = it
                         destStation = dstInputText
                     },
@@ -155,6 +223,8 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                         )
                         dstInputText = ""
                         destStation = ""
+                        expandDst = true
+                        focOnSrc = false
                     }
                 )
 

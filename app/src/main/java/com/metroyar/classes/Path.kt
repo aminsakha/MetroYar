@@ -39,7 +39,7 @@ class Path(val stationsOnPath: MutableList<Station>) {
         for (i in 0..list.size - 2)
             wholePathTime += metroLines.find { it.number == list[i].lineNumber }!!.timeBetweenEveryAdjStation
 //bara bazo baste shodane dar
-        wholePathTime += 0.46 * (stationsOnPath.size - 2)
+        wholePathTime += 0.2 * (stationsOnPath.size - 2)
         //baraye taviz khat
         wholePathTime += (interchangesScore - 1) * 6
     }

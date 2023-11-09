@@ -8,30 +8,12 @@
   "variantName": "release",
   "elements": [
     {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "armeabi-v7a"
-        }
-      ],
+      "type": "SINGLE",
+      "filters": [],
       "attributes": [],
       "versionCode": 7,
-      "versionName": "1.0.1",
-      "outputFile": "app-armeabi-v7a-release.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "arm64-v8a"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 7,
-      "versionName": "1.0.1",
-      "outputFile": "app-arm64-v8a-release.apk"
+      "versionName": "1.0.2",
+      "outputFile": "app-release.apk"
     }
   ],
   "elementType": "File"

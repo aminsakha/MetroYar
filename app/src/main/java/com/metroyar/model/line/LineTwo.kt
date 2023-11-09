@@ -5,7 +5,7 @@ import java.time.LocalTime
 
 class LineTwo : Line() {
     override val number = 2
-    override val timeBetweenEveryAdjStation = 2.1
+    override val timeBetweenEveryAdjStation = 2.0
     override val timeTable = mutableListOf(
         TimeTable(
             start = LocalTime.of(5, 30),

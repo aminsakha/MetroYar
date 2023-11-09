@@ -66,10 +66,10 @@ class BestPathResult(
                 )
             }
         }
-        return if ((possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime - possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime) > 9)
-            possiblePathsQueueBasedOnStationsBetween
-        else
+        return if ((possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime - possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime) < 9)
             possiblePathsQueueBasedOnInterchanges
+        else
+            possiblePathsQueueBasedOnStationsBetween
     }
 
     fun convertPathToReadableForm(): MutableList<String> {

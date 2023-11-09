@@ -4,7 +4,7 @@ import com.metroyar.model.TimeTable
 import java.time.LocalTime
 
 class LineSix () : Line() {
-    override val timeBetweenEveryAdjStation = 4.0
+    override val timeBetweenEveryAdjStation = 3.9
     override val number=6
     override val timeTable = mutableListOf(
         TimeTable(
