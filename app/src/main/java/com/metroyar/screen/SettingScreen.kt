@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import com.metroyar.composable.SettingItem
 import com.metroyar.db.RealmObject
-import com.metroyar.screen.destinations.NavigationBottomDestination
+import com.metroyar.destinations.NavigationBottomDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

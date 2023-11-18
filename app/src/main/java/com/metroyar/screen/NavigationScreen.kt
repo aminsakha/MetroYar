@@ -39,14 +39,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.classes.BestPathResult
-import com.metroyar.classes.GuidPathStyle
 import com.metroyar.composable.AutoCompleteOutLinedTextField
 import com.metroyar.composable.ShouldConfirmAlertDialog
-import com.metroyar.screen.destinations.PathResultScreenDestination
+import com.metroyar.destinations.PathResultScreenDestination
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.BackPressAction
 import com.metroyar.utils.GlobalObjects.destStation
@@ -54,7 +52,6 @@ import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.readableFormResultList
 import com.metroyar.utils.GlobalObjects.startStation
 import com.metroyar.utils.GlobalObjects.stationList
-import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

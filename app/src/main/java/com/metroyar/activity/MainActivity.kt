@@ -10,10 +10,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.metroyar.NavGraphs
 import com.metroyar.R
 import com.metroyar.db.RealmObject
 import com.metroyar.db.RealmObject.realmRepo
-import com.metroyar.screen.NavGraphs
+
 import com.metroyar.ui.theme.MetroYarTheme
 import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.deviceWidthInDp

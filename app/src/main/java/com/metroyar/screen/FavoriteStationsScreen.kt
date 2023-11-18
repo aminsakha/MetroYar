@@ -42,7 +42,8 @@ import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
 import com.metroyar.composable.ShowLottieAnimation
 import com.metroyar.db.RealmObject
-import com.metroyar.screen.destinations.NavigationBottomDestination
+import com.metroyar.destinations.NavigationBottomDestination
+
 import com.metroyar.ui.theme.line
 import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.annotation.Destination
