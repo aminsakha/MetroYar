@@ -9,6 +9,14 @@ plugins {
 }
 
 android {
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a'
+            universalApk false
+        }
+    }
     namespace 'com.metroyar'
     compileSdk 33
     defaultConfig {
@@ -17,13 +25,15 @@ android {
         targetSdk 33
         versionCode 9
         versionName "1.0.2"
-
+        buildConfigField "String", "MAPTILER_API_KEY", "${MAPTILER_API_KEY}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
     }
-
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
         release {
             debuggable false
@@ -106,5 +116,5 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib:5.3.0'
     implementation "androidx.core:core-splashscreen:1.0.1"
     implementation 'androidx.appcompat:appcompat:1.6.1'
-
+    implementation 'org.maplibre.gl:android-sdk:10.0.2'
 }
