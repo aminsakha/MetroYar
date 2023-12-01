@@ -152,7 +152,7 @@ fun NavigationScreen(context: Context, navigator: DestinationsNavigator) {
                     }
                 }
 
-                Spacer(modifier = Modifier.height(deviceHeightInDp / 9f))
+                Spacer(modifier = Modifier.height(deviceHeightInDp / 11f))
 
                 AutoCompleteOutLinedTextField(
                     secondCheckExpand = expandSrc,

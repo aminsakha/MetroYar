@@ -150,7 +150,7 @@ fun AutoCompleteOutLinedTextField(
                 {
                     LazyColumn(
                         modifier = Modifier
-                            .heightIn(max = deviceHeightInDp / 5.5f)
+                            .heightIn(max = deviceHeightInDp / 5.64f)
                             .background(MaterialTheme.colorScheme.onSecondary)
                     ) {
                         val filteredList =
