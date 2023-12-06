@@ -238,7 +238,7 @@ fun BestPathLayout(
 
             Spacer(Modifier.height(8.dp))
             ArrivalsTime(
-                trainArrivalTime = " ساعت رسیدن مترو : حدود ${
+                trainArrivalTime = " ساعت رسیدن مترو به مبدا : حدود ${
                     getNextTrainArrivalTime(
                         currentTime = LocalTime.now(),
                         lineNumber = bestCurrentPath!!.stationsOnPath[0].lineNumber
