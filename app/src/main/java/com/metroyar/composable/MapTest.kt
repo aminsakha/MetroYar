@@ -16,12 +16,15 @@ import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationGroup
+import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotationGroup
 import com.mapbox.maps.extension.style.expressions.dsl.generated.literal
 import com.mapbox.maps.extension.style.expressions.generated.Expression
 import com.mapbox.maps.plugin.annotation.AnnotationConfig
 import com.mapbox.maps.plugin.annotation.AnnotationSourceOptions
 import com.mapbox.maps.plugin.annotation.ClusterOptions
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
+import com.mapbox.maps.plugin.annotation.generated.PolygonAnnotationOptions
+import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.metroyar.R
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -47,13 +50,18 @@ fun MapTest() {
 
         val a = Point.fromLngLat(51.388740, 35.714045)
         val b = Point.fromLngLat(51.389963, 35.710317)
-        val icon = context.getDrawable(R.drawable.train)?.toBitmap()
+        val icon = context.getDrawable(R.drawable.station_on_map_icon)?.toBitmap()
         val POINTS_TO_ADD = listOf<Point>(a, b)
+        PolylineAnnotationGroup(annotations = POINTS_TO_ADD.map {
+            PolylineAnnotationOptions()
+                .withPoints(POINTS_TO_ADD).withLineColor("#ee4e8b")
+                .withLineWidth(5.0).withLineOffset(-2.0)
+        })
         PointAnnotationGroup(
             annotations = POINTS_TO_ADD.map {
                 PointAnnotationOptions()
                     .withPoint(it)
-                    .withIconImage(icon!!).withIconSize(3.0)
+                    .withIconImage(icon!!).withIconSize(0.4)
             },
             annotationConfig = AnnotationConfig(
                 annotationSourceOptions = AnnotationSourceOptions(
