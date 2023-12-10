@@ -1,13 +1,27 @@
 package com.metroyar.composable
 
 import android.content.Context
+import android.graphics.drawable.shapes.OvalShape
+import android.util.Size
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -52,75 +66,79 @@ fun initList(context: Context): MutableList<MapBoxStation> {
 fun MapTest() {
     val context = LocalContext.current
     val tmp = initList(context)
-    MapboxMap(
-        modifier = Modifier.fillMaxSize(),
-        mapInitOptionsFactory = { context ->
-            MapInitOptions(
-                context = context,
-                styleUri = Style.STANDARD,
-                cameraOptions = CameraOptions.Builder()
-                    .center(Point.fromLngLat(51.39117656697642, 35.70093967881435))
-                    .zoom(11.5)
-                    .build()
+    Column(modifier = Modifier.padding(bottom = 6.dp)) {
+        MapboxMap(
+            modifier = Modifier
+                .clip(RoundedCornerShape(bottomEndPercent = 16, bottomStartPercent = 16)),
+            mapInitOptionsFactory = { context ->
+                MapInitOptions(
+                    context = context,
+                    styleUri = Style.STANDARD,
+                    cameraOptions = CameraOptions.Builder()
+                        .center(Point.fromLngLat( 51.40515065845713, 35.70122356615692))
+                        .zoom(11.8)
+                        .build()
+                )
+            }
+        ) {
+
+            val icon =
+                AppCompatResources.getDrawable(context, R.drawable.station_on_map_icon)?.toBitmap()
+
+            PolylineAnnotationGroup(
+                annotations = listOf(
+                    createPolyLine(tmp, 1, lineOne.toArgb()),
+                    createPolyLine(tmp, 7, lineSeven.toArgb()),
+                    createPolyLine(tmp, 6, lineSix.toArgb()),
+                    createPolyLine(tmp, 5, lineFive.toArgb()),
+                    createPolyLine(
+                        listOf(
+                            tmp.find { it.title == "ایستگاه مترو ارم سبز" }!!,
+                            tmp.find { it.title == "ایستگاه مترو علامه جعفری" }!!
+                        ), 4, lineFour.toArgb()
+                    ),
+                    createPolyLine(tmp, 4, lineFour.toArgb()),
+                    createPolyLine(tmp, 3, lineThree.toArgb()),
+                    createPolyLine(
+                        listOf(
+                            tmp.find { it.title == "ایستگاه مترو پایانه ۱ ۲ فرودگاه مهرآباد" }!!,
+                            tmp.find { it.title == "ایستگاه مترو پایانه ۴ ۶ فرودگاه مهرآباد" }!!,
+                            tmp.find { it.title == "ایستگاه مترو بیمه" }!!
+                        ), 4, lineFour.toArgb()
+                    ),
+                    createPolyLine(tmp, 2, lineTwo.toArgb()),
+                    createPolyLine(
+                        listOf(
+                            tmp.find { it.title == "ایستگاه مترو پرند" }!!,
+                            tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
+                            tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
+                            tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
+                        ), 1, lineOne.toArgb()
+                    ),
+                )
+            )
+
+            PointAnnotationGroup(
+                annotations = tmp.map { Point.fromLngLat(it.x, it.y) }.map {
+                    PointAnnotationOptions()
+                        .withPoint(it)
+                        .withIconImage(icon!!).withIconSize(0.3)
+                },
+                onClick = { point ->
+                    val find =
+                        tmp.find { it.y == point.point.latitude() && it.x == point.point.longitude() }
+
+                    Toast.makeText(
+                        context,
+                        find?.title,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    true
+                }
             )
         }
-    ) {
-
-        val icon =
-            AppCompatResources.getDrawable(context, R.drawable.station_on_map_icon)?.toBitmap()
-
-        PolylineAnnotationGroup(
-            annotations = listOf(
-                createPolyLine(tmp, 1, lineOne.toArgb()),
-                createPolyLine(tmp, 7, lineSeven.toArgb()),
-                createPolyLine(tmp, 6, lineSix.toArgb()),
-                createPolyLine(tmp, 5, lineFive.toArgb()),
-                createPolyLine(
-                    listOf(
-                        tmp.find { it.title == "ایستگاه مترو ارم سبز" }!!,
-                        tmp.find { it.title == "ایستگاه مترو علامه جعفری" }!!
-                    ), 4, lineFour.toArgb()
-                ),
-                createPolyLine(tmp, 4, lineFour.toArgb()),
-                createPolyLine(tmp, 3, lineThree.toArgb()),
-                createPolyLine(
-                    listOf(
-                        tmp.find { it.title == "ایستگاه مترو پایانه ۱ ۲ فرودگاه مهرآباد" }!!,
-                        tmp.find { it.title == "ایستگاه مترو پایانه ۴ ۶ فرودگاه مهرآباد" }!!,
-                        tmp.find { it.title == "ایستگاه مترو بیمه" }!!
-                    ), 4, lineFour.toArgb()
-                ),
-                createPolyLine(tmp, 2, lineTwo.toArgb()),
-                createPolyLine(
-                    listOf(
-                        tmp.find { it.title == "ایستگاه مترو پرند" }!!,
-                        tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
-                        tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
-                        tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
-                    ), 1, lineOne.toArgb()
-                ),
-            )
-        )
-
-        PointAnnotationGroup(
-            annotations = tmp.map { Point.fromLngLat(it.x, it.y) }.map {
-                PointAnnotationOptions()
-                    .withPoint(it)
-                    .withIconImage(icon!!).withIconSize(0.3)
-            },
-            onClick = { point ->
-                val find =
-                    tmp.find { it.y == point.point.latitude() && it.x == point.point.longitude() }
-
-                Toast.makeText(
-                    context,
-                    find?.title,
-                    Toast.LENGTH_SHORT
-                ).show()
-                true
-            }
-        )
     }
+
     BackPressAction()
 }
 
