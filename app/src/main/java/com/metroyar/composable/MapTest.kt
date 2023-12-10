@@ -1,12 +1,11 @@
 package com.metroyar.composable
 
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.Drawable
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
 import com.mapbox.geojson.Point
@@ -17,76 +16,169 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationGroup
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotationGroup
-import com.mapbox.maps.extension.style.expressions.dsl.generated.literal
-import com.mapbox.maps.extension.style.expressions.generated.Expression
-import com.mapbox.maps.plugin.annotation.AnnotationConfig
-import com.mapbox.maps.plugin.annotation.AnnotationSourceOptions
-import com.mapbox.maps.plugin.annotation.ClusterOptions
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
-import com.mapbox.maps.plugin.annotation.generated.PolygonAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.metroyar.R
+import com.metroyar.model.MapBoxStation
+import com.metroyar.network.MetroYarNeshanApiService
+import com.metroyar.ui.theme.lineFive
+import com.metroyar.ui.theme.lineFour
+import com.metroyar.ui.theme.lineOne
+import com.metroyar.ui.theme.lineSeven
+import com.metroyar.ui.theme.lineSix
+import com.metroyar.ui.theme.lineThree
+import com.metroyar.ui.theme.lineTwo
+import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.log
 import com.ramcosta.composedestinations.annotation.Destination
 
+fun initList(context: Context): MutableList<MapBoxStation> {
+    val resultList = mutableListOf<MapBoxStation>()
+    val triplesArray = context.resources.getStringArray(R.array.triples)
+    GlobalObjects.stationList.forEachIndexed { index, station ->
+        val parts = triplesArray[index].split(",")
+        val y = parts[0].toDouble()
+        val x = parts[1].toDouble()
+        resultList.add(MapBoxStation(parts[2], x, y, station.lineNumber))
+        log("resut", "${resultList.last().title} -> ${resultList.last().lineNum}")
+    }
+    return resultList
+
+}
+
+suspend fun locations(): MutableList<Triple<String, Double, Double>> {
+    val list = mutableListOf<Triple<String, Double, Double>>()
+    for (station in GlobalObjects.stationList) {
+        val response =
+            MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
+                latitude = 35.6944,
+                longitude = 51.4215,
+                term = "ایستگاه مترو ${station.stationName}"
+            )
+        var a = response.items.filter { it.type == "subway_station" }.distinctBy { it.title }
+            .getOrNull(0)
+        if (a != null) {
+            list.add(Triple(a.title, a.location.x, a.location.y))
+        }
+        if (a == null) {
+            a = response.items.filter { it.type == "metro_entrance" }.distinctBy { it.title }
+                .getOrNull(0)
+            if (a != null) {
+                list.add(Triple(a.title, a.location.x, a.location.y))
+            }
+        }
+        log("added", list.last())
+    }
+    return list
+}
 
 @OptIn(MapboxExperimental::class)
 @Destination
 @Composable
 fun MapTest() {
     val context = LocalContext.current
+    val tmp = initList(context)
     MapboxMap(
         modifier = Modifier.fillMaxSize(),
         mapInitOptionsFactory = { context ->
             MapInitOptions(
                 context = context,
-                styleUri = Style.TRAFFIC_DAY,
+                styleUri = Style.STANDARD,
                 cameraOptions = CameraOptions.Builder()
-                    .center(Point.fromLngLat(51.388740, 35.714045))
-                    .zoom(16.0)
+                    .center(Point.fromLngLat(51.39117656697642, 35.70093967881435))
+                    .zoom(11.5)
                     .build()
             )
         }
     ) {
-
-        val a = Point.fromLngLat(51.388740, 35.714045)
-        val b = Point.fromLngLat(51.389963, 35.710317)
         val icon = context.getDrawable(R.drawable.station_on_map_icon)?.toBitmap()
-        val POINTS_TO_ADD = listOf<Point>(a, b)
-        PolylineAnnotationGroup(annotations = POINTS_TO_ADD.map {
-            PolylineAnnotationOptions()
-                .withPoints(POINTS_TO_ADD).withLineColor("#ee4e8b")
-                .withLineWidth(5.0).withLineOffset(-2.0)
+
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(tmp, 1, lineOne.toArgb())
+        })
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(
+                listOf(
+                    tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
+                    tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
+                    tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
+                ), 1, lineOne.toArgb()
+            )
+        }
+        )
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(tmp, 2, lineTwo.toArgb())
+        })
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(tmp, 3, lineThree.toArgb())
+        })
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(tmp, 4, lineFour.toArgb())
+        }
+        )
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(
+                listOf(
+                    tmp.find { it.title == "ایستگاه مترو پایانه ۱ ۲ فرودگاه مهرآباد" }!!,
+                    tmp.find { it.title == "ایستگاه مترو پایانه ۴ ۶ فرودگاه مهرآباد" }!!,
+                    tmp.find { it.title == "ایستگاه مترو بیمه" }!!
+                ), 4, lineFour.toArgb()
+            )
+        }
+        )
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(
+                listOf(
+                    tmp.find { it.title == "ایستگاه مترو ارم سبز" }!!,
+                    tmp.find { it.title == "ایستگاه مترو علامه جعفری" }!!
+                ), 4, lineFour.toArgb()
+            )
+        }
+        )
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(tmp, 5, lineFive.toArgb())
+        })
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(tmp, 6, lineSix.toArgb())
+        })
+        PolylineAnnotationGroup(annotations = tmp.map {
+            createPolyLine(tmp, 7, lineSeven.toArgb())
         })
         PointAnnotationGroup(
-            annotations = POINTS_TO_ADD.map {
+            annotations = tmp.map { Point.fromLngLat(it.x, it.y) }.map {
                 PointAnnotationOptions()
                     .withPoint(it)
-                    .withIconImage(icon!!).withIconSize(0.4)
+                    .withIconImage(icon!!).withIconSize(0.3)
             },
-            annotationConfig = AnnotationConfig(
-                annotationSourceOptions = AnnotationSourceOptions(
-                    clusterOptions = ClusterOptions(
-                        textColorExpression = Expression.color(Color.YELLOW),
-                        textColor = Color.BLACK,
-                        textSize = 20.0,
-                        circleRadiusExpression = literal(25.0),
-                        colorLevels = listOf(
-                            Pair(100, Color.RED),
-                            Pair(50, Color.BLUE),
-                            Pair(0, Color.GREEN)
-                        )
-                    )
-                )
-            ),
-            onClick = {
+            onClick = { point ->
+                val find =
+                    tmp.find { it.y == point.point.latitude() && it.x == point.point.longitude() }
+
                 Toast.makeText(
                     context,
-                    "Clicked on Point Annotation Cluster: $it",
+                    find?.title,
                     Toast.LENGTH_SHORT
                 ).show()
                 true
             }
         )
-
     }
+}
+
+@Composable
+private fun createPolyLine(
+    tmp: List<MapBoxStation>,
+    lineNumber: Int,
+    color: Int
+): PolylineAnnotationOptions {
+
+    return PolylineAnnotationOptions()
+        .withPoints(
+            if (tmp.size > 6)
+                tmp.filter { it.title != "ایستگاه مترو علامه جعفری" }.dropLast(4)
+                    .filter { it.lineNum == lineNumber }.map { Point.fromLngLat(it.x, it.y) }
+            else tmp.filter { it.lineNum == lineNumber }.map { Point.fromLngLat(it.x, it.y) }
+        )
+        .withLineColor(color)
+        .withLineWidth(8.0).withLineOffset(-2.0)
 }
