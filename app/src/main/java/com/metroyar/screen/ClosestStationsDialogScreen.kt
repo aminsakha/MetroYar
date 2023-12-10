@@ -113,4 +113,21 @@ fun ClosestStationsDialogScreen(
         clipSpec = LottieClipSpec.Progress(0.0f, 1f)
         log("res from Neshan", closestStationsPair)
     }
+    if (closestStationsPair.first == "\uD83E\uDD14" || location.x == 1.1) {
+        ShouldConfirmAlertDialog(
+            visible = showSuggestionDialog,
+            onConfirm = {
+                showSuggestionDialog = false
+                onDisMiss.invoke(false)
+            },
+            onDismissRequest = {
+                showSuggestionDialog = false
+                onDisMiss.invoke(false)
+            },
+            title = "خطا در برقراری ارتباط",
+            message = "مشکلی پیش اومده 🤔",
+            confirmBtnText = "تلاش دوباره"
+        )
+        log("res from Neshan", "err")
+    }
 }

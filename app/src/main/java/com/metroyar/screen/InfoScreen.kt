@@ -79,7 +79,7 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             InfoCardItem(
                 infoItem = InfoItem(
                     title = "تماس با ما",
-                    icon = Icons.Filled.Warning,
+                    icon = ImageVector.vectorResource(id = R.drawable.letter),
                     onClickedItem = {
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
                             data = Uri.parse("mailto:metroyarsupprt@gmail.com")
