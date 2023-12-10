@@ -2,8 +2,10 @@ package com.metroyar.composable
 
 import android.content.Context
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +33,9 @@ import com.metroyar.ui.theme.lineTwo
 import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.log
 import com.ramcosta.composedestinations.annotation.Destination
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun initList(context: Context): MutableList<MapBoxStation> {
     val resultList = mutableListOf<MapBoxStation>()
@@ -91,59 +96,50 @@ fun MapTest() {
             )
         }
     ) {
-        val icon = context.getDrawable(R.drawable.station_on_map_icon)?.toBitmap()
 
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(tmp, 1, lineOne.toArgb())
-        })
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(
-                listOf(
-                    tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
-                    tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
-                    tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
-                ), 1, lineOne.toArgb()
+        val icon =
+            AppCompatResources.getDrawable(context, R.drawable.station_on_map_icon)?.toBitmap()
+
+
+        PolylineAnnotationGroup(
+            annotations = listOf(
+                createPolyLine(tmp, 1, lineOne.toArgb()),
+                createPolyLine(tmp, 7, lineSeven.toArgb()),
+                createPolyLine(tmp, 6, lineSix.toArgb()),
+                createPolyLine(tmp, 5, lineFive.toArgb()),
+                createPolyLine(
+                    listOf(
+                        tmp.find { it.title == "ایستگاه مترو ارم سبز" }!!,
+                        tmp.find { it.title == "ایستگاه مترو علامه جعفری" }!!
+                    ), 4, lineFour.toArgb()
+                ),
+                createPolyLine(tmp, 4, lineFour.toArgb()),
+                createPolyLine(tmp, 3, lineThree.toArgb()),
+                createPolyLine(
+                    listOf(
+                        tmp.find { it.title == "ایستگاه مترو پایانه ۱ ۲ فرودگاه مهرآباد" }!!,
+                        tmp.find { it.title == "ایستگاه مترو پایانه ۴ ۶ فرودگاه مهرآباد" }!!,
+                        tmp.find { it.title == "ایستگاه مترو بیمه" }!!
+                    ), 4, lineFour.toArgb()
+                ),
+                createPolyLine(tmp, 2, lineTwo.toArgb()),
+                createPolyLine(
+                    listOf(
+                        tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
+                        tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
+                        tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
+                    ), 1, lineOne.toArgb()
+                ),
+                createPolyLine(
+                    listOf(
+                        tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
+                        tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
+                        tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
+                    ), 1, lineOne.toArgb()
+                )
             )
-        }
         )
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(tmp, 2, lineTwo.toArgb())
-        })
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(tmp, 3, lineThree.toArgb())
-        })
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(tmp, 4, lineFour.toArgb())
-        }
-        )
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(
-                listOf(
-                    tmp.find { it.title == "ایستگاه مترو پایانه ۱ ۲ فرودگاه مهرآباد" }!!,
-                    tmp.find { it.title == "ایستگاه مترو پایانه ۴ ۶ فرودگاه مهرآباد" }!!,
-                    tmp.find { it.title == "ایستگاه مترو بیمه" }!!
-                ), 4, lineFour.toArgb()
-            )
-        }
-        )
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(
-                listOf(
-                    tmp.find { it.title == "ایستگاه مترو ارم سبز" }!!,
-                    tmp.find { it.title == "ایستگاه مترو علامه جعفری" }!!
-                ), 4, lineFour.toArgb()
-            )
-        }
-        )
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(tmp, 5, lineFive.toArgb())
-        })
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(tmp, 6, lineSix.toArgb())
-        })
-        PolylineAnnotationGroup(annotations = tmp.map {
-            createPolyLine(tmp, 7, lineSeven.toArgb())
-        })
+
         PointAnnotationGroup(
             annotations = tmp.map { Point.fromLngLat(it.x, it.y) }.map {
                 PointAnnotationOptions()
