@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.sp
 import com.metroyar.R
 import com.metroyar.classes.BestPathResult
 import com.metroyar.classes.GuidPathStyle
-import com.metroyar.destinations.PathResultScreenDestination
+import com.metroyar.screen.destinations.PathResultScreenDestination
 
 
 import com.metroyar.screen.getLineColor

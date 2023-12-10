@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 private const val BASE_URL = "https://api.neshan.org/"
 
 val loggingInterceptor = HttpLoggingInterceptor { message ->
-    Log.i("network", message)
+    Log.i(GlobalObjects.TAG, message)
 }.apply {
     level = HttpLoggingInterceptor.Level.BODY
 }

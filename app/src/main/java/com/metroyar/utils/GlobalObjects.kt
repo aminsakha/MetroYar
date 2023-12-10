@@ -11,13 +11,13 @@ object GlobalObjects {
     var bestCurrentPath: Path? = null
     var deviceWidthInDp = Dp(30f)
     var deviceHeightInDp = Dp(30f)
-    val stack: Stack<Int> = Stack<Int>().apply { push(1) }
+    val stack: Stack<Int> = Stack<Int>().apply { push(3) }
     const val TAG = "testMetroYar"
     val adjNodesLineNum = mutableMapOf<Pair<Int, Int>, Int>()
     val metroGraph = MetroGraph(350)
     var startStation = ""
     var destStation = ""
-    var lastMenuItemIndex = 1
+    var lastMenuItemIndex = 3
     var readableFormResultList = listOf<String>()
     val tripleOfLinesAndTheirStartAndEndStations =
         mutableListOf<Triple<Int, String, String>>().apply {

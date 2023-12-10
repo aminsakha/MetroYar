@@ -28,6 +28,7 @@ import com.metroyar.ui.theme.lineSeven
 import com.metroyar.ui.theme.lineSix
 import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
+import com.metroyar.utils.BackPressAction
 import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.log
 import com.ramcosta.composedestinations.annotation.Destination
@@ -47,7 +48,6 @@ fun initList(context: Context): MutableList<MapBoxStation> {
 }
 
 @OptIn(MapboxExperimental::class)
-@Destination
 @Composable
 fun MapTest() {
     val context = LocalContext.current
@@ -99,13 +99,6 @@ fun MapTest() {
                         tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
                     ), 1, lineOne.toArgb()
                 ),
-                createPolyLine(
-                    listOf(
-                        tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
-                        tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
-                        tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
-                    ), 1, lineOne.toArgb()
-                )
             )
         )
 
@@ -128,6 +121,7 @@ fun MapTest() {
             }
         )
     }
+    BackPressAction()
 }
 
 @Composable

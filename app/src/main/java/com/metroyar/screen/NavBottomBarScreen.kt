@@ -37,6 +37,7 @@ import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
+import com.metroyar.composable.MapTest
 import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.model.BottomNavItem
 import com.metroyar.ui.theme.line
@@ -57,9 +58,11 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
-    var showShowInfoScreen by remember { mutableStateOf(lastMenuItemIndex == 0) }
-    var showShowNavigationScreen by remember { mutableStateOf(lastMenuItemIndex == 1) }
-    var showShowMapScreen by remember { mutableStateOf(lastMenuItemIndex == 2) }
+    var shouldShowInfoScreen by remember { mutableStateOf(lastMenuItemIndex == 0) }
+    var shouldShowStationsOnMapScreen by remember { mutableStateOf(lastMenuItemIndex == 1) }
+    var shouldShowMapScreen by remember { mutableStateOf(lastMenuItemIndex == 2) }
+    var shouldShowNavigationScreen by remember { mutableStateOf(lastMenuItemIndex == 3) }
+
     var selectedScreenTopBarTitle by remember { mutableStateOf(BottomNavItem.Navigation.title) }
     val bottomBarItems = remember { BottomNavItem.values() }
 
@@ -108,9 +111,10 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                     .nonRipple {
                                         if (stack.isNotEmpty())
                                             when (stack.pop()) {
-                                                0 -> showShowInfoScreen = false
-                                                1 -> showShowNavigationScreen = false
-                                                2 -> showShowMapScreen = false
+                                                0 -> shouldShowInfoScreen = false
+                                                1 -> shouldShowStationsOnMapScreen = false
+                                                2 -> shouldShowMapScreen = false
+                                                3 -> shouldShowNavigationScreen = false
                                                 else -> {}
                                             }
                                         if (realmRepo.getShouldPlaySound())
@@ -122,9 +126,10 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                         selectedMenuIndex = it.ordinal
                                         stack.push(selectedMenuIndex)
                                         when (selectedMenuIndex) {
-                                            0 -> showShowInfoScreen = true
-                                            1 -> showShowNavigationScreen = true
-                                            2 -> showShowMapScreen = true
+                                            0 -> shouldShowInfoScreen = true
+                                            1 -> shouldShowStationsOnMapScreen = true
+                                            2 -> shouldShowMapScreen = true
+                                            3 -> shouldShowNavigationScreen = true
                                         }
                                         lastMenuItemIndex = selectedMenuIndex
                                         selectedScreenTopBarTitle = it.title
@@ -153,25 +158,32 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                     .padding(padding)
             ) {
                 AnimatedVisibility(
-                    visible = showShowInfoScreen,
+                    visible = shouldShowInfoScreen,
                     enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     InfoScreen(navigator = navigator, context = context)
                 }
                 AnimatedVisibility(
-                    visible = showShowNavigationScreen,
+                    visible = shouldShowNavigationScreen,
                     enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     NavigationScreen(context = LocalContext.current, navigator = navigator)
                 }
                 AnimatedVisibility(
-                    visible = showShowMapScreen,
+                    visible = shouldShowMapScreen,
                     enter = fadeIn(),
                     exit = ExitTransition.None
                 ) {
                     MetroMapScreen()
+                }
+                AnimatedVisibility(
+                    visible = shouldShowStationsOnMapScreen,
+                    enter = fadeIn(),
+                    exit = ExitTransition.None
+                ) {
+                    MapTest()
                 }
             }
         }

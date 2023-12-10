@@ -44,7 +44,7 @@ import com.metroyar.R
 import com.metroyar.classes.BestPathResult
 import com.metroyar.composable.AutoCompleteOutLinedTextField
 import com.metroyar.composable.ShouldConfirmAlertDialog
-import com.metroyar.destinations.PathResultScreenDestination
+import com.metroyar.screen.destinations.PathResultScreenDestination
 
 
 import com.metroyar.ui.theme.textColor

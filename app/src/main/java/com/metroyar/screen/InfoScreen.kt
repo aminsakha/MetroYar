@@ -1,5 +1,6 @@
 package com.metroyar.screen
 
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -22,14 +23,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.metroyar.R
 import com.metroyar.composable.InfoCardItem
-import com.metroyar.destinations.AboutUsScreenDestination
-import com.metroyar.destinations.FavoriteStationsScreenDestination
-import com.metroyar.destinations.MapTestDestination
-import com.metroyar.destinations.SettingScreenDestination
-
 import com.metroyar.model.InfoItem
-
-
+import com.metroyar.screen.destinations.AboutUsScreenDestination
+import com.metroyar.screen.destinations.FavoriteStationsScreenDestination
+import com.metroyar.screen.destinations.SettingScreenDestination
 import com.metroyar.ui.theme.line
 import com.metroyar.utils.BackPressAction
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -81,7 +78,7 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             )
             InfoCardItem(
                 infoItem = InfoItem(
-                    title = "گزارش خطا",
+                    title = "تماس با ما",
                     icon = Icons.Filled.Warning,
                     onClickedItem = {
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -98,11 +95,9 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             InfoCardItem(
                 infoItem = InfoItem(
                     title = "نسخه ",
-                    endText = "1.0.2",
+                    endText = "1.1.0",
                     icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
-                    onClickedItem = {
-                      navigator.navigate(MapTestDestination())
-                    })
+                    onClickedItem = {})
             )
         }
     }
