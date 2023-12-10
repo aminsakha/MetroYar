@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +21,6 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.metroyar.R
 import com.metroyar.model.MapBoxStation
-import com.metroyar.network.MetroYarNeshanApiService
 import com.metroyar.ui.theme.lineFive
 import com.metroyar.ui.theme.lineFour
 import com.metroyar.ui.theme.lineOne
@@ -33,9 +31,6 @@ import com.metroyar.ui.theme.lineTwo
 import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.log
 import com.ramcosta.composedestinations.annotation.Destination
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 fun initList(context: Context): MutableList<MapBoxStation> {
     val resultList = mutableListOf<MapBoxStation>()
@@ -49,32 +44,6 @@ fun initList(context: Context): MutableList<MapBoxStation> {
     }
     return resultList
 
-}
-
-suspend fun locations(): MutableList<Triple<String, Double, Double>> {
-    val list = mutableListOf<Triple<String, Double, Double>>()
-    for (station in GlobalObjects.stationList) {
-        val response =
-            MetroYarNeshanApiService.retrofitService.findNearestStationsFromApi(
-                latitude = 35.6944,
-                longitude = 51.4215,
-                term = "ایستگاه مترو ${station.stationName}"
-            )
-        var a = response.items.filter { it.type == "subway_station" }.distinctBy { it.title }
-            .getOrNull(0)
-        if (a != null) {
-            list.add(Triple(a.title, a.location.x, a.location.y))
-        }
-        if (a == null) {
-            a = response.items.filter { it.type == "metro_entrance" }.distinctBy { it.title }
-                .getOrNull(0)
-            if (a != null) {
-                list.add(Triple(a.title, a.location.x, a.location.y))
-            }
-        }
-        log("added", list.last())
-    }
-    return list
 }
 
 @OptIn(MapboxExperimental::class)
@@ -100,7 +69,6 @@ fun MapTest() {
         val icon =
             AppCompatResources.getDrawable(context, R.drawable.station_on_map_icon)?.toBitmap()
 
-
         PolylineAnnotationGroup(
             annotations = listOf(
                 createPolyLine(tmp, 1, lineOne.toArgb()),
@@ -125,6 +93,7 @@ fun MapTest() {
                 createPolyLine(tmp, 2, lineTwo.toArgb()),
                 createPolyLine(
                     listOf(
+                        tmp.find { it.title == "ایستگاه مترو پرند" }!!,
                         tmp.find { it.title == "ایستگاه مترو فرودگاه امام خمینی" }!!,
                         tmp.find { it.title == "ایستگاه مترو نمایشگاه شهر آفتاب" }!!,
                         tmp.find { it.title == "ایستگاه مترو شاهد-باقرشهر" }!!
@@ -171,7 +140,7 @@ private fun createPolyLine(
     return PolylineAnnotationOptions()
         .withPoints(
             if (tmp.size > 6)
-                tmp.filter { it.title != "ایستگاه مترو علامه جعفری" }.dropLast(4)
+                tmp.filter { it.title != "ایستگاه مترو علامه جعفری" }.dropLast(5)
                     .filter { it.lineNum == lineNumber }.map { Point.fromLngLat(it.x, it.y) }
             else tmp.filter { it.lineNum == lineNumber }.map { Point.fromLngLat(it.x, it.y) }
         )

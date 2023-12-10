@@ -7,13 +7,13 @@ import com.metroyar.model.Station
 import java.util.Stack
 
 object GlobalObjects {
+    val stationList = mutableListOf<Station>()
     var bestCurrentPath: Path? = null
     var deviceWidthInDp = Dp(30f)
     var deviceHeightInDp = Dp(30f)
     val stack: Stack<Int> = Stack<Int>().apply { push(1) }
     const val TAG = "testMetroYar"
     val adjNodesLineNum = mutableMapOf<Pair<Int, Int>, Int>()
-    val stationList = mutableListOf<Station>()
     val metroGraph = MetroGraph(350)
     var startStation = ""
     var destStation = ""
