@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     0.0f
                 )
                 zoomX.interpolator = OvershootInterpolator()
-                zoomX.duration = 20L
+                zoomX.duration = 500L
                 zoomX.doOnEnd { screen.remove() }
 
                 val zoomY = ObjectAnimator.ofFloat(
