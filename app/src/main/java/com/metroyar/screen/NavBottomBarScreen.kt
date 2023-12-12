@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,12 +38,13 @@ import com.exyte.animatednavbar.animation.balltrajectory.Parabolic
 import com.exyte.animatednavbar.animation.indendshape.Height
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.metroyar.R
-import com.metroyar.db.RealmObject.realmRepo
+import com.metroyar.db.PreferencesKeys
 import com.metroyar.model.BottomNavItem
 import com.metroyar.ui.theme.line
 import com.metroyar.ui.theme.textColor
 import com.metroyar.utils.GlobalObjects.lastMenuItemIndex
 import com.metroyar.utils.GlobalObjects.stack
+import com.metroyar.utils.dataStore
 import com.metroyar.utils.nonRipple
 import com.metroyar.utils.playSound
 import com.metroyar.utils.vibratePhone
@@ -56,6 +58,18 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun NavigationBottom(navigator: DestinationsNavigator) {
     val context = LocalContext.current
+    val shouldPlay= produceState(initialValue = true, context.dataStore) {
+        context.dataStore.data.collect { preferences ->
+            val yourBooleanKey = PreferencesKeys.SHOULD_PLAY_SOUND
+            value = preferences[yourBooleanKey] ?: true
+        }
+    }.value
+    val shouldVibrate= produceState(initialValue = true, context.dataStore) {
+        context.dataStore.data.collect { preferences ->
+            val yourBooleanKey = PreferencesKeys.SHOULD_VIBRATE_PHONE
+            value = preferences[yourBooleanKey] ?: true
+        }
+    }.value
     var selectedMenuIndex by remember { mutableIntStateOf(lastMenuItemIndex) }
     var shouldShowInfoScreen by remember { mutableStateOf(lastMenuItemIndex == 0) }
     var shouldShowStationsOnMapScreen by remember { mutableStateOf(lastMenuItemIndex == 1) }
@@ -116,7 +130,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                                 3 -> shouldShowNavigationScreen = false
                                                 else -> {}
                                             }
-                                        if (realmRepo.getShouldPlaySound())
+                                        if (shouldPlay)
                                             playSound(
                                                 context = context,
                                                 soundResourceId = R.raw.menu_sound,
@@ -132,7 +146,7 @@ fun NavigationBottom(navigator: DestinationsNavigator) {
                                         }
                                         lastMenuItemIndex = selectedMenuIndex
                                         selectedScreenTopBarTitle = it.title
-                                        if (realmRepo.getShouldVibrate())
+                                        if (shouldVibrate)
                                             vibratePhone(context)
                                     },
                                 contentAlignment = Alignment.Center

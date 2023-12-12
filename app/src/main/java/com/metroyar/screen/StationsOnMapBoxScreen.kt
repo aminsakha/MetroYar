@@ -34,6 +34,7 @@ import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
 import com.metroyar.utils.BackPressAction
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.playSound
 import com.metroyar.utils.toastMaker
 
 @OptIn(MapboxExperimental::class)
@@ -104,6 +105,11 @@ fun MapTest() {
                         .withIconImage(icon!!).withIconSize(0.3)
                 },
                 onClick = { point ->
+                    playSound(
+                        context = context,
+                        soundResourceId = R.raw.change_src_dst,
+                        volumeRange = 0.10f
+                    )
                     val clickedStation =
                         mapBoxStationsList.find { it.y == point.point.latitude() && it.x == point.point.longitude() }
                     toastMaker(context, clickedStation!!.title)

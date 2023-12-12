@@ -1,11 +1,15 @@
 package com.metroyar.utils
 
+import android.content.Context
 import androidx.compose.ui.unit.Dp
+import androidx.datastore.preferences.preferencesDataStore
 import com.metroyar.classes.MetroGraph
 import com.metroyar.classes.Path
 import com.metroyar.model.Station
 import java.util.Stack
-
+ val Context.dataStore by preferencesDataStore(
+    name = "MyDb"
+)
 object GlobalObjects {
     val stationList = mutableListOf<Station>()
     var bestCurrentPath: Path? = null

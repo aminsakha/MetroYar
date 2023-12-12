@@ -46,3 +46,6 @@
  -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
  -dontwarn com.tobrun.datacompat.annotation.Default
+-keepclassmembers class * extends androidx.datastore.preferences.protobuf.GeneratedMessageLite {
+    <fields>;
+}
