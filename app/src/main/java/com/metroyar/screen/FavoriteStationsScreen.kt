@@ -23,8 +23,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -41,11 +44,16 @@ import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.metroyar.R
 import com.metroyar.composable.ShowLottieAnimation
-import com.metroyar.db.RealmObject
+import com.metroyar.db.PreferencesKeys
+import com.metroyar.db.read
+import com.metroyar.db.save
 import com.metroyar.screen.destinations.NavigationBottomDestination
 
 
 import com.metroyar.ui.theme.line
+import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.dataStore
+import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -55,7 +63,7 @@ import kotlinx.coroutines.launch
 @Destination
 @Composable
 fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
-    val context= LocalContext.current
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     Scaffold(topBar = {
         CenterAlignedTopAppBar(
@@ -73,10 +81,26 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
             })
     },
         content = { padding ->
+            val tmpList = listOf<String>()
             var dbList by remember {
-                mutableStateOf(
-                    RealmObject.realmRepo.getListOfFavoriteStations().filter { it != "" })
+                mutableStateOf(tmpList)
             }
+            LaunchedEffect(key1 = dbList) {
+                if (read(
+                        context.dataStore,
+                        PreferencesKeys.FAVORITE_STATIONS
+                    ) != null
+                )
+                    dbList = GlobalObjects.stationList.map { it.stationName }
+                        .filter { title ->
+                            read(
+                                context.dataStore,
+                                PreferencesKeys.FAVORITE_STATIONS
+                            )!!.contains(title)
+                        }.distinct()
+                log("db",dbList)
+            }
+
             if (dbList.isEmpty()) {
                 Column(
                     Modifier.fillMaxSize(),
@@ -91,7 +115,11 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                         onAnimationFinished = {},
                         shouldStopAnimation = false
                     )
-                    Text(text = "هنوز ایستگاهی نشان نکردید", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "هنوز ایستگاهی نشان نکردید",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             } else
                 LazyColumn(modifier = Modifier.padding(padding)) {
@@ -110,19 +138,29 @@ fun FavoriteStationsScreen(navigator: DestinationsNavigator) {
                                         soundResourceId = R.raw.remove_sound_effect,
                                     )
                                     coroutineScope.launch {
-                                        RealmObject.realmRepo.deleteStation(
-                                            favoriteStationName
+                                        save(
+                                            context.dataStore,
+                                            key = PreferencesKeys.FAVORITE_STATIONS,
+                                            read(
+                                                context.dataStore,
+                                                PreferencesKeys.FAVORITE_STATIONS
+                                            )?.replace(favoriteStationName, "")!!
                                         )
                                         dbList =
-                                            RealmObject.realmRepo.getListOfFavoriteStations()
-                                                .filter { it != "" }
+                                            GlobalObjects.stationList.map { it.stationName }
+                                                .filter { title ->
+                                                    read(
+                                                        context.dataStore,
+                                                        PreferencesKeys.FAVORITE_STATIONS
+                                                    )!!.contains(title)
+                                                }
                                     }
                                 },
                             ) {
                                 Icon(
                                     imageVector = ImageVector.vectorResource(id = R.drawable.icons8_trash_128),
                                     contentDescription = "",
-                                    modifier=Modifier.size(24.dp),
+                                    modifier = Modifier.size(24.dp),
                                     tint = MaterialTheme.colorScheme.error
                                 )
                             }

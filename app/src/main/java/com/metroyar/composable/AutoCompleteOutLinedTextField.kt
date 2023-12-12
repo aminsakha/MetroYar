@@ -2,7 +2,7 @@ package com.metroyar.composable
 
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -33,6 +34,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -46,10 +48,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.metroyar.R
-import com.metroyar.db.RealmObject.realmRepo
+import com.metroyar.db.PreferencesKeys
+import com.metroyar.db.read
+import com.metroyar.db.save
 import com.metroyar.ui.theme.*
 import com.metroyar.utils.GlobalObjects.deviceHeightInDp
 import com.metroyar.utils.GlobalObjects.stationList
+import com.metroyar.utils.dataStore
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -64,7 +69,17 @@ fun AutoCompleteOutLinedTextField(
     label: String,
     focusRequester: FocusRequester,
 ) {
-    val dataBaseFavoriteStations = realmRepo.getListOfFavoriteStations()
+    val context = LocalContext.current
+
+
+    val dataBaseFavoriteStations = stationList.map { it.stationName }.filter { title ->
+        produceState(initialValue = "", context.dataStore) {
+            context.dataStore.data.collect { preferences ->
+                val yourBooleanKey = PreferencesKeys.FAVORITE_STATIONS
+                value = preferences[yourBooleanKey] ?: ""
+            }
+        }.value.split(",").any { name -> name == title }
+    }
     val dropDownStationNamesList =
         stationList.map { it.stationName }.toSet().shuffled()
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
@@ -169,10 +184,28 @@ fun AutoCompleteOutLinedTextField(
                             DropDownStationItem(
                                 onStarSelected = {
                                     coroutineScope.launch {
-                                        if (it)
-                                            realmRepo.deleteStation(stationName)
-                                        else
-                                            realmRepo.insertStation(station = stationName)
+                                        if (it) {
+                                            save(
+                                                context.dataStore,
+                                                key = PreferencesKeys.FAVORITE_STATIONS,
+                                                read(
+                                                    context.dataStore,
+                                                    PreferencesKeys.FAVORITE_STATIONS
+                                                )?.replace(stationName, "")!!
+                                            )
+                                        } else {
+                                            save(
+                                                context.dataStore,
+                                                key = PreferencesKeys.FAVORITE_STATIONS,
+                                                "${
+                                                    read(
+                                                        context.dataStore,
+                                                        PreferencesKeys.FAVORITE_STATIONS
+                                                    )?:""
+                                                },$stationName"
+                                            )
+                                        }
+
                                     }
                                 },
                                 itemName = stationName,

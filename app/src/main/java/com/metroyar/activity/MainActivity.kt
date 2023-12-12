@@ -14,8 +14,6 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 import com.metroyar.R
-import com.metroyar.db.RealmObject
-import com.metroyar.db.RealmObject.realmRepo
 import com.metroyar.screen.NavGraphs
 
 
@@ -67,7 +65,6 @@ class MainActivity : ComponentActivity() {
                 val configuration = LocalConfiguration.current
                 deviceWidthInDp = configuration.screenWidthDp.dp
                 deviceHeightInDp = configuration.screenHeightDp.dp
-                realmRepo.initRealmObject(RealmObject.realm)
                 initiateStationsAndAdjNodesLineNum(LocalContext.current)
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
