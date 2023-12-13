@@ -5,26 +5,17 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.22-1.0.11'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.10'
     id 'kotlin-kapt'
-    id 'io.realm.kotlin'
 }
 
 android {
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'arm64-v8a'
-            universalApk false
-        }
-    }
     namespace 'com.metroyar'
     compileSdk 33
     defaultConfig {
         applicationId "com.metroyar"
         minSdk 24
         targetSdk 33
-        versionCode 9
-        versionName "1.0.2"
+        versionCode 10
+        versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -103,9 +94,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
     implementation 'com.github.SmartToolFactory:Compose-Screenshot:1.0.3'
-    implementation 'io.realm.kotlin:library-base:1.11.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
-    implementation 'io.realm.kotlin:library-sync:1.11.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
     implementation 'com.airbnb.android:lottie-compose:4.0.0'

@@ -33,32 +33,33 @@ class MainActivity : ComponentActivity() {
             YandexMetricaConfig.newConfigBuilder(getString(R.string.yandex_api_key)).build()
         YandexMetrica.activate(applicationContext, config)
         YandexMetrica.enableActivityAutoTracking(applicationContext as Application)
-        installSplashScreen().apply {
-            setOnExitAnimationListener { screen ->
-                val zoomX = ObjectAnimator.ofFloat(
-                    screen.iconView,
-                    View.SCALE_X,
-                    0.6f,
-                    0.0f
-                )
-                zoomX.interpolator = OvershootInterpolator()
-                zoomX.duration = 500L
-                zoomX.doOnEnd { screen.remove() }
-
-                val zoomY = ObjectAnimator.ofFloat(
-                    screen.iconView,
-                    View.SCALE_Y,
-                    0.6f,
-                    0.0f
-                )
-                zoomY.interpolator = OvershootInterpolator()
-                zoomY.duration = 600L
-                zoomY.doOnEnd { screen.remove() }
-
-                zoomX.start()
-                zoomY.start()
-            }
-        }
+        installSplashScreen()
+//            .apply {
+//            setOnExitAnimationListener { screen ->
+//                val zoomX = ObjectAnimator.ofFloat(
+//                    screen.iconView,
+//                    View.SCALE_X,
+//                    0.6f,
+//                    0.0f
+//                )
+//                zoomX.interpolator = OvershootInterpolator()
+//                zoomX.duration = 500L
+//                zoomX.doOnEnd { screen.remove() }
+//
+//                val zoomY = ObjectAnimator.ofFloat(
+//                    screen.iconView,
+//                    View.SCALE_Y,
+//                    0.6f,
+//                    0.0f
+//                )
+//                zoomY.interpolator = OvershootInterpolator()
+//                zoomY.duration = 600L
+//                zoomY.doOnEnd { screen.remove() }
+//
+//                zoomX.start()
+//                zoomY.start()
+//            }
+//        }
 
         setContent {
             MetroYarTheme {
