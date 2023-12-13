@@ -30,6 +30,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.ui.theme.line
+import com.metroyar.utils.log
 
 
 @Composable
@@ -41,7 +42,9 @@ fun SettingItem(title: String, initialValue: Boolean, onSwitchClicked: (Boolean)
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        log("ghable check", initialValue)
         var checked by remember { mutableStateOf(initialValue) }
+        log("checked", checked)
         val icon: (@Composable () -> Unit) = if (checked) {
             {
                 Icon(

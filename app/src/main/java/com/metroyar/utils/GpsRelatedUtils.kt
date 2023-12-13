@@ -39,6 +39,7 @@ suspend fun getClosestStationsFromApi(
         )
         onPairChange.invoke(pair)
     } catch (e: Exception) {
+        onPairChange.invoke(Pair("🤔","🤔"))
         e.printStackTrace()
     }
 }
@@ -81,8 +82,23 @@ fun GetCurrentLocation(context: Context, onLocationChange: (GPSCoordinate) -> Un
                     )
                     log("loc", location)
                 }
+                else{
+                    onLocationChange.invoke(
+                        GPSCoordinate(
+                            1.1,
+                            1.1
+                        )
+                    )
+                }
             }
         } catch (_: Exception) {
+            onLocationChange.invoke(
+                GPSCoordinate(
+                    1.1,
+                  1.1
+                )
+            )
+            log("loc", "0 loc")
         }
     }
 }

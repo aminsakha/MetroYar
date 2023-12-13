@@ -5,7 +5,6 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.22-1.0.11'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.10'
     id 'kotlin-kapt'
-    id 'io.realm.kotlin'
 }
 
 android {
@@ -15,15 +14,13 @@ android {
         applicationId "com.metroyar"
         minSdk 24
         targetSdk 33
-        versionCode 9
-        versionName "1.0.2"
-
+        versionCode 10
+        versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
     }
-
     buildTypes {
         release {
             debuggable false
@@ -50,6 +47,9 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
     }
 }
 
@@ -94,13 +94,14 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
     implementation 'com.github.SmartToolFactory:Compose-Screenshot:1.0.3'
-    implementation 'io.realm.kotlin:library-base:1.11.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
-    implementation 'io.realm.kotlin:library-sync:1.11.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     implementation 'com.airbnb.android:lottie-compose:4.0.0'
     implementation 'com.yandex.android:mobmetricalib:5.3.0'
-    implementation "androidx.core:core-splashscreen:1.0.0"
+    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.mapbox.maps:android:11.0.0'
+    implementation 'com.mapbox.extension:maps-compose:11.0.0'
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 }

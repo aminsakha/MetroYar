@@ -1,5 +1,6 @@
 package com.metroyar.screen
 
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -77,8 +78,8 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             )
             InfoCardItem(
                 infoItem = InfoItem(
-                    title = "گزارش خطا",
-                    icon = Icons.Filled.Warning,
+                    title = "تماس با ما",
+                    icon = ImageVector.vectorResource(id = R.drawable.letter),
                     onClickedItem = {
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
                             data = Uri.parse("mailto:metroyarsupprt@gmail.com")
@@ -94,7 +95,7 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             InfoCardItem(
                 infoItem = InfoItem(
                     title = "نسخه ",
-                    endText = "1.0.2",
+                    endText = "1.1.0",
                     icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
                     onClickedItem = {})
             )

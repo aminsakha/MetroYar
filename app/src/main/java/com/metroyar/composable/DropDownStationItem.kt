@@ -13,18 +13,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.metroyar.R
-import com.metroyar.db.RealmObject.realmRepo
+import com.metroyar.db.PreferencesKeys
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.dataStore
 
 @Composable
 fun DropDownStationItem(
@@ -32,10 +35,16 @@ fun DropDownStationItem(
     onItemSelected: (String) -> Unit,
     onStarSelected: (Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
     var isBookMarked by remember {
         mutableStateOf(false)
     }
-    isBookMarked = realmRepo.getListOfFavoriteStations().contains(itemName)
+    isBookMarked = produceState(initialValue = "", context.dataStore) {
+        context.dataStore.data.collect { preferences ->
+            val yourBooleanKey = PreferencesKeys.FAVORITE_STATIONS
+            value = preferences[yourBooleanKey] ?: ""
+        }
+    }.value.contains(itemName)
 
     Row(modifier = Modifier
         .fillMaxWidth()

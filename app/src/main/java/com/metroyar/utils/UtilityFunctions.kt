@@ -60,6 +60,17 @@ fun findStationObjectFromItsName(stationName: String) =
 
 fun findStationObjectFromItsId(stationId: Int) = stationList.find { it.id == stationId }!!
 
+fun toastMaker(
+    context: Context,
+    text: String
+) {
+    Toast.makeText(
+        context,
+        text,
+        Toast.LENGTH_SHORT
+    ).show()
+}
+
 fun log(stringMessage: String = "", wantToLogThis: Any?) =
     Log.d(TAG, "$stringMessage : $wantToLogThis")
 
