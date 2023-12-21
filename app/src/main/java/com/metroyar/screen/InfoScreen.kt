@@ -3,6 +3,7 @@ package com.metroyar.screen
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -95,7 +95,10 @@ fun InfoScreen(context: Context, navigator: DestinationsNavigator) {
             InfoCardItem(
                 infoItem = InfoItem(
                     title = "نسخه ",
-                    endText = "1.1.0",
+                    endText = context.packageManager.getPackageInfo(
+                        context.packageName,
+                        PackageManager.GET_ACTIVITIES
+                    ).versionName,
                     icon = ImageVector.vectorResource(id = R.drawable.baseline_update_24),
                     onClickedItem = {})
             )
