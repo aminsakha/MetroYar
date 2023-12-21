@@ -123,9 +123,11 @@ fun MapTest() {
 
 private fun initMapBoxStationsList(context: Context): List<MapBoxStation> {
     val triplesArray = context.resources.getStringArray(R.array.triples)
-    return GlobalObjects.stationList.mapIndexed { index, station ->
-        val (y, x, title) = triplesArray[index].split(",")
-        MapBoxStation(title, x.toDouble(), y.toDouble(), station.lineNumber)
+    return GlobalObjects.stationList.mapIndexedNotNull { index, station ->
+        triplesArray.getOrNull(index)?.let {
+            val (y, x, title) = it.split(",")
+            MapBoxStation(title, x.toDouble(), y.toDouble(), station.lineNumber)
+        }
     }
 }
 
