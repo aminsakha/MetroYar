@@ -201,11 +201,10 @@ fun AutoCompleteOutLinedTextField(
                                                     read(
                                                         context.dataStore,
                                                         PreferencesKeys.FAVORITE_STATIONS
-                                                    )?:""
+                                                    ) ?: ""
                                                 },$stationName"
                                             )
                                         }
-
                                     }
                                 },
                                 itemName = stationName,
