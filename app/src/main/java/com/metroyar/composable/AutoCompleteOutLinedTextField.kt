@@ -71,7 +71,6 @@ fun AutoCompleteOutLinedTextField(
 ) {
     val context = LocalContext.current
 
-
     val dataBaseFavoriteStations = stationList.map { it.stationName }.filter { title ->
         produceState(initialValue = "", context.dataStore) {
             context.dataStore.data.collect { preferences ->
@@ -81,7 +80,7 @@ fun AutoCompleteOutLinedTextField(
         }.value.split(",").any { name -> name == title }
     }
     val dropDownStationNamesList =
-        stationList.map { it.stationName }.toSet().shuffled()
+        remember { stationList.map { it.stationName }.toSet().shuffled()}
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -171,13 +170,16 @@ fun AutoCompleteOutLinedTextField(
                         val filteredList =
                             if (inputValue.isEmpty() && dataBaseFavoriteStations.isNotEmpty())
                                 dropDownStationNamesList.sortedWith(compareBy { element ->
-                                    dataBaseFavoriteStations.indexOf(element)
-                                }).reversed()
+                                    -dataBaseFavoriteStations.indexOf(element)
+                                })
+
                             else {
                                 dropDownStationNamesList.filter {
                                     it.contains(inputValue)
                                 }.sortedWith(compareByDescending {
                                     it.startsWith(inputValue)
+                                }).sortedWith(compareBy { element ->
+                                    -dataBaseFavoriteStations.indexOf(element)
                                 })
                             }
                         items(filteredList) { stationName ->
