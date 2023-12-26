@@ -80,7 +80,7 @@ fun AutoCompleteOutLinedTextField(
         }.value.split(",").any { name -> name == title }
     }
     val dropDownStationNamesList =
-        remember { stationList.map { it.stationName }.toSet().shuffled()}
+        remember { stationList.map { it.stationName }.toSet().shuffled() }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -172,7 +172,6 @@ fun AutoCompleteOutLinedTextField(
                                 dropDownStationNamesList.sortedWith(compareBy { element ->
                                     -dataBaseFavoriteStations.indexOf(element)
                                 })
-
                             else {
                                 dropDownStationNamesList.filter {
                                     it.contains(inputValue)
