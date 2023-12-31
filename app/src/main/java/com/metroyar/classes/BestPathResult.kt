@@ -10,6 +10,7 @@ import com.metroyar.utils.GlobalObjects.tripleOfLinesAndTheirStartAndEndStations
 import com.metroyar.utils.findStationObjectFromItsId
 import com.metroyar.utils.findStationObjectFromItsName
 import com.metroyar.utils.getDirectionFromInterchangeStations
+import com.metroyar.utils.log
 import java.util.PriorityQueue
 
 
@@ -66,10 +67,15 @@ class BestPathResult(
                 )
             }
         }
-        return if ((possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime - possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime) < 9)
-            possiblePathsQueueBasedOnInterchanges
-        else
+
+
+        log("inter",possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime)
+        log("stations",possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime)
+        return if ((possiblePathsQueueBasedOnInterchanges.peek()!!.wholePathTime - possiblePathsQueueBasedOnStationsBetween.peek()!!.wholePathTime) > 8)
             possiblePathsQueueBasedOnStationsBetween
+        else
+            possiblePathsQueueBasedOnInterchanges
+
     }
 
     fun convertPathToReadableForm(): MutableList<String> {
