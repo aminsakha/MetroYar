@@ -34,8 +34,10 @@ import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
 import com.metroyar.utils.BackPressAction
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.metroyar.utils.toastMaker
+import kotlin.math.min
 
 @OptIn(MapboxExperimental::class)
 @Composable
@@ -57,7 +59,6 @@ fun MapTest() {
                 )
             }
         ) {
-
             val icon =
                 AppCompatResources.getDrawable(context, R.drawable.station_on_map_icon)?.toBitmap()
 
@@ -72,9 +73,8 @@ fun MapTest() {
                     createPolyLine(mapBoxStationsList, 5, lineFive.toArgb()),
 
                     createPolyLine(
-                        listOf(
-                            mapBoxStationsList.find { it.title == "ایستگاه مترو ارم سبز" || it.title == "ایستگاه مترو علامه جعفری" }!!,
-                        ), 4, lineFour.toArgb()
+                        mapBoxStationsList.filter { it.title == "ایستگاه مترو ارم سبز" || it.title == "ایستگاه مترو علامه جعفری" },
+                        4, lineFour.toArgb()
                     ),
 
                     createPolyLine(
@@ -130,6 +130,7 @@ private fun initMapBoxStationsList(context: Context): List<MapBoxStation> {
         }
     }
 }
+
 
 @Composable
 private fun createPolyLine(
