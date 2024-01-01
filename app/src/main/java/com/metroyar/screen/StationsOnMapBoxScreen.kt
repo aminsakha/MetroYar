@@ -59,7 +59,6 @@ fun MapTest() {
                 )
             }
         ) {
-
             val icon =
                 AppCompatResources.getDrawable(context, R.drawable.station_on_map_icon)?.toBitmap()
 
