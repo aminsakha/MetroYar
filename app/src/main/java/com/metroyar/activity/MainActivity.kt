@@ -71,7 +71,6 @@ class MainActivity : ComponentActivity() {
                 deviceHeightInDp = configuration.screenHeightDp.dp
                 initiateStationsAndAdjNodesLineNum(LocalContext.current)
                 DestinationsNavHost(navGraph = NavGraphs.root)
-                log("stations",GlobalObjects.stationList.size)
             }
         }
     }

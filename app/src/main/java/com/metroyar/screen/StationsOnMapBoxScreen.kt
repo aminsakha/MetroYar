@@ -37,6 +37,7 @@ import com.metroyar.utils.GlobalObjects
 import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.metroyar.utils.toastMaker
+import kotlin.math.min
 
 @OptIn(MapboxExperimental::class)
 @Composable
@@ -73,9 +74,8 @@ fun MapTest() {
                     createPolyLine(mapBoxStationsList, 5, lineFive.toArgb()),
 
                     createPolyLine(
-                        listOf(
-                            mapBoxStationsList.find { it.title == "ایستگاه مترو ارم سبز" || it.title == "ایستگاه مترو علامه جعفری" }!!,
-                        ), 4, lineFour.toArgb()
+                        mapBoxStationsList.filter { it.title == "ایستگاه مترو ارم سبز" || it.title == "ایستگاه مترو علامه جعفری" },
+                        4, lineFour.toArgb()
                     ),
 
                     createPolyLine(
@@ -124,7 +124,6 @@ fun MapTest() {
 
 private fun initMapBoxStationsList(context: Context): List<MapBoxStation> {
     val triplesArray = context.resources.getStringArray(R.array.triples)
-    log("trp",triplesArray.size)
     return GlobalObjects.stationList.mapIndexedNotNull { index, station ->
         triplesArray.getOrNull(index)?.let {
             val (y, x, title) = it.split(",")
@@ -132,6 +131,7 @@ private fun initMapBoxStationsList(context: Context): List<MapBoxStation> {
         }
     }
 }
+
 
 @Composable
 private fun createPolyLine(
