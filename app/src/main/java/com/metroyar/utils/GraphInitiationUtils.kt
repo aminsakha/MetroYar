@@ -5,20 +5,23 @@ import com.metroyar.R
 import com.metroyar.model.Station
 
 fun initiateStationsAndAdjNodesLineNum(context: Context) {
+    val lines = listOf(
+        R.array.stationsOnLine1,
+        R.array.stationsOnLine2,
+        R.array.stationsOnLine3,
+        R.array.stationsOnLine4,
+        R.array.stationsOnLine5,
+        R.array.stationsOnLine6,
+        R.array.stationsOnLine7,
+    )
     var stationId = -1
     val resources = context.resources
-    for (i in 1..7) {
-        val curLine = resources.getStringArray(
-            context.resources.getIdentifier(
-                "stationsOnLine$i",
-                "array",
-                context.packageName
-            )
-        )
+    lines.forEachIndexed { i, line ->
+        val curLine = resources.getStringArray(line)
 
         curLine.forEach { stationName ->
             try {
-                GlobalObjects.stationList.add(Station(++stationId, stationName, i))
+                GlobalObjects.stationList.add(Station(++stationId, stationName, i+1))
                 if (GlobalObjects.stationList.last().lineNumber == GlobalObjects.stationList[GlobalObjects.stationList.lastIndex - 1].lineNumber) {
                     GlobalObjects.metroGraph.addEdge(
                         GlobalObjects.stationList[GlobalObjects.stationList.lastIndex - 1].id,
@@ -28,9 +31,9 @@ fun initiateStationsAndAdjNodesLineNum(context: Context) {
                         Pair(
                             GlobalObjects.stationList[GlobalObjects.stationList.lastIndex - 1].id,
                             GlobalObjects.stationList.last().id
-                        ), i
+                        ), i+1
                     )
-                    setAdjNodesLineNum(Pair(GlobalObjects.stationList.last().id, GlobalObjects.stationList.last().id), i)
+                    setAdjNodesLineNum(Pair(GlobalObjects.stationList.last().id, GlobalObjects.stationList.last().id), i+1)
                 }
             } catch (_: Exception) {
             }
@@ -66,15 +69,18 @@ fun setAdjNodesLineNum(edgePair: Pair<Int, Int>, edgeLineNum: Int) {
 
 fun connectSideStations(context: Context) {
     val resources = context.resources
-    arrayOf(1, 4).forEach { lineNum ->
-        val curLine = resources.getStringArray(
-            resources.getIdentifier("sideStationsOfLine$lineNum", "array", context.packageName)
-        )
-        curLine.forEachIndexed { index, stationName ->
+    val lineResources = listOf(R.array.sideStationsOfLine1, R.array.sideStationsOfLine4)
+    val lineNumbers = listOf(1, 4)
+
+    lineResources.forEachIndexed { index, resourceId ->
+        val lineNum = lineNumbers[index]
+        val curLine = resources.getStringArray(resourceId)
+        val firstStationName = if (lineNum == 1) "شاهد - باقرشهر" else "بیمه"
+
+        curLine.forEachIndexed { curIndex, stationName ->
             GlobalObjects.stationList.add(Station(GlobalObjects.stationList.size, stationName, lineNum))
-            val firstStationName = if (lineNum == 1) "شاهد - باقرشهر" else "بیمه"
-            val firstStationId =
-                if (index == 0) findStationObjectFromItsName(firstStationName)[0].id else GlobalObjects.stationList[GlobalObjects.stationList.lastIndex - 1].id
+            val firstStationId = if (curIndex == 0) findStationObjectFromItsName(firstStationName)[0].id
+            else GlobalObjects.stationList[GlobalObjects.stationList.lastIndex - 1].id
             try {
                 GlobalObjects.metroGraph.addEdge(firstStationId, GlobalObjects.stationList.last().id)
                 setAdjNodesLineNum(Pair(firstStationId, GlobalObjects.stationList.last().id), lineNum)

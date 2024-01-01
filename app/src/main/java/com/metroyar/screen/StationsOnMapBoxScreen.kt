@@ -34,6 +34,7 @@ import com.metroyar.ui.theme.lineThree
 import com.metroyar.ui.theme.lineTwo
 import com.metroyar.utils.BackPressAction
 import com.metroyar.utils.GlobalObjects
+import com.metroyar.utils.log
 import com.metroyar.utils.playSound
 import com.metroyar.utils.toastMaker
 
@@ -123,6 +124,7 @@ fun MapTest() {
 
 private fun initMapBoxStationsList(context: Context): List<MapBoxStation> {
     val triplesArray = context.resources.getStringArray(R.array.triples)
+    log("trp",triplesArray.size)
     return GlobalObjects.stationList.mapIndexedNotNull { index, station ->
         triplesArray.getOrNull(index)?.let {
             val (y, x, title) = it.split(",")
